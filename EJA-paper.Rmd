@@ -94,3 +94,35 @@ survey_data <- read_csv("survey_data_no_other.csv")
 survey_data_all_countries <- read_csv("survey_data_all_countries.csv")
 # survey_fragments <- read_csv("survey_fragments.csv")
 ```
+
+```{r Table One}
+# https://cran.r-project.org/web/packages/table1/vignettes/table1-examples.html
+# stratification by gender
+catVars = "Gender"
+
+contVars = c(
+    "Profession",
+    "Your expert level"
+)
+# cava NA's for stratification is not possible since NA is dropped
+tableOne <-
+    CreateTableOne(
+        data = survey_data,
+        vars = contVars,
+        testExact = fisher.test,     
+        addOverall = FALSE,
+        strata = catVars
+    )
+
+
+results_tbl <- print(tableOne, nonnormal = biomarkers, exact = "stage", quote = FALSE, noSpaces = FALSE, printToggle = FALSE)
+summary(tableOne)
+# writing the table to excel
+# write.xlsx(results_tbl,
+#            file = "~/Desktop/R/Shiny/ESAIC-survey/ESAIC-KAI-survey-2021/master_data.xlsx",
+#            sheetName = "demographics_paper_gender_fix", 
+#            col.names = TRUE, 
+#            row.names = TRUE, 
+#            append = TRUE)
+```
+
