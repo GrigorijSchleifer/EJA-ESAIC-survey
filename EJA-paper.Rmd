@@ -92,5 +92,5 @@ library(scales)
 ```{r Data import and cleaning}
 survey_data <- read_csv("survey_data_no_other.csv")
 survey_data_all_countries <- read_csv("survey_data_all_countries.csv")
-survey_fragments <- read_csv("survey_fragments.csv")
+# survey_fragments <- read_csv("survey_fragments.csv")
 ```
