@@ -6,6 +6,18 @@ output: html_document
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
+```{r libraries}
+library(tableone)
+library(RColorBrewer)
+library(scales)
+library(lessR)
+library(xlsx)
+library(ggpubr)
+library(scales)
+
+# library(ReporteRs)
+# library(magrittr)
+```
 
 ```{r All questions separated by LimeSurvey}
 
@@ -76,23 +88,10 @@ knitr::opts_chunk$set(echo = TRUE)
 "[Comment] Do you think it is necessary to verify the identity of the parent/guardian  (i.e. ID card)"
 ```
 
-```{r libraries}
-library(tableone)
-library(RColorBrewer)
-library(scales)
-library(lessR)
-library(xlsx)
-library(ggpubr)
-library(scales)
-
-# library(ReporteRs)
-# library(magrittr)
-```
-
 ```{r Data import and cleaning}
 survey_data <- read_csv("survey_data_no_other.csv")
 survey_data_all_countries <- read_csv("survey_data_all_countries.csv")
-# survey_fragments <- read_csv("survey_fragments.csv")
+survey_fragments <- read_csv("survey_fragments.csv")
 ```
 
 ```{r Table One}
@@ -124,5 +123,26 @@ summary(tableOne)
 #            col.names = TRUE, 
 #            row.names = TRUE, 
 #            append = TRUE)
+```
+
+```{r who obtaines?}
+survey_fragments %>% 
+    count(who.obtains) %>% 
+    dplyr::filter(!is.na(who.obtains)) %>% 
+    ggplot(aes(x = who.obtains, y = n, fill = who.obtains)) +
+            geom_col() +
+            labs(x = "", 
+                 y = "", 
+                 title = "Who in general obtains the informed consent?") +
+            theme_light(base_size = 15) + 
+            # theme(axis.title.x = element_text(size = 15, colour = 'black'),
+            #       axis.title.y = element_text(size = 15, colour = 'black', angle = 90),
+            #       # title = element_text(size = 25, colour = 'black'),
+            theme(legend.position = "None") +
+            scale_fill_brewer(palette = "Set2")
+```
+
+```{r risc scores}
+
 ```
 
