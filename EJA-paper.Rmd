@@ -125,6 +125,15 @@ summary(tableOne)
 #            append = TRUE)
 ```
 
+```{r responce counts from different countries}
+survey_fragments %>% 
+    dplyr::filter(country != "Other") %>% 
+    count(country) %>% 
+    arrange(desc(n)) %>% 
+    print(n = 100)
+```
+
+
 ```{r who obtaines consent?}
 survey_fragments %>% 
     count(who.obtains) %>% 
@@ -144,7 +153,8 @@ survey_fragments %>%
     coord_flip()
 ```
 
-```{r risc scores}
 
+
+```{r risc scores}
 ```
 
