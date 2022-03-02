@@ -129,6 +129,7 @@ summary(tableOne)
 survey_fragments %>% 
     count(who.obtains) %>% 
     dplyr::filter(!is.na(who.obtains)) %>% 
+    mutate(who.obtains = fct_reorder(who.obtains, n)) %>% 
     ggplot(aes(x = who.obtains, y = n, fill = who.obtains)) +
             geom_col() +
             labs(x = "", 
