@@ -125,7 +125,7 @@ summary(tableOne)
 #            append = TRUE)
 ```
 
-```{r responce counts from different countries}
+```{r responce counts for different countries}
 survey_fragments %>% 
     dplyr::filter(country != "Other") %>% 
     count(country) %>% 
@@ -156,5 +156,27 @@ survey_fragments %>%
 
 
 ```{r risc scores}
+survey_fragments %>% 
+    select(ASA.Class:POSPOM) %>% 
+    # using dplyrs across function to perform columnwise operations on character data
+    summarise(across(is.character, table)) %>% 
+    .[2,]
+    
+    
+
+df_for_scores %>% 
+            ggplot(aes(x = risk_score, y = n, fill = risk_score)) +
+            geom_col() +
+            labs(x = "", 
+                 y = "", 
+                 title = "Which of the following Risc Scores do you routinely use?") +
+            theme_light(base_size = 15) + 
+            # theme(axis.title.x = element_text(size = 15, colour = 'black'),
+            #       axis.title.y = element_text(size = 20, colour = 'black', angle = 90),
+            #       title = element_text(size = 25, colour = 'black'),
+            #       legend.position = "None") +
+            theme(legend.position = "None") +
+            scale_fill_brewer(palette = "Set2") + 
+            ylim(0, max(df_for_scores$n) + 10)
 ```
 
