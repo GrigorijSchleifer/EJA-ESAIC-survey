@@ -152,6 +152,10 @@ survey_fragments %>%
             scale_fill_brewer(palette = "Set2") +
     coord_flip()
 ```
+```{r data provided by}
+table(survey_data$Profession)
+prop.table(table(survey_data$Profession))
+```
 
 
 
