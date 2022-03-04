@@ -164,6 +164,16 @@ survey_fragments %>%
     gather(risk_score, value) %>% 
     mutate(risk_score = fct_reorder(risk_score, value)) %>% 
     ggplot(aes(x = risk_score, y = value, fill = risk_score)) +
-    geom_bar(stat='identity')
+    geom_bar(stat='identity') +
+    labs(x = "", 
+                 y = "", 
+                 title = "Risk scores used") +
+            theme_light(base_size = 15) + 
+            theme(title = element_text(size = 25, colour = 'black'),
+                  axis.text.x = element_text(size = 22, vjust = 1.3),
+                  axis.text.y = element_text(size = 20)) +
+            theme(legend.position = "None") +
+            scale_fill_brewer(palette = "Set2") +
+    coord_flip()
 ```
 
