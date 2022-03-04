@@ -160,13 +160,13 @@ survey_fragments %>%
     select(ASA.Class:POSPOM) %>% 
     # using dplyrs across function to perform columnwise operations on character data
     summarise(across(is.character, table)) %>% 
-    .[2,]
-    
-    
+    .[2,] %>% 
+    gather(risk_score, value) %>% 
+    ggplot(aes(x = risk_score)) +
+    geom_histogram()
 
-df_for_scores %>% 
-            ggplot(aes(x = risk_score, y = n, fill = risk_score)) +
-            geom_col() +
+
+
             labs(x = "", 
                  y = "", 
                  title = "Which of the following Risc Scores do you routinely use?") +
