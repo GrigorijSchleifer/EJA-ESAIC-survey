@@ -232,7 +232,7 @@ simple_df %>%
     # "#00441B", "#053060", "#660A1F", "#A7771C" (Dunkel)
     # "#4B72AF", "#54A968", "#C64E51", "#DCAD94" (etwas weniger knallig)
     scale_fill_manual(values=c("#B2172B", "#08598D", "#1E9D77", "#A7771C")) + 
-    facet_wrap(~factor(simple_complex, levels = c("simple", "complex")))
+    facet_wrap(~factor(simple_complex, levels = c("simple procedures", "complex procedures")))
 
 
 
@@ -276,5 +276,40 @@ simple_df %>%
 #     main = "complex procedures",
 #     radius = 1.2,
 #     border = "white")
+```
+
+```{r PIE Is an online/telephone informed consent for elective surgery in accordance with the legal requirements in your country? }
+prop.table(table(survey_data$"Is an online/telephone informed consent for elective surgery in accordance with the legal requirements in your country? (for simple procedures, low risk patients)"))
+table(survey_data$"Is an online/telephone informed consent for elective surgery in accordance with the legal requirements in your country? (for simple procedures, low risk patients)")
+
+prop.table(table(survey_data$"Is an online/telephone informed consent for elective surgery in accordance with the legal requirements in your country? (for complex procedures, higher risk patients)"))
+table(survey_data$"Is an online/telephone informed consent for elective surgery in accordance with the legal requirements in your country? (for complex procedures, higher risk patients)")
+
+
+consent_legal <- data.frame(simple_complex = c(rep("simple procedures", 3), rep("complex procedures", 3)),
+                        answer = rep(c("Unsure", "No", "Yes"), 2),
+                        when_simple = round(c(0.3553616, 0.3715711, 0.2730673, 0.3877805, 0.4251870, 0.1870324), digits = 3) * 100)
+
+
+consent_legal %>% 
+    ggplot(aes(x="", y=when_simple, fill=answer)) +
+    geom_bar(stat="identity", width=1, color = "white") +
+    coord_polar("y", start=0) + 
+    theme_void() + 
+    geom_text(aes(label = paste0(when_simple, "%")),
+              size = 10, 
+              colour="white",
+              position = position_stack(vjust = 0.5)) +
+    theme(legend.position="bottom",
+          legend.title = element_blank(),
+          legend.text = element_text(size=30),
+          legend.spacing.x = unit(1.5, 'cm'),
+          strip.text.x = element_text(size=35)) +
+    # "#00441B", "#053060", "#660A1F", "#A7771C" (Dunkel)
+    # "#4B72AF", "#54A968", "#C64E51", "#DCAD94" (etwas weniger knallig)
+    # "#B2172B", "#08598D", "#1E9D77", "#A7771C" (original)
+    # "#ffffb2", "#fecc5c", "#fd8d3c", "#e31a1c" (black and white compatible)
+    scale_fill_manual(values=c("#B2172B", "#08598D", "#1E9D77", "#A7771C")) +
+    facet_wrap(~factor(simple_complex, levels = c("simple procedures", "complex procedures")))
 ```
 
