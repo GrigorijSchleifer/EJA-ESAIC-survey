@@ -313,3 +313,32 @@ consent_legal %>%
     facet_wrap(~factor(simple_complex, levels = c("simple procedures", "complex procedures")))
 ```
 
+```{r Thinking of Re-Do / repeated anaesthesia assuming the patient is well informed. Would an online/telephone informed consent then be allowed for elective surgery due to legal requirements in your country?}
+
+prop.table(table(survey_data$`Thinking of Re-Do / repeated anaesthesia assuming the patient is well informed. Would an online/telephone informed consent then be allowed for elective surgery due to legal requirements in your country?`))
+
+redo_legal <- data.frame(answer = c("Unsure", "No", "Yes"),
+                        when_simple = round(c(0.3496241, 0.3283208, 0.3220551), digits = 3) * 100)
+
+
+redo_legal %>% 
+    ggplot(aes(x="", y=when_simple, fill=answer)) +
+    geom_bar(stat="identity", width=1, color = "white") +
+    coord_polar("y", start=0) + 
+    theme_void() + 
+    geom_text(aes(label = paste0(when_simple, "%")),
+              size = 10, 
+              colour="white",
+              position = position_stack(vjust = 0.5)) +
+    theme(legend.position="bottom",
+          legend.title = element_blank(),
+          legend.text = element_text(size=30),
+          legend.spacing.x = unit(1.5, 'cm'),
+          strip.text.x = element_text(size=35)) +
+    # "#00441B", "#053060", "#660A1F", "#A7771C" (Dunkel)
+    # "#4B72AF", "#54A968", "#C64E51", "#DCAD94" (etwas weniger knallig)
+    # "#B2172B", "#08598D", "#1E9D77", "#A7771C" (original)
+    # "#ffffb2", "#fecc5c", "#fd8d3c", "#e31a1c" (black and white compatible)
+    scale_fill_manual(values=c("#B2172B", "#08598D", "#1E9D77", "#A7771C"))
+```
+
