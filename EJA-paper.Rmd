@@ -342,3 +342,11 @@ redo_legal %>%
     scale_fill_manual(values=c("#B2172B", "#08598D", "#1E9D77", "#A7771C"))
 ```
 
+```{r EU countries}
+
+survey_data %>%
+    select(`Country where you work?`) %>% 
+    mutate(EU = if_else())
+
+```
+
