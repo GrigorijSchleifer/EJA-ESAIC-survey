@@ -343,6 +343,35 @@ redo_legal %>%
 ```
 
 ```{r EU countries}
+original <- c("Belgium",
+              "France",
+              "Germany",
+              "Italy",
+              "Luxemburg",
+              "Netherlands")
+
+intermediate_EU <- c("Austria",
+                     "Denmark",
+                     "Finland",
+                     "Greece",
+                     "Ireland",
+                     "Portugal",
+                     "Spain",
+                     "Sweden")
+
+post_mill_us <- c("Bulgaria",
+                  "Croatia",
+                  "Cyprus",
+                  "Czechia",
+                  "Estonia",
+                  "Hungary",
+                  "Latvia",
+                  "Lithuania",
+                  "Malta",
+                  "Poland",
+                  "Romania",
+                  "Slovakia",
+                  "Slovenia")
 
 survey_data %>%
     select(`Country where you work?`) %>% 
