@@ -529,48 +529,49 @@ BIP_DF <- tibble(
                 "Malta",
                 "North Macedonia (formerly Macedonia)",
                 "Kosovo",
-            
-Montenegro *	4.19
-"United Kingdom (UK)"
+                "Montenegro",
+                "United Kingdom (UK)"),
+    BIP = c(
+        3332.23,
+        2278.95,
+        1651.59,
+        1121.7,
+        798.67,
+        655.98,
+        626.7,
+        523.04,
+        472.26,
+        451.18,
+        375.56,
+        366.51,
+        317.88,
+        311.73,
+        237.47,
+        218.17,
+        213.66,
+        202.47,
+        165.83,
+        135.92,
+        91.56,
+        64.14,
+        60.64,
+        49.28,
+        48.93,
+        46.47,
+        46.3,
+        29.33,
+        27.17,
+        21,
+        19.02,
+        12.99,
+        12.82,
+        10.77,
+        6.8,
+        4.19,
+        2.708)
+)
+    
 
 
-
-
-Deutschland*	3332.23
-Frankreich*	2278.95
-Italien*	1651.59
-Spanien*	1121.7
-Niederlande*	798.67
-Schweiz	655.98
-Türkei *	626.7
-Polen*	523.04
-Schweden	472.26
-Belgien	451.18
-Österreich	375.56
-Irland	366.51
-Norwegen	317.88
-Dänemark	311.73
-Finnland	237.47
-Rumänien*	218.17
-Tschechien	213.66
-Portugal**	202.47
-Griechenland*	165.83
-Ungarn*	135.92
-Slowakei	91.56
-Luxemburg	64.14
-Bulgarien	60.64
-Kroatien*	49.28
-Litauen	48.93
-Serbien *	46.47
-Slowenien	46.3
-Lettland	29.33
-Estland	27.17
-Zypern*	21
-Island	19.02
-Albanien **	12.99
-Malta	12.82
-Nordmazedonien **	10.77
-Kosovo	6.8
-Montenegro *	4.19
 ```
 
