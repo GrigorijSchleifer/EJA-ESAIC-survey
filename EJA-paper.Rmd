@@ -381,8 +381,20 @@ redo_legal %>%
 catVars = "EU_members"
 
 contVars = c(
-    "How would you prefer to do the anaesthesiological preoperative evaluation in the future?" 
+    "How would you prefer to do the anaesthesiological preoperative evaluation in the future?",
+    "When do you need to obtain Informed consent for elective surgery based on legal requirements (for complex procedures, higher risk patients).",
+    "When do you need to obtain Informed consent for elective surgery based on legal requirements (for simple procedures, low risk patients).",
+    "Is an online/telephone informed consent for elective surgery in accordance with the legal requirements in your country? (for complex procedures, higher risk patients)",
+    "Is an online/telephone informed consent for elective surgery in accordance with the legal requirements in your country? (for simple procedures, low risk patients)",
+    "Thinking of Re-Do / repeated anaesthesia assuming the patient is well informed. Would an online/telephone informed consent then be allowed for elective surgery due to legal requirements in your country?",
+    "Is there a special regulation in your country during this pandemic situation favouring online or telephone informed consent?",
+    "Is it possible to obtain informed consent online via internet, in your routine setting?",
+    "Is it possible to obtain informed consent online via telefone, in your routine setting?",
+    "Do you know if it is legally allowed to obtain informed consent via Internet or telephone (for simple procedures, low risk patients) in your country?",
+    "When ensuring a certain guideline, which may include i.e. specific appointment (time and date) for the interview, secure data protected online service, asking if there is a relaxed environment without distraction, parents’ explicit agreement in online or telephone interview. Would this be an alternative to personal face-to-face meetings?",
+    "[Together with special designed written information and professional pre-produced videos it might be more efficient than face-to-face meeting] What could be a major advantage of online/telephone interviews? (More than one answer is possible)"
 )
+
 # cava NA's for stratification is not possible since NA is dropped
 tableOne <-
     CreateTableOne(
@@ -395,14 +407,14 @@ tableOne <-
 
 
 results_tbl <- print(tableOne, nonnormal = biomarkers, exact = "stage", quote = FALSE, noSpaces = FALSE, printToggle = FALSE)
-summary(tableOne)
+
 # writing the table to excel
-# write.xlsx(results_tbl,
-#            file = "~/Desktop/R/Shiny/ESAIC-survey/ESAIC-KAI-survey-2021/master_data.xlsx",
-#            sheetName = "demographics_paper_gender_fix", 
-#            col.names = TRUE, 
-#            row.names = TRUE, 
-#      
+write.xlsx(results_tbl,
+           file = "~/Desktop/R/EJA-ESAIC-survey/tbl_one.xlsx",
+           sheetName = "table_one_EU_countries",
+           col.names = TRUE,
+           row.names = TRUE)
+
 ```
 
 ```{r All questions separated by LimeSurvey}
