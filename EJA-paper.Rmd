@@ -371,9 +371,6 @@ redo_legal %>%
     # "#ffffb2", "#fecc5c", "#fd8d3c", "#e31a1c" (black and white compatible)
     scale_fill_manual(values=c("#B2172B", "#08598D", "#1E9D77", "#A7771C"))
 ```
-
-
-
 ```{r Table One Stratified EU member}
 # https://cran.r-project.org/web/packages/table1/vignettes/table1-examples.html
 # stratification by gender
@@ -392,7 +389,9 @@ contVars = c(
     "Is it possible to obtain informed consent online via telefone, in your routine setting?",
     "Do you know if it is legally allowed to obtain informed consent via Internet or telephone (for simple procedures, low risk patients) in your country?",
     "When ensuring a certain guideline, which may include i.e. specific appointment (time and date) for the interview, secure data protected online service, asking if there is a relaxed environment without distraction, parents’ explicit agreement in online or telephone interview. Would this be an alternative to personal face-to-face meetings?",
-    "[Together with special designed written information and professional pre-produced videos it might be more efficient than face-to-face meeting] What could be a major advantage of online/telephone interviews? (More than one answer is possible)"
+```
+```{r Table One Stratified EU member}
+"[Together with special designed written information and professional pre-produced videos it might be more efficient than face-to-face meeting] What could be a major advantage of online/telephone interviews? (More than one answer is possible)"
 )
 
 # cava NA's for stratification is not possible since NA is dropped
@@ -411,12 +410,15 @@ results_tbl <- print(tableOne, nonnormal = biomarkers, exact = "stage", quote = 
 # writing the table to excel
 write.xlsx(results_tbl,
            file = "~/Desktop/R/EJA-ESAIC-survey/tbl_one.xlsx",
-           sheetName = "table_one_EU_countries",
+```
+```{r Table One Stratified EU member}
+```
+```{r Table One Stratified EU member}
+sheetName = "table_one_EU_countries",
            col.names = TRUE,
            row.names = TRUE)
 
 ```
-
 ```{r All questions separated by LimeSurvey}
 
 "Gender"
@@ -485,3 +487,85 @@ write.xlsx(results_tbl,
 "Do you think it is necessary to verify the identity of the parent/guardian  (i.e. ID card)"
 "[Comment] Do you think it is necessary to verify the identity of the parent/guardian  (i.e. ID card)"
 ```
+
+```{r BIP}
+BIP_DF <- tibble(
+    country = c("Germany",
+                "France",
+                "Italy",
+                "Spain",
+                "Netherlands",
+                "Switzerland",
+                "Turkey",
+                "Poland",
+                "Sweden",
+                "Belgium",
+                "Austria",
+                "Ireland",
+                "Norway",
+                "Denmark",
+                "Finland",
+                "Romania",
+                "Czechia",
+                "Portugal",
+                "Greece",
+                "Hungary",
+                "Slovakia",
+                "Luxembourg",
+                "Bulgaria",
+                "Croatia",
+                "Lithuania",
+                "Serbia",
+                "Slovenia",
+                "Latvia",
+                "Estonia",
+                "Cyprus",
+                "Iceland",
+                
+Albanien **	12.99
+Malta	12.82
+Nordmazedonien **	10.77
+Kosovo	6.8
+Montenegro *	4.19
+
+
+
+
+Deutschland*	3332.23
+Frankreich*	2278.95
+Italien*	1651.59
+Spanien*	1121.7
+Niederlande*	798.67
+Schweiz	655.98
+Türkei *	626.7
+Polen*	523.04
+Schweden	472.26
+Belgien	451.18
+Österreich	375.56
+Irland	366.51
+Norwegen	317.88
+Dänemark	311.73
+Finnland	237.47
+Rumänien*	218.17
+Tschechien	213.66
+Portugal**	202.47
+Griechenland*	165.83
+Ungarn*	135.92
+Slowakei	91.56
+Luxemburg	64.14
+Bulgarien	60.64
+Kroatien*	49.28
+Litauen	48.93
+Serbien *	46.47
+Slowenien	46.3
+Lettland	29.33
+Estland	27.17
+Zypern*	21
+Island	19.02
+Albanien **	12.99
+Malta	12.82
+Nordmazedonien **	10.77
+Kosovo	6.8
+Montenegro *	4.19
+```
+
