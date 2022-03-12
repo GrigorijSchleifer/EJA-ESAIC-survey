@@ -373,9 +373,11 @@ post_mill_us <- c("Bulgaria",
                   "Slovakia",
                   "Slovenia")
 
-survey_data %>%
-    select(`Country where you work?`) %>% 
-    mutate(EU = if_else())
+survey_fragments %>%
+    select(country) %>% 
+    mutate(EU_members = case_when(country %in% original ~ "Original"),
+           ) %>% 
+    count(some)
 
 ```
 
