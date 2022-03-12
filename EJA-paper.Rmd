@@ -32,11 +32,11 @@ names(survey_data) <-
         "startlanguage",
         "seed",
         "Gender",
-        "What is your age?",
+        "age",
         "Profession",
-        "Your expert level",
-        "Years of experience",
-        "Country where you work?",
+        "expert_level",
+        "experience",
+        "country",
         "Who in general obtains the informed consent prior to anaesthesia?",
         "[ASA-Class] Which of the following Scores do you routinely use in preoperative evaluation?",
         "[Apfel-Score] Which of the following Scores do you routinely use in preoperative evaluation?",
@@ -95,6 +95,43 @@ names(survey_data) <-
         "Do you think it is necessary to verify the identity of the parent/guardian  (i.e. ID card)",
         "[Comment] Do you think it is necessary to verify the identity of the parent/guardian  (i.e. ID card)"
     )
+
+original <- c("Belgium",
+              "France",
+              "Germany",
+              "Italy",
+              "Luxemburg",
+              "Netherlands")
+
+intermediate_EU <- c("Austria",
+                     "Denmark",
+                     "Finland",
+                     "Greece",
+                     "Ireland",
+                     "Portugal",
+                     "Spain",
+                     "Sweden")
+
+post_mill_us <- c("Bulgaria",
+                  "Croatia",
+                  "Cyprus",
+                  "Czechia",
+                  "Estonia",
+                  "Hungary",
+                  "Latvia",
+                  "Lithuania",
+                  "Malta",
+                  "Poland",
+                  "Romania",
+                  "Slovakia",
+                  "Slovenia")
+
+survey_data <- survey_data %>% 
+    mutate(EU_members = case_when(
+        country %in% original ~ "Original",
+        country %in% intermediate_EU ~ "Intermediate",
+        country %in% post_mill_us ~ "Postmillenial",
+        TRUE ~ "NO MEMBER")) 
 ```
 
 ```{r Table One}
@@ -335,47 +372,7 @@ redo_legal %>%
     scale_fill_manual(values=c("#B2172B", "#08598D", "#1E9D77", "#A7771C"))
 ```
 
-```{r EU countries}
-original <- c("Belgium",
-              "France",
-              "Germany",
-              "Italy",
-              "Luxemburg",
-              "Netherlands")
 
-intermediate_EU <- c("Austria",
-                     "Denmark",
-                     "Finland",
-                     "Greece",
-                     "Ireland",
-                     "Portugal",
-                     "Spain",
-                     "Sweden")
-
-post_mill_us <- c("Bulgaria",
-                  "Croatia",
-                  "Cyprus",
-                  "Czechia",
-                  "Estonia",
-                  "Hungary",
-                  "Latvia",
-                  "Lithuania",
-                  "Malta",
-                  "Poland",
-                  "Romania",
-                  "Slovakia",
-                  "Slovenia")
-
-survey_fragments <- survey_fragments %>% 
-    mutate(EU_members = case_when(
-        country %in% original ~ "Original",
-        country %in% intermediate_EU ~ "Intermediate",
-        country %in% post_mill_us ~ "Postmillenial",
-        TRUE ~ "NO MEMBER")) 
-    
-
-
-```
 
 ```{r Table One Stratified EU member}
 # https://cran.r-project.org/web/packages/table1/vignettes/table1-examples.html
