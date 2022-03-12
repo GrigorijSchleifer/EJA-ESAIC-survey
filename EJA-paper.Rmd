@@ -132,6 +132,10 @@ survey_data <- survey_data %>%
         country %in% intermediate_EU ~ "Intermediate",
         country %in% post_mill_us ~ "Postmillenial",
         TRUE ~ "NO MEMBER")) 
+
+survey_data_barchart$country[survey_data_barchart$country == "United Kingdom (UK)"] <- "UK" 
+survey_data_barchart$country[survey_data_barchart$country == "North Macedonia (formerly Macedonia)"] <- "Macedonia" 
+survey_data_barchart$country[survey_data_barchart$country == "Bosnia and Herzegovina"] <- "B&H" 
 ```
 
 ```{r Table One}
@@ -521,12 +525,13 @@ BIP_DF <- tibble(
                 "Estonia",
                 "Cyprus",
                 "Iceland",
-                
-Albanien **	12.99
-Malta	12.82
-Nordmazedonien **	10.77
-Kosovo	6.8
+                "Albania",
+                "Malta",
+                "North Macedonia (formerly Macedonia)",
+                "Kosovo",
+            
 Montenegro *	4.19
+"United Kingdom (UK)"
 
 
 
