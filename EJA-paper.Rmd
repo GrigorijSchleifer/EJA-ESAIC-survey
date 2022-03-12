@@ -374,10 +374,14 @@ post_mill_us <- c("Bulgaria",
                   "Slovenia")
 
 survey_fragments %>%
-    select(country) %>% 
-    mutate(EU_members = case_when(country %in% original ~ "Original"),
-           ) %>% 
-    count(some)
+    dplyr::filter(country != "Other") %>% 
+    mutate(EU_members = case_when(
+        country %in% original ~ "Original",
+        country %in% intermediate_EU ~ "Intermediate",
+        country %in% post_mill_us ~ "Postmillenial",
+        TRUE ~ "NO MEMBER")) %>% 
+    select(country, EU_members) %>% 
+    print(n = 100)
 
 ```
 
