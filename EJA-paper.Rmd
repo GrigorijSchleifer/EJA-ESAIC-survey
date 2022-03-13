@@ -393,8 +393,6 @@ contVars = c(
     "Is it possible to obtain informed consent online via telefone, in your routine setting?",
     "Do you know if it is legally allowed to obtain informed consent via Internet or telephone (for simple procedures, low risk patients) in your country?",
     "When ensuring a certain guideline, which may include i.e. specific appointment (time and date) for the interview, secure data protected online service, asking if there is a relaxed environment without distraction, parents’ explicit agreement in online or telephone interview. Would this be an alternative to personal face-to-face meetings?",
-```
-```{r Table One Stratified EU member}
 "[Together with special designed written information and professional pre-produced videos it might be more efficient than face-to-face meeting] What could be a major advantage of online/telephone interviews? (More than one answer is possible)"
 )
 
@@ -414,15 +412,11 @@ results_tbl <- print(tableOne, nonnormal = biomarkers, exact = "stage", quote = 
 # writing the table to excel
 write.xlsx(results_tbl,
            file = "~/Desktop/R/EJA-ESAIC-survey/tbl_one.xlsx",
-```
-```{r Table One Stratified EU member}
-```
-```{r Table One Stratified EU member}
-sheetName = "table_one_EU_countries",
+           sheetName = "table_one_EU_countries",
            col.names = TRUE,
            row.names = TRUE)
-
 ```
+
 ```{r All questions separated by LimeSurvey}
 
 "Gender"
