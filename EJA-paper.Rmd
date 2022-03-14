@@ -531,7 +531,12 @@ BIP_DF <- tibble(
         "North Macedonia (formerly Macedonia)",
         "Moldova",
         "Monaco",
-        "Kosovo"
+        "Kosovo",
+        "Georgia",
+        "Israel",
+        "Kazakhstan",
+        "Liechtenstein",
+        "Uzbekistan"
     ),
     BIP = c(
         3846,
@@ -575,15 +580,18 @@ BIP_DF <- tibble(
         12.27,
         11.91,
         8,
-        7.61
+        7.61,
+        15.89,
+        402,
+        169.8,
+        6.69,
+        57.7
     )
 )
 
-
 BIP_DF <- BIP_DF %>% 
     mutate(levels_bip = cut(BIP_DF$BIP, 
-                            breaks = c(1, 500, 1000, Inf), 
+                            breaks = c(1, 100, 500, Inf), 
                             labels = c("Low", "Middle", "High")))
-
 ```
 
