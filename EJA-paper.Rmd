@@ -199,9 +199,9 @@ survey_data <- survey_data %>%
         TRUE ~ "NO MEMBER")) 
 
 
-survey_data_barchart$country[survey_data_barchart$country == "United Kingdom (UK)"] <- "UK" 
-survey_data_barchart$country[survey_data_barchart$country == "North Macedonia (formerly Macedonia)"] <- "Macedonia" 
-survey_data_barchart$country[survey_data_barchart$country == "Bosnia and Herzegovina"] <- "B&H" 
+# survey_data_barchart$country[survey_data_barchart$country == "United Kingdom (UK)"] <- "UK" 
+# survey_data_barchart$country[survey_data_barchart$country == "North Macedonia (formerly Macedonia)"] <- "Macedonia" 
+# survey_data_barchart$country[survey_data_barchart$country == "Bosnia and Herzegovina"] <- "B&H" 
 
 
 
@@ -274,6 +274,114 @@ survey_data_barchart$country[survey_data_barchart$country == "Bosnia and Herzego
 "[Comment] In case of personal presence of the parent/caregiver do you routinely check the identity or legal responsibility of the parent/caregiver (i.e. ID card)"
 "Do you think it is necessary to verify the identity of the parent/guardian  (i.e. ID card)"
 "[Comment] Do you think it is necessary to verify the identity of the parent/guardian  (i.e. ID card)"
+```
+```{r BIP}
+# https://tradingeconomics.com/country-list/gdp?continent=europe
+BIP_DF <- tibble(
+    country = c(
+        "Germany",
+        "United Kingdom (UK)",
+        "France",
+        "Italy",
+        "Russia",
+        "Spain",
+        "Netherlands",
+        "Switzerland",
+        "Turkey",
+        "Poland",
+        "Sweden",
+        "Belgium",
+        "Austria",
+        "Ireland",
+        "Norway",
+        "Denmark",
+        "Finland",
+        "Romania",
+        "Czechia",
+        "Portugal",
+        "Greece",
+        "Ukraine",
+        "Hungary",
+        "Slovakia",
+        "Luxembourg",
+        "Bulgaria",
+        "Belarus",
+        "Croatia",
+        "Lithuania",
+        "Slovenia",
+        "Serbia",
+        "Latvia",
+        "Estonia",
+        "Cyprus",
+        "Iceland",
+        "Bosnia and Herzegovina",
+        "Albania",
+        "Malta",
+        "North Macedonia (formerly Macedonia)",
+        "Moldova",
+        "Monaco",
+        "Kosovo",
+        "Georgia",
+        "Israel",
+        "Kazakhstan",
+        "Liechtenstein",
+        "Uzbekistan"
+    ),
+    BIP = c(
+        3846,
+        2708,
+        2630,
+        1886,
+        1484,
+        1281,
+        914,
+        752,
+        720,
+        594,
+        541,
+        515,
+        431,
+        426,
+        363,
+        356,
+        270,
+        249,
+        245,
+        231,
+        189,
+        156,
+        155,
+        105,
+        73.26,
+        69.11,
+        60.26,
+        55.97,
+        55.89,
+        53.59,
+        52.96,
+        33.51,
+        30.65,
+        23.8,
+        21.71,
+        19.79,
+        14.8,
+        14.65,
+        12.27,
+        11.91,
+        8,
+        7.61,
+        15.89,
+        402,
+        169.8,
+        6.69,
+        57.7
+    )
+)
+
+BIP_DF <- BIP_DF %>% 
+    mutate(levels_bip = cut(BIP_DF$BIP, 
+                            breaks = c(1, 100, 500, Inf), 
+                            labels = c("Low", "Middle", "High")))
 ```
 
 ```{r Table One}
@@ -556,112 +664,44 @@ write.xlsx(results_tbl,
 ```
 
 
-```{r BIP}
-# https://tradingeconomics.com/country-list/gdp?continent=europe
-BIP_DF <- tibble(
-    country = c(
-        "Germany",
-        "United Kingdom (UK)",
-        "France",
-        "Italy",
-        "Russia",
-        "Spain",
-        "Netherlands",
-        "Switzerland",
-        "Turkey",
-        "Poland",
-        "Sweden",
-        "Belgium",
-        "Austria",
-        "Ireland",
-        "Norway",
-        "Denmark",
-        "Finland",
-        "Romania",
-        "Czechia",
-        "Portugal",
-        "Greece",
-        "Ukraine",
-        "Hungary",
-        "Slovakia",
-        "Luxembourg",
-        "Bulgaria",
-        "Belarus",
-        "Croatia",
-        "Lithuania",
-        "Slovenia",
-        "Serbia",
-        "Latvia",
-        "Estonia",
-        "Cyprus",
-        "Iceland",
-        "Bosnia and Herzegovina",
-        "Albania",
-        "Malta",
-        "North Macedonia (formerly Macedonia)",
-        "Moldova",
-        "Monaco",
-        "Kosovo",
-        "Georgia",
-        "Israel",
-        "Kazakhstan",
-        "Liechtenstein",
-        "Uzbekistan"
-    ),
-    BIP = c(
-        3846,
-        2708,
-        2630,
-        1886,
-        1484,
-        1281,
-        914,
-        752,
-        720,
-        594,
-        541,
-        515,
-        431,
-        426,
-        363,
-        356,
-        270,
-        249,
-        245,
-        231,
-        189,
-        156,
-        155,
-        105,
-        73.26,
-        69.11,
-        60.26,
-        55.97,
-        55.89,
-        53.59,
-        52.96,
-        33.51,
-        30.65,
-        23.8,
-        21.71,
-        19.79,
-        14.8,
-        14.65,
-        12.27,
-        11.91,
-        8,
-        7.61,
-        15.89,
-        402,
-        169.8,
-        6.69,
-        57.7
-    )
+```{r Table One GDP Stratified}
+# https://cran.r-project.org/web/packages/table1/vignettes/table1-examples.html
+# stratification by gender
+
+catVars = "GDP"
+
+contVars = c(
+    "How would you prefer to do the anaesthesiological preoperative evaluation in the future?",
+    "When do you need to obtain Informed consent for elective surgery based on legal requirements (for complex procedures, higher risk patients).",
+    "When do you need to obtain Informed consent for elective surgery based on legal requirements (for simple procedures, low risk patients).",
+    "Is an online/telephone informed consent for elective surgery in accordance with the legal requirements in your country? (for complex procedures, higher risk patients)",
+    "Is an online/telephone informed consent for elective surgery in accordance with the legal requirements in your country? (for simple procedures, low risk patients)",
+    "Thinking of Re-Do / repeated anaesthesia assuming the patient is well informed. Would an online/telephone informed consent then be allowed for elective surgery due to legal requirements in your country?",
+    "Is there a special regulation in your country during this pandemic situation favouring online or telephone informed consent?",
+    "Is it possible to obtain informed consent online via internet, in your routine setting?",
+    "Is it possible to obtain informed consent online via telefone, in your routine setting?",
+    "Do you know if it is legally allowed to obtain informed consent via Internet or telephone (for simple procedures, low risk patients) in your country?",
+    "When ensuring a certain guideline, which may include i.e. specific appointment (time and date) for the interview, secure data protected online service, asking if there is a relaxed environment without distraction, parents’ explicit agreement in online or telephone interview. Would this be an alternative to personal face-to-face meetings?",
+"[Together with special designed written information and professional pre-produced videos it might be more efficient than face-to-face meeting] What could be a major advantage of online/telephone interviews? (More than one answer is possible)"
 )
 
-BIP_DF <- BIP_DF %>% 
-    mutate(levels_bip = cut(BIP_DF$BIP, 
-                            breaks = c(1, 100, 500, Inf), 
-                            labels = c("Low", "Middle", "High")))
-```
+# cava NA's for stratification is not possible since NA is dropped
+tableOne <-
+    CreateTableOne(
+        data = survey_data,
+        vars = contVars,
+        testExact = fisher.test,     
+        addOverall = FALSE,
+        strata = catVars
+    )
 
+
+results_tbl <- print(tableOne, nonnormal = biomarkers, exact = "stage", quote = FALSE, noSpaces = FALSE, printToggle = FALSE)
+
+# writing the table to excel
+write.xlsx(results_tbl,
+           file = "~/Desktop/R/EJA-ESAIC-survey/tbl_one.xlsx",
+           sheetName = "GDP stratified",
+           col.names = TRUE,
+           row.names = TRUE)
+```
