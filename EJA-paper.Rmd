@@ -96,6 +96,7 @@ names(survey_data) <-
         "[Comment] Do you think it is necessary to verify the identity of the parent/guardian  (i.e. ID card)"
     )
 
+
 original <- c("Belgium",
               "France",
               "Germany",
@@ -133,9 +134,78 @@ survey_data <- survey_data %>%
         country %in% post_mill_us ~ "Postmillenial",
         TRUE ~ "NO MEMBER")) 
 
+
+high_gdp <- c(
+    "Germany",
+    "United Kingdom (UK)",
+    "France",
+    "Italy",
+    "Russia",
+    "Spain",
+    "Netherlands",
+    "Switzerland",
+    "Turkey",
+    "Poland",
+    "Sweden",
+    "Belgium"
+)
+
+middle_gdp <- c(
+    "Austria",
+    "Ireland",
+    "Norway",
+    "Denmark",
+    "Finland",
+    "Romania",
+    "Czechia",
+    "Portugal",
+    "Greece",
+    "Ukraine",
+    "Hungary",
+    "Slovakia",
+    "Israel",
+    "Kazakhstan"
+)
+
+low_gdp <- c(
+    "Luxembourg",
+    "Bulgaria",
+    "Belarus",
+    "Croatia",
+    "Lithuania",
+    "Slovenia",
+    "Serbia",
+    "Latvia",
+    "Estonia",
+    "Cyprus",
+    "Iceland",
+    "Bosnia and Herzegovina",
+    "Albania",
+    "Malta",
+    "North Macedonia (formerly Macedonia)",
+    "Moldova",
+    "Monaco",
+    "Kosovo",
+    "Georgia",
+    "Liechtenstein",
+    "Uzbekistan"
+)
+
+survey_data <- survey_data %>% 
+    mutate(GDP = case_when(
+        country %in% high_gdp ~ "High GDP",
+        country %in% middle_gdp ~ "Middle GDP",
+        country %in% low_gdp ~ "Low GDP",
+        TRUE ~ "NO MEMBER")) 
+
+
 survey_data_barchart$country[survey_data_barchart$country == "United Kingdom (UK)"] <- "UK" 
 survey_data_barchart$country[survey_data_barchart$country == "North Macedonia (formerly Macedonia)"] <- "Macedonia" 
 survey_data_barchart$country[survey_data_barchart$country == "Bosnia and Herzegovina"] <- "B&H" 
+
+
+
+
 ```
 ```{r All questions separated by LimeSurvey}
 
