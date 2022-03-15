@@ -684,6 +684,8 @@ contVars = c(
     "When ensuring a certain guideline, which may include i.e. specific appointment (time and date) for the interview, secure data protected online service, asking if there is a relaxed environment without distraction, parents’ explicit agreement in online or telephone interview. Would this be an alternative to personal face-to-face meetings?",
 "[Together with special designed written information and professional pre-produced videos it might be more efficient than face-to-face meeting] What could be a major advantage of online/telephone interviews? (More than one answer is possible)"
 )
+survey_data <- survey_data %>% 
+    dplyr::filter(GDP != "NO MEMBER")
 
 # cava NA's for stratification is not possible since NA is dropped
 tableOne <-
