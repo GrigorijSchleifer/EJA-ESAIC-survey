@@ -19,92 +19,22 @@ library(scales)
 # library(magrittr)
 ```
 ```{r Data import and cleaning}
-survey_data <- read_csv("survey_data_no_other.csv")
-survey_data_all_countries <- read_csv("survey_data_all_countries.csv")
-survey_fragments <- read_csv("survey_fragments.csv")
+survey_data <- read_csv("data/survey_data_no_other.csv")
+survey_data_all_countries <- read_csv("data/survey_data_all_countries.csv")
+survey_fragments <- read_csv("data/survey_fragments.csv")
 
-all_questions <- names(survey_data) <-
-    c(
-        "X1",
-        "id",
-        "submitdate",
-        "lastpage",
-        "startlanguage",
-        "seed",
-        "Gender",
-        "age",
-        "Profession",
-        "expert_level",
-        "experience",
-        "country",
-        "Who in general obtains the informed consent prior to anaesthesia?",
-        "[ASA-Class] Which of the following Scores do you routinely use in preoperative evaluation?",
-        "[Apfel-Score] Which of the following Scores do you routinely use in preoperative evaluation?",
-        "[NYHA-Score] Which of the following Scores do you routinely use in preoperative evaluation?",
-        "[ARISCAT-Score] Which of the following Scores do you routinely use in preoperative evaluation?",
-        "[rCRI] Which of the following Scores do you routinely use in preoperative evaluation?",
-        "[POSPOM] Which of the following Scores do you routinely use in preoperative evaluation?",
-        "[Other] Which of the following Scores do you routinely use in preoperative evaluation?",
-        "How would you prefer to do the anaesthesiological preoperative evaluation in the future?",
-        "[Other] How would you prefer to do the anaesthesiological preoperative evaluation in the future?",
-        "When do you need to obtain Informed consent for elective surgery based on legal requirements (for complex procedures, higher risk patients).",
-        "When do you need to obtain Informed consent for elective surgery based on legal requirements (for simple procedures, low risk patients).",
-        "Is an online/telephone informed consent for elective surgery in accordance with the legal requirements in your country? (for complex procedures, higher risk patients)",
-        "[Comment] Is an online/telephone informed consent for elective surgery in accordance with the legal requirements in your country? (for complex procedures, higher risk patients)",
-        "Is an online/telephone informed consent for elective surgery in accordance with the legal requirements in your country? (for simple procedures, low risk patients)",
-        "[Comment] Is an online/telephone informed consent for elective surgery in accordance with the legal requirements in your country? (for simple procedures, low risk patients)",
-        "Thinking of Re-Do / repeated anaesthesia assuming the patient is well informed. Would an online/telephone informed consent then be allowed for elective surgery due to legal requirements in your country?",
-        "Is there a special regulation in your country during this pandemic situation favouring online or telephone informed consent?",
-        "Is it possible to obtain informed consent online via internet, in your routine setting?",
-        "[Comment] Is it possible to obtain informed consent online via internet, in your routine setting?",
-        "Is it possible to obtain informed consent online via telefone, in your routine setting?",
-        "[Comment] Is it possible to obtain informed consent online via telefone, in your routine setting?",
-        "Do you know if it is legally allowed to obtain informed consent via Internet or telephone (for simple procedures, low risk patients) in your country?",
-        "[Comment] Do you know if it is legally allowed to obtain informed consent via Internet or telephone (for simple procedures, low risk patients) in your country?",
-        "When ensuring a certain guideline, which may include i.e. specific appointment (time and date) for the interview, secure data protected online service, asking if there is a relaxed environment without distraction, parents’ explicit agreement in online or telephone interview. Would this be an alternative to personal face-to-face meetings?",
-        "[Comment] When ensuring a certain guideline, which may include i.e. specific appointment (time and date) for the interview, secure data protected online service, asking if there is a relaxed environment without distraction, parents’ explicit agreement in online or telephone interview. Would this be an alternative to personal face-to-face meetings?",
-        "[Lack of personal contact] What are your major concerns about online or telephone interviews? (More than one answer is possible)",
-        "[Patient´s behaviour is impossible to observe] What are your major concerns about online or telephone interviews? (More than one answer is possible)",
-        "[Personal relation with the patient cannot be build] What are your major concerns about online or telephone interviews? (More than one answer is possible)",
-        "[Confidence in anaesthesia cannot be achieved] What are your major concerns about online or telephone interviews? (More than one answer is possible)",
-        "[Impossible to fulfil legal requirements] What are your major concerns about online or telephone interviews? (More than one answer is possible)",
-        "[I am not sure if it might be illegal in my country] What are your major concerns about online or telephone interviews? (More than one answer is possible)",
-        "[Impossible to gather for anamnestic information] What are your major concerns about online or telephone interviews? (More than one answer is possible)",
-        "[Other] What are your major concerns about online or telephone interviews? (More than one answer is possible)",
-        "[If patients are from remote locations,  no travel or transportation is necessary] What could be a major advantage of online/telephone interviews? (More than one answer is possible)",
-        "[More relaxed for the patients] What could be a major advantage of online/telephone interviews? (More than one answer is possible)",
-        "[No waste of time waiting in the holding area] What could be a major advantage of online/telephone interviews? (More than one answer is possible)",
-        "[Less anger/stress due to long waiting] What could be a major advantage of online/telephone interviews? (More than one answer is possible)",
-        "[With specific questions all information could be obtained] What could be a major advantage of online/telephone interviews? (More than one answer is possible)",
-        "[Together with special designed written information and professional pre-produced videos it might be more efficient than face-to-face meeting] What could be a major advantage of online/telephone interviews? (More than one answer is possible)",
-        "[Other] What could be a major advantage of online/telephone interviews? (More than one answer is possible)",
-        "Do you need to obtain written Informed consent for elective surgery due to legal requirements from both parents or just from one (complex procedures, higher risk patients)?",
-        "[Comment] Do you need to obtain written Informed consent for elective surgery due to legal requirements from both parents or just from one (complex procedures, higher risk patients)?",
-        "Do you need to obtain written Informed consent for elective surgery due to legal requirements from both parents or just from one (simple procedures, low risk patients)?",
-        "[Comment] Do you need to obtain written Informed consent for elective surgery due to legal requirements from both parents or just from one (simple procedures, low risk patients)?",
-        "[Age above ...] What requirements does a child have to fulfil to sign independently?",
-        "[Comment] [Age above ...] What requirements does a child have to fulfil to sign independently?",
-        "[Having the mental capacity to understand the consequences of its decision] What requirements does a child have to fulfil to sign independently?",
-        "[Comment] [Having the mental capacity to understand the consequences of its decision] What requirements does a child have to fulfil to sign independently?",
-        "[other ...] What requirements does a child have to fulfil to sign independently?",
-        "[Comment] [other ...] What requirements does a child have to fulfil to sign independently?",
-        "Do you know if it is legally allowed to obtain informed consent from the parent/caregiver via Internet or telephone?",
-        "[Comment] Do you know if it is legally allowed to obtain informed consent from the parent/caregiver via Internet or telephone?",
-        "In case of personal presence of the parent/caregiver do you routinely check the identity or legal responsibility of the parent/caregiver (i.e. ID card)",
-        "[Comment] In case of personal presence of the parent/caregiver do you routinely check the identity or legal responsibility of the parent/caregiver (i.e. ID card)",
-        "Do you think it is necessary to verify the identity of the parent/guardian  (i.e. ID card)",
-        "[Comment] Do you think it is necessary to verify the identity of the parent/guardian  (i.e. ID card)"
-    )
+# storing all column names as a list of characters
+all_questions <- dput(names(survey_data)) 
 
 
-original <- c("Belgium",
+original_EU_member <- c("Belgium",
               "France",
               "Germany",
               "Italy",
               "Luxemburg",
               "Netherlands")
 
-intermediate_EU <- c("Austria",
+intermediate_EU_member <- c("Austria",
                      "Denmark",
                      "Finland",
                      "Greece",
@@ -113,7 +43,7 @@ intermediate_EU <- c("Austria",
                      "Spain",
                      "Sweden")
 
-post_mill_us <- c("Bulgaria",
+post_mill_eu_member <- c("Bulgaria",
                   "Croatia",
                   "Cyprus",
                   "Czechia",
@@ -129,13 +59,13 @@ post_mill_us <- c("Bulgaria",
 
 survey_data <- survey_data %>% 
     mutate(EU_members = case_when(
-        country %in% original ~ "Original",
-        country %in% intermediate_EU ~ "Intermediate",
-        country %in% post_mill_us ~ "Postmillenial",
+        country %in% original_EU_member ~ "Original",
+        country %in% intermediate_EU_member ~ "Intermediate",
+        country %in% post_mill_eu_member ~ "Postmillenial",
         TRUE ~ "NO MEMBER")) 
 
 
-high_gdp <- c(
+high_gdp_countries <- c(
     "Germany",
     "United Kingdom (UK)",
     "France",
@@ -150,7 +80,7 @@ high_gdp <- c(
     "Belgium"
 )
 
-middle_gdp <- c(
+middle_gdp_countries <- c(
     "Austria",
     "Ireland",
     "Norway",
@@ -167,7 +97,7 @@ middle_gdp <- c(
     "Kazakhstan"
 )
 
-low_gdp <- c(
+low_gdp_countries <- c(
     "Luxembourg",
     "Bulgaria",
     "Belarus",
@@ -193,88 +123,17 @@ low_gdp <- c(
 
 survey_data <- survey_data %>% 
     mutate(GDP = case_when(
-        country %in% high_gdp ~ "High GDP",
-        country %in% middle_gdp ~ "Middle GDP",
-        country %in% low_gdp ~ "Low GDP",
+        country %in% high_gdp_countries ~ "High GDP",
+        country %in% middle_gdp_countries ~ "Middle GDP",
+        country %in% low_gdp_countries ~ "Low GDP",
         TRUE ~ "NO MEMBER")) 
 
 
 # survey_data_barchart$country[survey_data_barchart$country == "United Kingdom (UK)"] <- "UK" 
 # survey_data_barchart$country[survey_data_barchart$country == "North Macedonia (formerly Macedonia)"] <- "Macedonia" 
 # survey_data_barchart$country[survey_data_barchart$country == "Bosnia and Herzegovina"] <- "B&H" 
-
-
-
-
 ```
-```{r All questions separated by LimeSurvey}
 
-"Gender"
-"What is your age?"
-"Profession"
-"Your expert level"
-"Years of experience"
-"Country where you work?"
-
-"Who in general obtains the informed consent prior to anaesthesia?"
-
-"[ASA-Class] Which of the following Scores do you routinely use in preoperative evaluation?"
-"[Apfel-Score] Which of the following Scores do you routinely use in preoperative evaluation?"
-"[NYHA-Score] Which of the following Scores do you routinely use in preoperative evaluation?"
-"[ARISCAT-Score] Which of the following Scores do you routinely use in preoperative evaluation?" 
-"[rCRI] Which of the following Scores do you routinely use in preoperative evaluation?"
-"[POSPOM] Which of the following Scores do you routinely use in preoperative evaluation?" 
-"[Other] Which of the following Scores do you routinely use in preoperative evaluation?" 
-"How would you prefer to do the anaesthesiological preoperative evaluation in the future?" 
-"[Other] How would you prefer to do the anaesthesiological preoperative evaluation in the future?"
-"When do you need to obtain Informed consent for elective surgery based on legal requirements (for complex procedures, higher risk patients)."
-"When do you need to obtain Informed consent for elective surgery based on legal requirements (for simple procedures, low risk patients)."
-"Is an online/telephone informed consent for elective surgery in accordance with the legal requirements in your country? (for complex procedures, higher risk patients)"
-"[Comment] Is an online/telephone informed consent for elective surgery in accordance with the legal requirements in your country? (for complex procedures, higher risk patients)"
-"Is an online/telephone informed consent for elective surgery in accordance with the legal requirements in your country? (for simple procedures, low risk patients)"
-"[Comment] Is an online/telephone informed consent for elective surgery in accordance with the legal requirements in your country? (for simple procedures, low risk patients)"
-"Thinking of Re-Do / repeated anaesthesia assuming the patient is well informed. Would an online/telephone informed consent then be allowed for elective surgery due to legal requirements in your country?"
-"Is there a special regulation in your country during this pandemic situation favouring online or telephone informed consent?"
-"Is it possible to obtain informed consent online via internet, in your routine setting?"
-"[Comment] Is it possible to obtain informed consent online via internet, in your routine setting?"
-"Is it possible to obtain informed consent online via telefone, in your routine setting?"
-"[Comment] Is it possible to obtain informed consent online via telefone, in your routine setting?"
-"Do you know if it is legally allowed to obtain informed consent via Internet or telephone (for simple procedures, low risk patients) in your country?"
-"[Comment] Do you know if it is legally allowed to obtain informed consent via Internet or telephone (for simple procedures, low risk patients) in your country?" 
-"When ensuring a certain guideline, which may include i.e. specific appointment (time and date) for the interview, secure data protected online service, asking if there is a relaxed environment without distraction, parents’ explicit agreement in online or telephone interview. Would this be an alternative to personal face-to-face meetings?"
-"[Comment] When ensuring a certain guideline, which may include i.e. specific appointment (time and date) for the interview, secure data protected online service, asking if there is a relaxed environment without distraction, parents’ explicit agreement in online or telephone interview. Would this be an alternative to personal face-to-face meetings?"
-"[Lack of personal contact] What are your major concerns about online or telephone interviews? (More than one answer is possible)"
-"[Patient´s behaviour is impossible to observe] What are your major concerns about online or telephone interviews? (More than one answer is possible)"
-"[Personal relation with the patient cannot be build] What are your major concerns about online or telephone interviews? (More than one answer is possible)"
-"[Confidence in anaesthesia cannot be achieved] What are your major concerns about online or telephone interviews? (More than one answer is possible)"
-"[Impossible to fulfil legal requirements] What are your major concerns about online or telephone interviews? (More than one answer is possible)"
-"[I am not sure if it might be illegal in my country] What are your major concerns about online or telephone interviews? (More than one answer is possible)"
-"[Impossible to gather for anamnestic information] What are your major concerns about online or telephone interviews? (More than one answer is possible)"
-"[Other] What are your major concerns about online or telephone interviews? (More than one answer is possible)"
-"[If patients are from remote locations,  no travel or transportation is necessary] What could be a major advantage of online/telephone interviews? (More than one answer is possible)"
-"[More relaxed for the patients] What could be a major advantage of online/telephone interviews? (More than one answer is possible)"
-"[No waste of time waiting in the holding area] What could be a major advantage of online/telephone interviews? (More than one answer is possible)" 
-"[Less anger/stress due to long waiting] What could be a major advantage of online/telephone interviews? (More than one answer is possible)"
-"[With specific questions all information could be obtained] What could be a major advantage of online/telephone interviews? (More than one answer is possible)"
-"[Together with special designed written information and professional pre-produced videos it might be more efficient than face-to-face meeting] What could be a major advantage of online/telephone interviews? (More than one answer is possible)"
-"[Other] What could be a major advantage of online/telephone interviews? (More than one answer is possible)"
-"Do you need to obtain written Informed consent for elective surgery due to legal requirements from both parents or just from one (complex procedures, higher risk patients)?"
-"[Comment] Do you need to obtain written Informed consent for elective surgery due to legal requirements from both parents or just from one (complex procedures, higher risk patients)?"
-"Do you need to obtain written Informed consent for elective surgery due to legal requirements from both parents or just from one (simple procedures, low risk patients)?"
-"[Comment] Do you need to obtain written Informed consent for elective surgery due to legal requirements from both parents or just from one (simple procedures, low risk patients)?"
-"[Age above ...] What requirements does a child have to fulfil to sign independently?"
-"[Comment] [Age above ...] What requirements does a child have to fulfil to sign independently?"
-"[Having the mental capacity to understand the consequences of its decision] What requirements does a child have to fulfil to sign independently?"
-"[Comment] [Having the mental capacity to understand the consequences of its decision] What requirements does a child have to fulfil to sign independently?"
-"[other ...] What requirements does a child have to fulfil to sign independently?"
-"[Comment] [other ...] What requirements does a child have to fulfil to sign independently?"
-"Do you know if it is legally allowed to obtain informed consent from the parent/caregiver via Internet or telephone?"
-"[Comment] Do you know if it is legally allowed to obtain informed consent from the parent/caregiver via Internet or telephone?"
-"In case of personal presence of the parent/caregiver do you routinely check the identity or legal responsibility of the parent/caregiver (i.e. ID card)"
-"[Comment] In case of personal presence of the parent/caregiver do you routinely check the identity or legal responsibility of the parent/caregiver (i.e. ID card)"
-"Do you think it is necessary to verify the identity of the parent/guardian  (i.e. ID card)"
-"[Comment] Do you think it is necessary to verify the identity of the parent/guardian  (i.e. ID card)"
-```
 ```{r BIP}
 # https://tradingeconomics.com/country-list/gdp?continent=europe
 BIP_DF <- tibble(
@@ -384,7 +243,7 @@ BIP_DF <- BIP_DF %>%
                             labels = c("Low", "Middle", "High")))
 ```
 
-```{r Table One}
+```{r Table One FIRST PUBLICATION}
 # https://cran.r-project.org/web/packages/table1/vignettes/table1-examples.html
 # stratification by gender
 catVars = "Gender"
@@ -414,6 +273,91 @@ summary(tableOne)
 #            row.names = TRUE, 
 #            append = TRUE)
 ```
+```{r Table One Stratified EU member}
+# https://cran.r-project.org/web/packages/table1/vignettes/table1-examples.html
+# stratification by gender
+
+catVars = "EU_members"
+
+contVars = c(
+    "How would you prefer to do the anaesthesiological preoperative evaluation in the future?",
+    "When do you need to obtain Informed consent for elective surgery based on legal requirements (for complex procedures, higher risk patients).",
+    "When do you need to obtain Informed consent for elective surgery based on legal requirements (for simple procedures, low risk patients).",
+    "Is an online/telephone informed consent for elective surgery in accordance with the legal requirements in your country? (for complex procedures, higher risk patients)",
+    "Is an online/telephone informed consent for elective surgery in accordance with the legal requirements in your country? (for simple procedures, low risk patients)",
+    "Thinking of Re-Do / repeated anaesthesia assuming the patient is well informed. Would an online/telephone informed consent then be allowed for elective surgery due to legal requirements in your country?",
+    "Is there a special regulation in your country during this pandemic situation favouring online or telephone informed consent?",
+    "Is it possible to obtain informed consent online via internet, in your routine setting?",
+    "Is it possible to obtain informed consent online via telefone, in your routine setting?",
+    "Do you know if it is legally allowed to obtain informed consent via Internet or telephone (for simple procedures, low risk patients) in your country?",
+    "When ensuring a certain guideline, which may include i.e. specific appointment (time and date) for the interview, secure data protected online service, asking if there is a relaxed environment without distraction, parents’ explicit agreement in online or telephone interview. Would this be an alternative to personal face-to-face meetings?",
+"[Together with special designed written information and professional pre-produced videos it might be more efficient than face-to-face meeting] What could be a major advantage of online/telephone interviews? (More than one answer is possible)"
+)
+
+# cava NA's for stratification is not possible since NA is dropped
+tableOne <-
+    CreateTableOne(
+        data = survey_data,
+        vars = contVars,
+        testExact = fisher.test,     
+        addOverall = FALSE,
+        strata = catVars
+    )
+
+
+results_tbl <- print(tableOne, nonnormal = biomarkers, exact = "stage", quote = FALSE, noSpaces = FALSE, printToggle = FALSE)
+
+# writing the table to excel
+write.xlsx(results_tbl,
+           file = "~/Desktop/R/EJA-ESAIC-survey/tbl_one.xlsx",
+           sheetName = "table_one_EU_countries",
+           col.names = TRUE,
+           row.names = TRUE)
+```
+```{r Table One GDP Stratified}
+# https://cran.r-project.org/web/packages/table1/vignettes/table1-examples.html
+# stratification by gender
+
+catVars = "GDP"
+
+contVars = c(
+    "How would you prefer to do the anaesthesiological preoperative evaluation in the future?",
+    "When do you need to obtain Informed consent for elective surgery based on legal requirements (for complex procedures, higher risk patients).",
+    "When do you need to obtain Informed consent for elective surgery based on legal requirements (for simple procedures, low risk patients).",
+    "Is an online/telephone informed consent for elective surgery in accordance with the legal requirements in your country? (for complex procedures, higher risk patients)",
+    "Is an online/telephone informed consent for elective surgery in accordance with the legal requirements in your country? (for simple procedures, low risk patients)",
+    "Thinking of Re-Do / repeated anaesthesia assuming the patient is well informed. Would an online/telephone informed consent then be allowed for elective surgery due to legal requirements in your country?",
+    "Is there a special regulation in your country during this pandemic situation favouring online or telephone informed consent?",
+    "Is it possible to obtain informed consent online via internet, in your routine setting?",
+    "Is it possible to obtain informed consent online via telefone, in your routine setting?",
+    "Do you know if it is legally allowed to obtain informed consent via Internet or telephone (for simple procedures, low risk patients) in your country?",
+    "When ensuring a certain guideline, which may include i.e. specific appointment (time and date) for the interview, secure data protected online service, asking if there is a relaxed environment without distraction, parents’ explicit agreement in online or telephone interview. Would this be an alternative to personal face-to-face meetings?",
+"[Together with special designed written information and professional pre-produced videos it might be more efficient than face-to-face meeting] What could be a major advantage of online/telephone interviews? (More than one answer is possible)"
+)
+survey_data <- survey_data %>% 
+    dplyr::filter(GDP != "NO MEMBER")
+
+# cava NA's for stratification is not possible since NA is dropped
+tableOne <-
+    CreateTableOne(
+        data = survey_data,
+        vars = contVars,
+        testExact = fisher.test,     
+        addOverall = FALSE,
+        strata = catVars
+    )
+
+
+results_tbl <- print(tableOne, nonnormal = biomarkers, exact = "stage", quote = FALSE, noSpaces = FALSE, printToggle = FALSE)
+
+# writing the table to excel
+write.xlsx(results_tbl,
+           file = "~/Desktop/R/EJA-ESAIC-survey/tbl_one.xlsx",
+           sheetName = "GDP stratified",
+           col.names = TRUE,
+           row.names = TRUE)
+```
+
 ```{r responce counts for different countries}
 survey_fragments %>% 
     dplyr::filter(country != "Other") %>% 
@@ -421,7 +365,7 @@ survey_fragments %>%
     arrange(desc(n)) %>% 
     print(n = 100)
 ```
-```{r who obtaines consent?}
+```{r Who obtaines consent?}
 survey_fragments %>% 
     count(who.obtains) %>% 
     dplyr::filter(!is.na(who.obtains)) %>% 
@@ -621,89 +565,69 @@ redo_legal %>%
     # "#ffffb2", "#fecc5c", "#fd8d3c", "#e31a1c" (black and white compatible)
     scale_fill_manual(values=c("#B2172B", "#08598D", "#1E9D77", "#A7771C"))
 ```
-```{r Table One Stratified EU member}
-# https://cran.r-project.org/web/packages/table1/vignettes/table1-examples.html
-# stratification by gender
-
-catVars = "EU_members"
-
-contVars = c(
-    "How would you prefer to do the anaesthesiological preoperative evaluation in the future?",
-    "When do you need to obtain Informed consent for elective surgery based on legal requirements (for complex procedures, higher risk patients).",
-    "When do you need to obtain Informed consent for elective surgery based on legal requirements (for simple procedures, low risk patients).",
-    "Is an online/telephone informed consent for elective surgery in accordance with the legal requirements in your country? (for complex procedures, higher risk patients)",
-    "Is an online/telephone informed consent for elective surgery in accordance with the legal requirements in your country? (for simple procedures, low risk patients)",
-    "Thinking of Re-Do / repeated anaesthesia assuming the patient is well informed. Would an online/telephone informed consent then be allowed for elective surgery due to legal requirements in your country?",
-    "Is there a special regulation in your country during this pandemic situation favouring online or telephone informed consent?",
-    "Is it possible to obtain informed consent online via internet, in your routine setting?",
-    "Is it possible to obtain informed consent online via telefone, in your routine setting?",
-    "Do you know if it is legally allowed to obtain informed consent via Internet or telephone (for simple procedures, low risk patients) in your country?",
-    "When ensuring a certain guideline, which may include i.e. specific appointment (time and date) for the interview, secure data protected online service, asking if there is a relaxed environment without distraction, parents’ explicit agreement in online or telephone interview. Would this be an alternative to personal face-to-face meetings?",
-"[Together with special designed written information and professional pre-produced videos it might be more efficient than face-to-face meeting] What could be a major advantage of online/telephone interviews? (More than one answer is possible)"
-)
-
-# cava NA's for stratification is not possible since NA is dropped
-tableOne <-
-    CreateTableOne(
-        data = survey_data,
-        vars = contVars,
-        testExact = fisher.test,     
-        addOverall = FALSE,
-        strata = catVars
-    )
 
 
-results_tbl <- print(tableOne, nonnormal = biomarkers, exact = "stage", quote = FALSE, noSpaces = FALSE, printToggle = FALSE)
-
-# writing the table to excel
-write.xlsx(results_tbl,
-           file = "~/Desktop/R/EJA-ESAIC-survey/tbl_one.xlsx",
-           sheetName = "table_one_EU_countries",
-           col.names = TRUE,
-           row.names = TRUE)
-```
-
-
-```{r Table One GDP Stratified}
-# https://cran.r-project.org/web/packages/table1/vignettes/table1-examples.html
-# stratification by gender
-
-catVars = "GDP"
-
-contVars = c(
-    "How would you prefer to do the anaesthesiological preoperative evaluation in the future?",
-    "When do you need to obtain Informed consent for elective surgery based on legal requirements (for complex procedures, higher risk patients).",
-    "When do you need to obtain Informed consent for elective surgery based on legal requirements (for simple procedures, low risk patients).",
-    "Is an online/telephone informed consent for elective surgery in accordance with the legal requirements in your country? (for complex procedures, higher risk patients)",
-    "Is an online/telephone informed consent for elective surgery in accordance with the legal requirements in your country? (for simple procedures, low risk patients)",
-    "Thinking of Re-Do / repeated anaesthesia assuming the patient is well informed. Would an online/telephone informed consent then be allowed for elective surgery due to legal requirements in your country?",
-    "Is there a special regulation in your country during this pandemic situation favouring online or telephone informed consent?",
-    "Is it possible to obtain informed consent online via internet, in your routine setting?",
-    "Is it possible to obtain informed consent online via telefone, in your routine setting?",
-    "Do you know if it is legally allowed to obtain informed consent via Internet or telephone (for simple procedures, low risk patients) in your country?",
-    "When ensuring a certain guideline, which may include i.e. specific appointment (time and date) for the interview, secure data protected online service, asking if there is a relaxed environment without distraction, parents’ explicit agreement in online or telephone interview. Would this be an alternative to personal face-to-face meetings?",
-"[Together with special designed written information and professional pre-produced videos it might be more efficient than face-to-face meeting] What could be a major advantage of online/telephone interviews? (More than one answer is possible)"
-)
-survey_data <- survey_data %>% 
-    dplyr::filter(GDP != "NO MEMBER")
-
-# cava NA's for stratification is not possible since NA is dropped
-tableOne <-
-    CreateTableOne(
-        data = survey_data,
-        vars = contVars,
-        testExact = fisher.test,     
-        addOverall = FALSE,
-        strata = catVars
-    )
-
-
-results_tbl <- print(tableOne, nonnormal = biomarkers, exact = "stage", quote = FALSE, noSpaces = FALSE, printToggle = FALSE)
-
-# writing the table to excel
-write.xlsx(results_tbl,
-           file = "~/Desktop/R/EJA-ESAIC-survey/tbl_one.xlsx",
-           sheetName = "GDP stratified",
-           col.names = TRUE,
-           row.names = TRUE)
-```
+```{r All questions separated by LimeSurvey}
+all_questions_list <- c("Gender",
+"What is your age?",
+"Profession",
+"Your expert level",
+"Years of experience",
+"Country where you work?",
+"Who in general obtains the informed consent prior to anaesthesia?",
+"[ASA-Class] Which of the following Scores do you routinely use in preoperative evaluation?",
+"[Apfel-Score] Which of the following Scores do you routinely use in preoperative evaluation?",
+"[NYHA-Score] Which of the following Scores do you routinely use in preoperative evaluation?",
+"[ARISCAT-Score] Which of the following Scores do you routinely use in preoperative evaluation?",
+"[rCRI] Which of the following Scores do you routinely use in preoperative evaluation?",
+"[POSPOM] Which of the following Scores do you routinely use in preoperative evaluation?",
+"[Other] Which of the following Scores do you routinely use in preoperative evaluation?",
+"How would you prefer to do the anaesthesiological preoperative evaluation in the future?",
+"[Other] How would you prefer to do the anaesthesiological preoperative evaluation in the future?",
+"When do you need to obtain Informed consent for elective surgery based on legal requirements (for complex procedures, higher risk patients).",
+"When do you need to obtain Informed consent for elective surgery based on legal requirements (for simple procedures, low risk patients).",
+"Is an online/telephone informed consent for elective surgery in accordance with the legal requirements in your country? (for complex procedures, higher risk patients)",
+"[Comment] Is an online/telephone informed consent for elective surgery in accordance with the legal requirements in your country? (for complex procedures, higher risk patients)",
+"Is an online/telephone informed consent for elective surgery in accordance with the legal requirements in your country? (for simple procedures, low risk patients)",
+"[Comment] Is an online/telephone informed consent for elective surgery in accordance with the legal requirements in your country? (for simple procedures, low risk patients)",
+"Thinking of Re-Do / repeated anaesthesia assuming the patient is well informed. Would an online/telephone informed consent then be allowed for elective surgery due to legal requirements in your country?",
+"Is there a special regulation in your country during this pandemic situation favouring online or telephone informed consent?",
+"Is it possible to obtain informed consent online via internet, in your routine setting?",
+"[Comment] Is it possible to obtain informed consent online via internet, in your routine setting?",
+"Is it possible to obtain informed consent online via telefone, in your routine setting?",
+"[Comment] Is it possible to obtain informed consent online via telefone, in your routine setting?",
+"Do you know if it is legally allowed to obtain informed consent via Internet or telephone (for simple procedures, low risk patients) in your country?",
+"[Comment] Do you know if it is legally allowed to obtain informed consent via Internet or telephone (for simple procedures, low risk patients) in your country?",
+"When ensuring a certain guideline, which may include i.e. specific appointment (time and date) for the interview, secure data protected online service, asking if there is a relaxed environment without distraction, parents’ explicit agreement in online or telephone interview. Would this be an alternative to personal face-to-face meetings?",
+"[Comment] When ensuring a certain guideline, which may include i.e. specific appointment (time and date) for the interview, secure data protected online service, asking if there is a relaxed environment without distraction, parents’ explicit agreement in online or telephone interview. Would this be an alternative to personal face-to-face meetings?",
+"[Lack of personal contact] What are your major concerns about online or telephone interviews? (More than one answer is possible)",
+"[Patient´s behaviour is impossible to observe] What are your major concerns about online or telephone interviews? (More than one answer is possible)",
+"[Personal relation with the patient cannot be build] What are your major concerns about online or telephone interviews? (More than one answer is possible)",
+"[Confidence in anaesthesia cannot be achieved] What are your major concerns about online or telephone interviews? (More than one answer is possible)",
+"[Impossible to fulfil legal requirements] What are your major concerns about online or telephone interviews? (More than one answer is possible)",
+"[I am not sure if it might be illegal in my country] What are your major concerns about online or telephone interviews? (More than one answer is possible)",
+"[Impossible to gather for anamnestic information] What are your major concerns about online or telephone interviews? (More than one answer is possible)",
+"[Other] What are your major concerns about online or telephone interviews? (More than one answer is possible)",
+"[If patients are from remote locations,  no travel or transportation is necessary] What could be a major advantage of online/telephone interviews? (More than one answer is possible)",
+"[More relaxed for the patients] What could be a major advantage of online/telephone interviews? (More than one answer is possible)",
+"[No waste of time waiting in the holding area] What could be a major advantage of online/telephone interviews? (More than one answer is possible)",
+"[Less anger/stress due to long waiting] What could be a major advantage of online/telephone interviews? (More than one answer is possible)",
+"[With specific questions all information could be obtained] What could be a major advantage of online/telephone interviews? (More than one answer is possible)",
+"[Together with special designed written information and professional pre-produced videos it might be more efficient than face-to-face meeting] What could be a major advantage of online/telephone interviews? (More than one answer is possible)",
+"[Other] What could be a major advantage of online/telephone interviews? (More than one answer is possible)",
+"Do you need to obtain written Informed consent for elective surgery due to legal requirements from both parents or just from one (complex procedures, higher risk patients)?",
+"[Comment] Do you need to obtain written Informed consent for elective surgery due to legal requirements from both parents or just from one (complex procedures, higher risk patients)?",
+"Do you need to obtain written Informed consent for elective surgery due to legal requirements from both parents or just from one (simple procedures, low risk patients)?",
+"[Comment] Do you need to obtain written Informed consent for elective surgery due to legal requirements from both parents or just from one (simple procedures, low risk patients)?",
+"[Age above ...] What requirements does a child have to fulfil to sign independently?",
+"[Comment] [Age above ...] What requirements does a child have to fulfil to sign independently?",
+"[Having the mental capacity to understand the consequences of its decision] What requirements does a child have to fulfil to sign independently?",
+"[Comment] [Having the mental capacity to understand the consequences of its decision] What requirements does a child have to fulfil to sign independently?",
+"[other ...] What requirements does a child have to fulfil to sign independently?",
+"[Comment] [other ...] What requirements does a child have to fulfil to sign independently?",
+"Do you know if it is legally allowed to obtain informed consent from the parent/caregiver via Internet or telephone?",
+"[Comment] Do you know if it is legally allowed to obtain informed consent from the parent/caregiver via Internet or telephone?",
+"In case of personal presence of the parent/caregiver do you routinely check the identity or legal responsibility of the parent/caregiver (i.e. ID card)",
+"[Comment] In case of personal presence of the parent/caregiver do you routinely check the identity or legal responsibility of the parent/caregiver (i.e. ID card)",
+"Do you think it is necessary to verify the identity of the parent/guardian  (i.e. ID card)",
+"[Comment] Do you think it is necessary to verify the identity of the parent/guardian  (i.e. ID card)")
