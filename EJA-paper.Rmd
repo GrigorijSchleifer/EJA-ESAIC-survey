@@ -18,225 +18,21 @@ library(scales)
 # library(ReporteRs)
 # library(magrittr)
 ```
-```{r Data import and R files used for analysis}
-survey_data <- read_csv("data/survey_data_no_other.csv")
-survey_data_all_countries <- read_csv("data/survey_data_all_countries.csv")
-survey_fragments <- read_csv("data/survey_fragments.csv")
+```{r import and load files}
+# survey_data <- read_csv("data/survey_data_no_other.csv")
+# survey_data_all_countries <- read_csv("data/survey_data_all_countries.csv")
+# survey_fragments <- read_csv("data/survey_fragments.csv")
+# 
+# save("all_questions", "all_questions_list", "BIP_DF", "high_gdp_countries", "intermediate_EU_member", "low_gdp_countries", "middle_gdp_countries", "original_EU_member", "post_mill_eu_member", "questions_table_one_EJA_paper", "survey_data", "survey_data_all_countries", "survey_fragments", file = "Rfiles.RData")
+
+load("Rfiles.RData")
 
 # change "Country where you work?" to "country" for later BIP and EU membership code
 names(survey_data)[12] <- "country"
-
-# storing all column names as a list of characters
-all_questions <- dput(names(survey_data)) 
-
-original_EU_member <- c("Belgium",
-              "France",
-              "Germany",
-              "Italy",
-              "Luxemburg",
-              "Netherlands")
-
-intermediate_EU_member <- c("Austria",
-                     "Denmark",
-                     "Finland",
-                     "Greece",
-                     "Ireland",
-                     "Portugal",
-                     "Spain",
-                     "Sweden")
-
-post_mill_eu_member <- c("Bulgaria",
-                  "Croatia",
-                  "Cyprus",
-                  "Czechia",
-                  "Estonia",
-                  "Hungary",
-                  "Latvia",
-                  "Lithuania",
-                  "Malta",
-                  "Poland",
-                  "Romania",
-                  "Slovakia",
-                  "Slovenia")
-
-high_gdp_countries <- c(
-    "Germany",
-    "United Kingdom (UK)",
-    "France",
-    "Italy",
-    "Russia",
-    "Spain",
-    "Netherlands",
-    "Switzerland",
-    "Turkey",
-    "Poland",
-    "Sweden",
-    "Belgium"
-)
-
-middle_gdp_countries <- c(
-    "Austria",
-    "Ireland",
-    "Norway",
-    "Denmark",
-    "Finland",
-    "Romania",
-    "Czechia",
-    "Portugal",
-    "Greece",
-    "Ukraine",
-    "Hungary",
-    "Slovakia",
-    "Israel",
-    "Kazakhstan"
-)
-
-low_gdp_countries <- c(
-    "Luxembourg",
-    "Bulgaria",
-    "Belarus",
-    "Croatia",
-    "Lithuania",
-    "Slovenia",
-    "Serbia",
-    "Latvia",
-    "Estonia",
-    "Cyprus",
-    "Iceland",
-    "Bosnia and Herzegovina",
-    "Albania",
-    "Malta",
-    "North Macedonia (formerly Macedonia)",
-    "Moldova",
-    "Monaco",
-    "Kosovo",
-    "Georgia",
-    "Liechtenstein",
-    "Uzbekistan"
-)
-
-BIP_DF <- tibble(
-    country = c(
-        "Germany",
-        "United Kingdom (UK)",
-        "France",
-        "Italy",
-        "Russia",
-        "Spain",
-        "Netherlands",
-        "Switzerland",
-        "Turkey",
-        "Poland",
-        "Sweden",
-        "Belgium",
-        "Austria",
-        "Ireland",
-        "Norway",
-        "Denmark",
-        "Finland",
-        "Romania",
-        "Czechia",
-        "Portugal",
-        "Greece",
-        "Ukraine",
-        "Hungary",
-        "Slovakia",
-        "Luxembourg",
-        "Bulgaria",
-        "Belarus",
-        "Croatia",
-        "Lithuania",
-        "Slovenia",
-        "Serbia",
-        "Latvia",
-        "Estonia",
-        "Cyprus",
-        "Iceland",
-        "Bosnia and Herzegovina",
-        "Albania",
-        "Malta",
-        "North Macedonia (formerly Macedonia)",
-        "Moldova",
-        "Monaco",
-        "Kosovo",
-        "Georgia",
-        "Israel",
-        "Kazakhstan",
-        "Liechtenstein",
-        "Uzbekistan"
-    ),
-    BIP = c(
-        3846,
-        2708,
-        2630,
-        1886,
-        1484,
-        1281,
-        914,
-        752,
-        720,
-        594,
-        541,
-        515,
-        431,
-        426,
-        363,
-        356,
-        270,
-        249,
-        245,
-        231,
-        189,
-        156,
-        155,
-        105,
-        73.26,
-        69.11,
-        60.26,
-        55.97,
-        55.89,
-        53.59,
-        52.96,
-        33.51,
-        30.65,
-        23.8,
-        21.71,
-        19.79,
-        14.8,
-        14.65,
-        12.27,
-        11.91,
-        8,
-        7.61,
-        15.89,
-        402,
-        169.8,
-        6.69,
-        57.7
-    )
-)
-
-questions_table_one_EJA_paper <- c(
-    "How would you prefer to do the anaesthesiological preoperative evaluation in the future?",
-    "When do you need to obtain Informed consent for elective surgery based on legal requirements (for complex procedures, higher risk patients).",
-    "When do you need to obtain Informed consent for elective surgery based on legal requirements (for simple procedures, low risk patients).",
-    "Is an online/telephone informed consent for elective surgery in accordance with the legal requirements in your country? (for complex procedures, higher risk patients)",
-    "Is an online/telephone informed consent for elective surgery in accordance with the legal requirements in your country? (for simple procedures, low risk patients)",
-    "Thinking of Re-Do / repeated anaesthesia assuming the patient is well informed. Would an online/telephone informed consent then be allowed for elective surgery due to legal requirements in your country?",
-    "Is there a special regulation in your country during this pandemic situation favouring online or telephone informed consent?",
-    "Is it possible to obtain informed consent online via internet, in your routine setting?",
-    "Is it possible to obtain informed consent online via telefone, in your routine setting?",
-    "Do you know if it is legally allowed to obtain informed consent via Internet or telephone (for simple procedures, low risk patients) in your country?",
-    "When ensuring a certain guideline, which may include i.e. specific appointment (time and date) for the interview, secure data protected online service, asking if there is a relaxed environment without distraction, parents’ explicit agreement in online or telephone interview. Would this be an alternative to personal face-to-face meetings?",
-    "[Together with special designed written information and professional pre-produced videos it might be more efficient than face-to-face meeting] What could be a major advantage of online/telephone interviews? (More than one answer is possible)"
-)
-
-# survey_data_barchart$country[survey_data_barchart$country == "United Kingdom (UK)"] <- "UK" 
-# survey_data_barchart$country[survey_data_barchart$country == "North Macedonia (formerly Macedonia)"] <- "Macedonia" 
-# survey_data_barchart$country[survey_data_barchart$country == "Bosnia and Herzegovina"] <- "B&H" 
 ```
 
-```{r BIP}
+
+```{r Create GDP and EU membership columns}
 survey_data <- survey_data %>% 
     mutate(EU_members = case_when(
         country %in% original_EU_member ~ "Original",
@@ -581,3 +377,213 @@ redo_legal %>%
     scale_fill_manual(values=c("#B2172B", "#08598D", "#1E9D77", "#A7771C"))
 ```
 
+```{r R files used for analysis}
+# storing all column names as a list of characters
+all_questions <- dput(names(survey_data)) 
+
+original_EU_member <- c("Belgium",
+              "France",
+              "Germany",
+              "Italy",
+              "Luxemburg",
+              "Netherlands")
+
+intermediate_EU_member <- c("Austria",
+                     "Denmark",
+                     "Finland",
+                     "Greece",
+                     "Ireland",
+                     "Portugal",
+                     "Spain",
+                     "Sweden")
+
+post_mill_eu_member <- c("Bulgaria",
+                  "Croatia",
+                  "Cyprus",
+                  "Czechia",
+                  "Estonia",
+                  "Hungary",
+                  "Latvia",
+                  "Lithuania",
+                  "Malta",
+                  "Poland",
+                  "Romania",
+                  "Slovakia",
+                  "Slovenia")
+
+high_gdp_countries <- c(
+    "Germany",
+    "United Kingdom (UK)",
+    "France",
+    "Italy",
+    "Russia",
+    "Spain",
+    "Netherlands",
+    "Switzerland",
+    "Turkey",
+    "Poland",
+    "Sweden",
+    "Belgium"
+)
+
+middle_gdp_countries <- c(
+    "Austria",
+    "Ireland",
+    "Norway",
+    "Denmark",
+    "Finland",
+    "Romania",
+    "Czechia",
+    "Portugal",
+    "Greece",
+    "Ukraine",
+    "Hungary",
+    "Slovakia",
+    "Israel",
+    "Kazakhstan"
+)
+
+low_gdp_countries <- c(
+    "Luxembourg",
+    "Bulgaria",
+    "Belarus",
+    "Croatia",
+    "Lithuania",
+    "Slovenia",
+    "Serbia",
+    "Latvia",
+    "Estonia",
+    "Cyprus",
+    "Iceland",
+    "Bosnia and Herzegovina",
+    "Albania",
+    "Malta",
+    "North Macedonia (formerly Macedonia)",
+    "Moldova",
+    "Monaco",
+    "Kosovo",
+    "Georgia",
+    "Liechtenstein",
+    "Uzbekistan"
+)
+
+BIP_DF <- tibble(
+    country = c(
+        "Germany",
+        "United Kingdom (UK)",
+        "France",
+        "Italy",
+        "Russia",
+        "Spain",
+        "Netherlands",
+        "Switzerland",
+        "Turkey",
+        "Poland",
+        "Sweden",
+        "Belgium",
+        "Austria",
+        "Ireland",
+        "Norway",
+        "Denmark",
+        "Finland",
+        "Romania",
+        "Czechia",
+        "Portugal",
+        "Greece",
+        "Ukraine",
+        "Hungary",
+        "Slovakia",
+        "Luxembourg",
+        "Bulgaria",
+        "Belarus",
+        "Croatia",
+        "Lithuania",
+        "Slovenia",
+        "Serbia",
+        "Latvia",
+        "Estonia",
+        "Cyprus",
+        "Iceland",
+        "Bosnia and Herzegovina",
+        "Albania",
+        "Malta",
+        "North Macedonia (formerly Macedonia)",
+        "Moldova",
+        "Monaco",
+        "Kosovo",
+        "Georgia",
+        "Israel",
+        "Kazakhstan",
+        "Liechtenstein",
+        "Uzbekistan"
+    ),
+    BIP = c(
+        3846,
+        2708,
+        2630,
+        1886,
+        1484,
+        1281,
+        914,
+        752,
+        720,
+        594,
+        541,
+        515,
+        431,
+        426,
+        363,
+        356,
+        270,
+        249,
+        245,
+        231,
+        189,
+        156,
+        155,
+        105,
+        73.26,
+        69.11,
+        60.26,
+        55.97,
+        55.89,
+        53.59,
+        52.96,
+        33.51,
+        30.65,
+        23.8,
+        21.71,
+        19.79,
+        14.8,
+        14.65,
+        12.27,
+        11.91,
+        8,
+        7.61,
+        15.89,
+        402,
+        169.8,
+        6.69,
+        57.7
+    )
+)
+
+questions_table_one_EJA_paper <- c(
+    "How would you prefer to do the anaesthesiological preoperative evaluation in the future?",
+    "When do you need to obtain Informed consent for elective surgery based on legal requirements (for complex procedures, higher risk patients).",
+    "When do you need to obtain Informed consent for elective surgery based on legal requirements (for simple procedures, low risk patients).",
+    "Is an online/telephone informed consent for elective surgery in accordance with the legal requirements in your country? (for complex procedures, higher risk patients)",
+    "Is an online/telephone informed consent for elective surgery in accordance with the legal requirements in your country? (for simple procedures, low risk patients)",
+    "Thinking of Re-Do / repeated anaesthesia assuming the patient is well informed. Would an online/telephone informed consent then be allowed for elective surgery due to legal requirements in your country?",
+    "Is there a special regulation in your country during this pandemic situation favouring online or telephone informed consent?",
+    "Is it possible to obtain informed consent online via internet, in your routine setting?",
+    "Is it possible to obtain informed consent online via telefone, in your routine setting?",
+    "Do you know if it is legally allowed to obtain informed consent via Internet or telephone (for simple procedures, low risk patients) in your country?",
+    "When ensuring a certain guideline, which may include i.e. specific appointment (time and date) for the interview, secure data protected online service, asking if there is a relaxed environment without distraction, parents’ explicit agreement in online or telephone interview. Would this be an alternative to personal face-to-face meetings?",
+    "[Together with special designed written information and professional pre-produced videos it might be more efficient than face-to-face meeting] What could be a major advantage of online/telephone interviews? (More than one answer is possible)"
+)
+
+# survey_data_barchart$country[survey_data_barchart$country == "United Kingdom (UK)"] <- "UK" 
+# survey_data_barchart$country[survey_data_barchart$country == "North Macedonia (formerly Macedonia)"] <- "Macedonia" 
+# survey_data_barchart$country[survey_data_barchart$country == "Bosnia and Herzegovina"] <- "B&H" 
+```
