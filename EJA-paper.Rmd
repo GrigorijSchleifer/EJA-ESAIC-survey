@@ -68,7 +68,7 @@ tableOne <-
     CreateTableOne(
         data = survey_data,
         vars = contVars,
-        testExact = fisher.test,     
+        # testExact = fisher.test,     
         addOverall = FALSE,
         strata = catVars
     )
@@ -114,8 +114,11 @@ write.xlsx(results_tbl,
 ```
 ```{r Table One GDP Stratified}
 # https://cran.r-project.org/web/packages/table1/vignettes/table1-examples.html
-# stratification by gender
+# https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4966396/
+# https://www.socscistatistics.com/tests/chisquare2/default2.aspx
+# https://www.youtube.com/watch?v=f53nXHoMXx4&t=42s&ab_channel=VectorsAcademy
 
+# stratification by GDP
 catVars = "GDP"
 
 contVars = questions_table_one_EJA_paper
@@ -125,10 +128,10 @@ survey_data <- survey_data %>%
 
 # cava NA's for stratification is not possible since NA is dropped
 tableOne <-
-    CreateTableOne(
+    CreateCatTable(
         data = survey_data,
         vars = contVars,
-        testExact = fisher.test,     
+        # testExact = fisher.test,     
         addOverall = FALSE,
         strata = catVars
     )
@@ -139,7 +142,7 @@ results_tbl <- print(tableOne, nonnormal = biomarkers, exact = "stage", quote = 
 # writing the table to excel
 write.xlsx(results_tbl,
            file = "~/Desktop/R/EJA-ESAIC-survey/tbl_one.xlsx",
-           sheetName = "GDP stratified",
+           sheetName = "GDP stratified two",
            col.names = TRUE,
            row.names = TRUE)
 ```
@@ -562,3 +565,10 @@ questions_table_one_EJA_paper <- c(
 # survey_data_barchart$country[survey_data_barchart$country == "North Macedonia (formerly Macedonia)"] <- "Macedonia" 
 # survey_data_barchart$country[survey_data_barchart$country == "Bosnia and Herzegovina"] <- "B&H" 
 ```
+
+```{r}
+survey_data %>% 
+    group_by(GDP) %>% 
+    table(survey_data$"When do you need to obtain Informed consent for elective surgery based on legal requirements (for simple procedures, low risk patients).")
+```
+
