@@ -141,7 +141,7 @@ results_tbl <- print(tableOne, nonnormal = biomarkers, exact = "stage", quote = 
 
 # writing the table to excel
 write.xlsx(results_tbl,
-           file = "~/Desktop/R/EJA-ESAIC-survey/tbl_one.xlsx",
+           file = "~/Desktop/R/EJA-ESAIC-survey/tbl_one_test.xlsx",
            sheetName = "GDP stratified two",
            col.names = TRUE,
            row.names = TRUE)
