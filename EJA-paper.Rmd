@@ -22,7 +22,6 @@ library(scales)
 # survey_data <- read_csv("data/survey_data_no_other.csv")
 # survey_data_all_countries <- read_csv("data/survey_data_all_countries.csv")
 # survey_fragments <- read_csv("data/survey_fragments.csv")
-
 load("Rfiles.RData")
 
 # change "Country where you work?" to "country" for later BIP and EU membership code
@@ -144,6 +143,10 @@ write.xlsx(results_tbl,
            col.names = TRUE,
            row.names = TRUE)
 ```
+```{r Table One GDP per capita stratified}
+
+```
+
 
 ```{r responce counts for different countries}
 survey_fragments %>% 
@@ -576,13 +579,8 @@ questions_table_one_EJA_paper <- c(
     "[Together with special designed written information and professional pre-produced videos it might be more efficient than face-to-face meeting] What could be a major advantage of online/telephone interviews? (More than one answer is possible)"
 )
 
-# survey_data_barchart$country[survey_data_barchart$country == "United Kingdom (UK)"] <- "UK" 
-# survey_data_barchart$country[survey_data_barchart$country == "North Macedonia (formerly Macedonia)"] <- "Macedonia" 
-# survey_data_barchart$country[survey_data_barchart$country == "Bosnia and Herzegovina"] <- "B&H" 
-```
-
-```{r}
-# tibble for GDP per capita
+# tibble for GDP per capita in USD
+#https://data.worldbank.org/indicator/ny.gdp.pcap.cd
 GDP_PC <- tibble(
     countries =
         c(
@@ -596,93 +594,110 @@ GDP_PC <- tibble(
             "Austria",
             "Germany",
             "Sweden",
+            
             "Belgium",
             "Finland",
             "France",
             "United Kingdom (UK)",
             "Malta",
+            
             "Italy",
             "Czechia",
             "Cyprus",
             "Lithuania",
             "Slovenia",
+            
             "Spain",
             "Estonia",
             "Poland",
             "Portugal",
             "Hungary",
+            
             "Slovakia",
             "Latvia",
             "Romania",
             "Turkey",
             "Greece",
+            
             "Croatia",
             "Russia",
             "Bulgaria",
             "Belarus",
             "Montenegro",
+            
             "Serbia",
             "North Macedonia (formerly Macedonia)",
             "Bosnia and Herzegovina",
             "Albania",
             "Ukraine",
+            
             "Moldova",
             "Kosovo",
-            "Monaco",
             "Israel",
             "Kazakhstan",
             "Liechtenstein",
             "Uzbekistan"),
     GDP_PC = c(
-        110261,
-        89689,
-        68393,
-        63586,
-        55938,
-        54210,
-        52280,
-        51936,
-        50922,
-        50683,
-        48210,
-        47261,
-        42026,
-        41627,
-        39222,
-        38992,
-        38319,
-        37655,
-        36732,
-        36548,
-        36215,
-        35638,
-        32238,
-        32181,
-        31008,
-        30330,
-        29932,
-        28833,
-        28385,
-        27287,
-        26465,
-        26456,
-        22384,
-        19148,
-        18279,
-        18210,
-        15848,
-        14340,
-        13295,
-        12377,
-        12325,
-        10776,
-        19051,
-        43610,
-        90557,
-        18036,
-        16857
+        116014.6,
+        85267.8,
+        87097.0,
+        67329.7,
+        61063.3,
+        
+        52397.1,
+        59270.2,
+        48586.8,
+        46208.4,
+        52274.4,
+        
+        45159.3,
+        48745.0,
+        39030.4,
+        41059.2,
+        27884.6,
+        
+        31714.2,
+        22931.3,
+        27527.8,
+        20233.6,
+        25517.3,
+        
+        27063.2,
+        23027.0,
+        15721.0,
+        22176.3,
+        15980.7,
+        
+        19266.5,
+        17726.3,
+        12896.1,
+        8536.4,
+        17622.5,
+        
+        14134.2,
+        10126.7,
+        10079.2,
+        6424.2,
+        7677.2,
+        
+        7720.5,
+        5917.3,
+        6079.7,
+        5246.3,
+        3724.9,
+        
+        4547.1,
+        4346.6,
+        44168.9,
+        9122.2,
+        175813.9,
+        
+        1750.7
     )
 )
 
-
+# survey_data_barchart$country[survey_data_barchart$country == "United Kingdom (UK)"] <- "UK" 
+# survey_data_barchart$country[survey_data_barchart$country == "North Macedonia (formerly Macedonia)"] <- "Macedonia" 
+# survey_data_barchart$country[survey_data_barchart$country == "Bosnia and Herzegovina"] <- "B&H" 
 ```
+
