@@ -22,8 +22,6 @@ library(scales)
 # survey_data <- read_csv("data/survey_data_no_other.csv")
 # survey_data_all_countries <- read_csv("data/survey_data_all_countries.csv")
 # survey_fragments <- read_csv("data/survey_fragments.csv")
-# 
-# save("all_questions", "all_questions_list", "BIP_DF", "high_gdp_countries", "intermediate_EU_member", "low_gdp_countries", "middle_gdp_countries", "original_EU_member", "post_mill_eu_member", "questions_table_one_EJA_paper", "survey_data", "survey_data_all_countries", "survey_fragments", file = "Rfiles.RData")
 
 load("Rfiles.RData")
 
@@ -356,6 +354,23 @@ redo_legal %>%
 ```
 
 ```{r R files used for analysis}
+save(
+    "all_questions",
+    "all_questions_list",
+    "BIP_DF",
+    "high_gdp_countries",
+    "intermediate_EU_member",
+    "low_gdp_countries",
+    "middle_gdp_countries",
+    "original_EU_member",
+    "post_mill_eu_member",
+    "questions_table_one_EJA_paper",
+    "survey_data",
+    "survey_data_all_countries",
+    "survey_fragments",
+    "GDP_PC",
+    file = "Rfiles.RData"
+)
 # storing all column names as a list of characters
 all_questions <- dput(names(survey_data)) 
 
