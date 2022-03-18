@@ -567,7 +567,7 @@ questions_table_one_EJA_paper <- c(
 ```
 
 ```{r}
-
+# tibble for GDP per capita
 GDP_PC <- tibble(
     countries =
         c(
