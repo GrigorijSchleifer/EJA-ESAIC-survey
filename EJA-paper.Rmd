@@ -152,7 +152,36 @@ write.xlsx(results_tbl,
            row.names = TRUE)
 ```
 ```{r Table One GDP per capita stratified}
+# https://data.worldbank.org/indicator/ny.gdp.pcap.cd
+# in US dollar
+# stratification by GDP
+catVars = "GDP_PER_CAPITA"
 
+contVars = questions_table_one_EJA_paper
+
+survey_data <- survey_data %>% 
+    select(questions_table_one_EJA_paper) %>% 
+    dplyr::filter(GDP_PER_CAPITA != "NO MEMBER") %>% 
+    dplyr::filter(GDP_PER_CAPITA != "Different (please comment)")
+
+# cava NA's for stratification is not possible since NA is dropped
+tableOne <-
+    CreateCatTable(
+        data = survey_data,
+        vars = contVars,
+        # testExact = fisher.test,     
+        addOverall = FALSE,
+        strata = catVars
+    )
+
+results_tbl_gdp_pc <- print(tableOne, nonnormal = biomarkers, exact = "stage", quote = FALSE, noSpaces = FALSE, printToggle = FALSE)
+
+# writing the table to excel
+write.xlsx(results_tbl_gdp_pc,
+           file = "~/Desktop/R/EJA-ESAIC-survey/tbl_one.xlsx",
+           sheetName = "GDP_PER_CAP",
+           col.names = TRUE,
+           row.names = TRUE)
 ```
 
 
@@ -636,6 +665,7 @@ BIP_DF <- tibble(
     )
 )
 
+# all questions that are used for Table one creation 
 questions_table_one_EJA_paper <- c(
     "How would you prefer to do the anaesthesiological preoperative evaluation in the future?",
     "When do you need to obtain Informed consent for elective surgery based on legal requirements (for complex procedures, higher risk patients).",
@@ -647,8 +677,7 @@ questions_table_one_EJA_paper <- c(
     "Is it possible to obtain informed consent online via internet, in your routine setting?",
     "Is it possible to obtain informed consent online via telefone, in your routine setting?",
     "Do you know if it is legally allowed to obtain informed consent via Internet or telephone (for simple procedures, low risk patients) in your country?",
-    "When ensuring a certain guideline, which may include i.e. specific appointment (time and date) for the interview, secure data protected online service, asking if there is a relaxed environment without distraction, parents’ explicit agreement in online or telephone interview. Would this be an alternative to personal face-to-face meetings?",
-    "[Together with special designed written information and professional pre-produced videos it might be more efficient than face-to-face meeting] What could be a major advantage of online/telephone interviews? (More than one answer is possible)"
+    "When ensuring a certain guideline, which may include i.e. specific appointment (time and date) for the interview, secure data protected online service, asking if there is a relaxed environment without distraction, parents’ explicit agreement in online or telephone interview. Would this be an alternative to personal face-to-face meetings?"
 )
 
 # tibble for GDP per capita in USD
