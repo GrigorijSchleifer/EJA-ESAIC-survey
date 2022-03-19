@@ -48,8 +48,7 @@ survey_data <- survey_data %>%
     mutate(GDP = case_when(
         country %in% high_gdp_countries ~ "High GDP",
         country %in% middle_gdp_countries ~ "Middle GDP",
-        country %in% low_gdp_countries ~ "Low GDP",
-        TRUE ~ "NO MEMBER")) 
+        country %in% low_gdp_countries ~ "Low GDP")) 
 
 # GDP per capita columen creation for later stratification
 survey_data <- survey_data %>% 
@@ -159,10 +158,10 @@ catVars = "GDP_PER_CAPITA"
 
 contVars = questions_table_one_EJA_paper
 
-survey_data <- survey_data %>% 
-    select(questions_table_one_EJA_paper) %>% 
-    dplyr::filter(GDP_PER_CAPITA != "NO MEMBER") %>% 
-    dplyr::filter(GDP_PER_CAPITA != "Different (please comment)")
+# survey_data <- survey_data %>% 
+#     select(questions_table_one_EJA_paper) %>% 
+#     dplyr::filter(GDP_PER_CAPITA != "NO MEMBER") %>% 
+#     dplyr::filter(GDP_PER_CAPITA != "Different (please comment)")
 
 # cava NA's for stratification is not possible since NA is dropped
 tableOne <-
