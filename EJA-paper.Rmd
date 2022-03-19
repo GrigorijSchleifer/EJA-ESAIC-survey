@@ -43,12 +43,20 @@ BIP_DF <- BIP_DF %>%
                             breaks = c(1, 100, 500, Inf), 
                             labels = c("Low", "Middle", "High")))
 
+# first GDP column creation, replaced by GDP per capita for better comparison of countries to minimize the effect of country size on GDP
 survey_data <- survey_data %>% 
     mutate(GDP = case_when(
         country %in% high_gdp_countries ~ "High GDP",
         country %in% middle_gdp_countries ~ "Middle GDP",
         country %in% low_gdp_countries ~ "Low GDP",
         TRUE ~ "NO MEMBER")) 
+
+# GDP per capita columen creation for later stratification
+survey_data <- survey_data %>% 
+    mutate(GDP_PER_CAPITA = case_when(
+        country %in% GDP_PC_high ~ "High_GDP_PC",
+        country %in% GDP_PC_middle ~ "Middle_GDP_PC",
+        country %in% GPD_PC_low ~ "Low_GDP_PC")) 
 ```
 
 ```{r Table One FIRST PUBLICATION}
