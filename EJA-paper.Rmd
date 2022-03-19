@@ -371,7 +371,12 @@ save(
     "survey_data",
     "survey_data_all_countries",
     "survey_fragments",
+    # master tibble with GDP per capita 
     "GDP_PC",
+    # list fo column creation in the master file for later stratification
+    "GDP_PC_high",
+    "GDP_PC_middle",
+    "GPD_PC_low",
     file = "Rfiles.RData"
 )
 # storing all column names as a list of characters
@@ -407,6 +412,7 @@ post_mill_eu_member <- c("Bulgaria",
                   "Slovakia",
                   "Slovenia")
 
+# lists for GPD per capita and column creation in the masterfile (survey_data) for statification
 GDP_PC_high <-
     c(
         "Liechtenstein",
@@ -446,24 +452,25 @@ GDP_PC_middle <- c(
 
 
 GPD_PC_low <- c(
-"Croatia",
-"Romania",
-"Russia",
-"Bulgaria",
-"Kazakhstan",
-"Turkey",
-"Serbia",
-"Montenegro",
-"Belarus",
-"Bosnia and Herzegovina",
-"North Macedonia (formerly Macedonia)",
-"Albania",
-"Moldova",
-"Kosovo",
-"Ukraine",
-"Uzbekistan")
+    "Croatia",
+    "Romania",
+    "Russia",
+    "Bulgaria",
+    "Kazakhstan",
+    "Turkey",
+    "Serbia",
+    "Montenegro",
+    "Belarus",
+    "Bosnia and Herzegovina",
+    "North Macedonia (formerly Macedonia)",
+    "Albania",
+    "Moldova",
+    "Kosovo",
+    "Ukraine",
+    "Uzbekistan"
+)
 
-
+# old files for stratification, but not used anymore because GDP per capita is more correct
 high_gdp_countries <- c(
     "Germany",
     "United Kingdom (UK)",
