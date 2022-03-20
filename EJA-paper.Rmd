@@ -3,6 +3,8 @@ title: "EJA-paper"
 output: html_document
 ---
 
+# import libraries
+# load all files
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
@@ -31,6 +33,13 @@ names(survey_data)[12] <- "country"
 
 ```
 
+```{r creating fct_lump styple chunks}
+# https://tradingeconomics.com/country-list/gdp?continent=europe
+BIP_DF <- BIP_DF %>% 
+    mutate(levels_bip = cut(BIP_DF$BIP, 
+                            breaks = c(1, 100, 500, Inf), 
+                            labels = c("Low", "Middle", "High")))
+```
 
 ```{r Create GDP and EU membership columns}
 survey_data <- survey_data %>% 
@@ -39,12 +48,6 @@ survey_data <- survey_data %>%
         country %in% intermediate_EU_member ~ "Intermediate",
         country %in% post_mill_eu_member ~ "Postmillenial",
         TRUE ~ "NO MEMBER")) 
-
-# https://tradingeconomics.com/country-list/gdp?continent=europe
-BIP_DF <- BIP_DF %>% 
-    mutate(levels_bip = cut(BIP_DF$BIP, 
-                            breaks = c(1, 100, 500, Inf), 
-                            labels = c("Low", "Middle", "High")))
 
 # first GDP column creation, replaced by GDP per capita for better comparison of countries to minimize the effect of country size on GDP
 survey_data <- survey_data %>% 
@@ -396,6 +399,7 @@ redo_legal %>%
 ```
 
 ```{r R files used for analysis}
+# this will save all objects to REata for later load
 save(
     "all_questions",
     "all_questions_list",
@@ -416,6 +420,7 @@ save(
     "GDP_PC_high",
     "GDP_PC_middle",
     "GPD_PC_low",
+    "bevoelkerungsdichte",
     file = "Rfiles.RData"
 )
 # storing all column names as a list of characters
@@ -452,6 +457,7 @@ post_mill_eu_member <- c("Bulgaria",
                   "Slovenia")
 
 # lists for GPD per capita and column creation in the masterfile (survey_data) for statification
+# assignment just with 15 countries per block after descending arrangement 
 GDP_PC_high <-
     c(
         "Liechtenstein",
@@ -566,6 +572,64 @@ low_gdp_countries <- c(
     "Uzbekistan"
 )
 
+# Bevölkerungsdichte assignment in 3 groups with highest, middle and lowest 15 countries
+dichte_high <-
+    c(
+        "Malta",
+        "Netherlands",
+        "Israel",
+        "Belgium",
+        "United Kingdom (UK)",
+        "Germany",
+        "Liechtenstein",
+        "Luxembourg",
+        "Switzerland",
+        "Italy",
+        "Kosovo",
+        "Czechia",
+        "Denmark",
+        "Cyprus",
+        "Poland"
+    )
+
+dichte_middle <- c(
+    "Moldova",
+    "France",
+    "Portugal",
+    "Slovakia",
+    "Hungary",
+    "Albania",
+    "Austria",
+    "Slovenia",
+    "Turkey",
+    "Serbia",
+    "Spain",
+    "Greece",
+    "Romania",
+    "North Macedonia (formerly Macedonia)",
+    "Ukraine"
+)
+
+dichte_low <- c(
+    "Croatia",
+    "Uzbekistan",
+    "Bosnia and Herzegovina",
+    "Ireland",
+    "Bulgaria",
+    "Lithuania",
+    "Belarus",
+    "Montenegro",
+    "Latvia",
+    "Estonia",
+    "Sweden",
+    "Finland",
+    "Norway",
+    "Russia",
+    "Kazakhstan",
+    "Iceland"
+)
+
+# GDP tibble, not used for publication because GDP per capita is a better marker for comparison of country aconomy
 BIP_DF <- tibble(
     country = c(
         "Germany",
@@ -805,43 +869,36 @@ bevoelkerungsdichte <- tibble(
             "Austria",
             "Germany",
             "Sweden",
-            
             "Belgium",
             "Finland",
             "France",
             "United Kingdom (UK)",
             "Malta",
-            
             "Italy",
             "Czechia",
             "Cyprus",
             "Lithuania",
             "Slovenia",
-            
             "Spain",
             "Estonia",
             "Poland",
             "Portugal",
             "Hungary",
-            
             "Slovakia",
             "Latvia",
             "Romania",
             "Turkey",
             "Greece",
-            
             "Croatia",
             "Russia",
             "Bulgaria",
             "Belarus",
             "Montenegro",
-            
             "Serbia",
             "North Macedonia (formerly Macedonia)",
             "Bosnia and Herzegovina",
             "Albania",
             "Ukraine",
-            
             "Moldova",
             "Kosovo",
             "Israel",
@@ -859,7 +916,7 @@ bevoelkerungsdichte <- tibble(
         105.3,
         234.4,
         23.8,
-        372,8,
+        372.8,
         18,
         117.7,
         270.3,
