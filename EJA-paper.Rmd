@@ -27,6 +27,9 @@ load("Rfiles.RData")
 # change "Country where you work?" to "country" for later BIP and EU membership code
 names(survey_data)[12] <- "country"
 ```
+```{r links}
+
+```
 
 
 ```{r Create GDP and EU membership columns}
@@ -784,6 +787,114 @@ GDP_PC <- tibble(
         9122.2,
         175813.9,
         1750.7
+    )
+)
+
+
+# Bevölkerungsdichte Einwohner je km
+bevoelkerungsdichte <- tibble(
+    countries =
+        c(
+            "Luxembourg",
+            "Ireland",
+            "Switzerland",
+            "Norway",
+            "Denmark",
+            "Netherlands",
+            "Iceland",
+            "Austria",
+            "Germany",
+            "Sweden",
+            
+            "Belgium",
+            "Finland",
+            "France",
+            "United Kingdom (UK)",
+            "Malta",
+            
+            "Italy",
+            "Czechia",
+            "Cyprus",
+            "Lithuania",
+            "Slovenia",
+            
+            "Spain",
+            "Estonia",
+            "Poland",
+            "Portugal",
+            "Hungary",
+            
+            "Slovakia",
+            "Latvia",
+            "Romania",
+            "Turkey",
+            "Greece",
+            
+            "Croatia",
+            "Russia",
+            "Bulgaria",
+            "Belarus",
+            "Montenegro",
+            
+            "Serbia",
+            "North Macedonia (formerly Macedonia)",
+            "Bosnia and Herzegovina",
+            "Albania",
+            "Ukraine",
+            
+            "Moldova",
+            "Kosovo",
+            "Israel",
+            "Kazakhstan",
+            "Liechtenstein",
+            "Uzbekistan"),
+    GDP_PC = c(
+        218.8,
+        68.2,
+        210.5,
+        14.2,
+        134.1,
+        502.3,
+        3.3,
+        105.3,
+        234.4,
+        23.8,
+        372,8,
+        18,
+        117.7,
+        270.3,
+        1336.3,
+        202.3,
+        137.3,
+        125.6,
+        46.8,
+        103,
+        93,
+        31,
+        125,
+        113.8,
+        108.1,
+        113.1,
+        32,
+        86.4,
+        101.7,
+        87,
+        75.7,
+        8.8,
+        66.1,
+        46.7,
+        46.7,
+        101.2,
+        82.4,
+        69.3,
+        106.7,
+        77.1,
+        123.8,
+        164.2,
+        373.2,
+        7,
+        233.8,
+        74
     )
 )
 
