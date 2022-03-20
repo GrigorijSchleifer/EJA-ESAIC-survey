@@ -62,6 +62,13 @@ survey_data <- survey_data %>%
         country %in% GDP_PC_high ~ "High_GDP_PC",
         country %in% GDP_PC_middle ~ "Middle_GDP_PC",
         country %in% GPD_PC_low ~ "Low_GDP_PC")) 
+
+# GDP per capita columen creation for later stratification
+survey_data <- survey_data %>% 
+    mutate(dichte = case_when(
+        country %in% dichte_high ~ "Hohe_Dichte",
+        country %in% dichte_middle ~ "Mittler_Dichte",
+        country %in% dichte_low ~ "Geringe_Dichte")) 
 ```
 
 ```{r Table One FIRST PUBLICATION}
@@ -156,7 +163,7 @@ write.xlsx(results_tbl,
            col.names = TRUE,
            row.names = TRUE)
 ```
-```{r Table One GDP per capita stratified}
+```{r Table One stratified GDP PER CAPITA }
 # https://data.worldbank.org/indicator/ny.gdp.pcap.cd
 # in US dollar
 # stratification by GDP
@@ -188,6 +195,36 @@ write.xlsx(results_tbl_gdp_pc,
            col.names = TRUE,
            row.names = TRUE)
 ```
+```{r Table One stritified DICHTE}
+catVars = "dichte"
+
+contVars = questions_table_one_EJA_paper
+
+# survey_data <- survey_data %>% 
+#     select(questions_table_one_EJA_paper) %>% 
+#     dplyr::filter(GDP_PER_CAPITA != "NO MEMBER") %>% 
+#     dplyr::filter(GDP_PER_CAPITA != "Different (please comment)")
+
+# cava NA's for stratification is not possible since NA is dropped
+tableOne <-
+    CreateCatTable(
+        data = survey_data,
+        vars = contVars,
+        # testExact = fisher.test,     
+        addOverall = FALSE,
+        strata = catVars
+    )
+
+results_tbl_gdp_pc <- print(tableOne, nonnormal = biomarkers, exact = "stage", quote = FALSE, noSpaces = FALSE, printToggle = FALSE)
+
+# writing the table to excel
+write.xlsx(results_tbl_gdp_pc,
+           file = "~/Desktop/R/EJA-ESAIC-survey/tbl_one_dichte.xlsx",
+           sheetName = "dichte",
+           col.names = TRUE,
+           row.names = TRUE)
+```
+
 
 
 ```{r responce counts for different countries}
@@ -421,6 +458,10 @@ save(
     "GDP_PC_middle",
     "GPD_PC_low",
     "bevoelkerungsdichte",
+    # Bevölkerungsdichte
+    "dichte_high",
+    "dichte_middle",
+    "dichte_low",
     file = "Rfiles.RData"
 )
 # storing all column names as a list of characters
