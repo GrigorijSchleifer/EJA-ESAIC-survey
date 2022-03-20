@@ -848,7 +848,7 @@ bevoelkerungsdichte <- tibble(
             "Kazakhstan",
             "Liechtenstein",
             "Uzbekistan"),
-    GDP_PC = c(
+    dichte = c(
         218.8,
         68.2,
         210.5,
