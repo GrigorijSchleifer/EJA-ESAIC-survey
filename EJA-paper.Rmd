@@ -999,6 +999,57 @@ bevoelkerungsdichte <- tibble(
     )
 )
 
+# list to create a digital health index
+# https://de.statista.com/statistik/daten/studie/1070546/umfrage/stand-der-digitalisierung-des-gesundheitssystems-nach-ausgewaehlten-laendern/
+digital_health_index <- c(
+    country = c(
+        "Estonia",
+        "Denmark",
+        "Israel",
+        "Spain",
+        "United Kingdom (UK)",
+        "Schweden",
+        "Portugal",
+        "Netherlands",
+        "Austria",
+        "Italy",
+        "Belgium",
+        "Switzerland",
+        "France",
+        "Germany",
+        "Poland"
+    ),
+    index = c(
+        81.9,
+        72.5,
+        72.4,
+        71.4,
+        70,
+        68.3,
+        67.2,
+        66.1,
+        59.8,
+        55.8,
+        54.7,
+        40.6,
+        31.6,
+        30,
+        28.5
+    )
+)
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+)
+)
+
 # survey_data_barchart$country[survey_data_barchart$country == "United Kingdom (UK)"] <- "UK" 
 # survey_data_barchart$country[survey_data_barchart$country == "North Macedonia (formerly Macedonia)"] <- "Macedonia" 
 # survey_data_barchart$country[survey_data_barchart$country == "Bosnia and Herzegovina"] <- "B&H" 
