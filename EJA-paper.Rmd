@@ -69,6 +69,13 @@ survey_data <- survey_data %>%
         country %in% dichte_high ~ "Hohe_Dichte",
         country %in% dichte_middle ~ "Mittler_Dichte",
         country %in% dichte_low ~ "Geringe_Dichte"))
+
+survey_data <- survey_data %>% 
+    mutate(digital_index = case_when(
+        country %in% high_digital ~ "High_Digital",
+        country %in% middle_digital ~ "Middle_Digital",
+        country %in% low_digital ~ "Low_Digital",
+        TRUE ~ "NO INDEX"))
 ```
 
 ```{r Table One FIRST PUBLICATION}
