@@ -462,8 +462,16 @@ save(
     "dichte_high",
     "dichte_middle",
     "dichte_low",
+    # variables for creating digital_index column
+    "high_digital",
+    "middle_digital",
+    "low_digital",
     file = "Rfiles.RData"
 )
+
+
+
+
 # storing all column names as a list of characters
 all_questions <- dput(names(survey_data)) 
 
@@ -1038,17 +1046,27 @@ digital_health_index <- c(
     )
 )
     
+high_digital <- c("Estonia",
+                  "Denmark",
+                  "Israel",
+                  "Spain",
+                  "United Kingdom (UK)")
+
+middle_digital <- c("Schweden",
+                    "Portugal",
+                    "Netherlands",
+                    "Austria",
+                    "Italy")
+
+low_digital <- c("Belgium",
+                 "Switzerland",
+                 "France",
+                 "Germany",
+                 "Poland")
+
     
     
     
-    
-    
-    
-    
-    
-    
-)
-)
 
 # survey_data_barchart$country[survey_data_barchart$country == "United Kingdom (UK)"] <- "UK" 
 # survey_data_barchart$country[survey_data_barchart$country == "North Macedonia (formerly Macedonia)"] <- "Macedonia" 
