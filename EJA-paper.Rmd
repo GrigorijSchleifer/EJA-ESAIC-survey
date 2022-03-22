@@ -68,7 +68,7 @@ survey_data <- survey_data %>%
     mutate(dichte = case_when(
         country %in% dichte_high ~ "Hohe_Dichte",
         country %in% dichte_middle ~ "Mittler_Dichte",
-        country %in% dichte_low ~ "Geringe_Dichte")) 
+        country %in% dichte_low ~ "Geringe_Dichte"))
 ```
 
 ```{r Table One FIRST PUBLICATION}
