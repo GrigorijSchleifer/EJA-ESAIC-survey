@@ -67,7 +67,8 @@ survey_data <- survey_data %>%
 ```
 
 ```{r links}
-
+# Digital Health Index
+# https://de.statista.com/statistik/daten/studie/1070546/umfrage/stand-der-digitalisierung-des-gesundheitssystems-nach-ausgewaehlten-laendern/
 ```
 ```{r creating fct_lump styple chunks}
 # https://tradingeconomics.com/country-list/gdp?continent=europe
