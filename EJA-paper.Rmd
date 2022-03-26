@@ -65,8 +65,10 @@ survey_data <- survey_data %>%
         country %in% low_digital ~ "Low_Digital",
         TRUE ~ "NO INDEX"))
 ```
-
+# links and different
 ```{r links}
+# chi-square calculator
+# https://www.socscistatistics.com/tests/chisquare2/default2.aspx
 # Digital Health Index
 # https://de.statista.com/statistik/daten/studie/1070546/umfrage/stand-der-digitalisierung-des-gesundheitssystems-nach-ausgewaehlten-laendern/
 ```
@@ -364,7 +366,7 @@ survey_fragments %>%
             scale_fill_brewer(palette = "Set2") +
     coord_flip()
 ```
-```{r data provided by}
+```{r data provided by Profession}
 table(survey_data$Profession)
 prop.table(table(survey_data$Profession))
 ```
