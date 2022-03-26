@@ -265,7 +265,7 @@ write.xlsx(results_tbl_gdp_pc,
 
 # Results
 
-```{r Technical question aranged by telefone and internet}
+```{r Figure 1 technical question aranged by telefone and internet}
 
 # absolute counts
 table(survey_data$"Is it possible to obtain informed consent online via internet, in your routine setting?")
