@@ -4,10 +4,6 @@ output: html_document
 ---
 
 # import libraries
-# load all files
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
-```
 ```{r libraries}
 library(tableone)
 library(RColorBrewer)
@@ -19,6 +15,10 @@ library(scales)
 
 # library(ReporteRs)
 # library(magrittr)
+```
+# load all files
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
 ```
 ```{r import and load files}
 # survey_data <- read_csv("data/survey_data_no_other.csv")
