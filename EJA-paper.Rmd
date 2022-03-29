@@ -664,7 +664,7 @@ low_digital <- c("Belgium",
     
 # new df with short names created to be able to create better looking contingency tables
 survey_dt_associations <- survey_data %>%
-    select(questions_table_one_EJA_paper) %>%
+    select(questions_table_one_EJA_paper, GDP_PER_CAPITA, digital_index, dichte) %>%
     `colnames<-`(
         c(
             "when_complex",
@@ -677,7 +677,10 @@ survey_dt_associations <- survey_data %>%
             "tech_telefone",
             "ensuring_certain",
             "future",
-            "pandemic_regulation"
+            "pandemic_regulation",
+            "GDP_PER_CAPITA", 
+            "digital_index", 
+            "dichte"
         )
     )
 
@@ -1288,5 +1291,9 @@ regulations %>%
 # Associations
 ```{r}
 
+
+survey_dt_associations %>% 
+    select(c(when_complex, GDP_PER_CAPITA)) %>% 
+    table()
 ```
 
