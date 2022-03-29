@@ -371,9 +371,14 @@ table(survey_data$Profession)
 prop.table(table(survey_data$Profession))
 ```
 ```{r risc scores}
-survey_fragments %>% 
-    select(ASA.Class:POSPOM) %>% 
-    # using dplyrs across function to perform columnwise operations on character data
+only_scores <- survey_fragments %>% 
+    select(ASA.Class:POSPOM) 
+
+    
+names(only_scores) <- c("ASA", "NYHA", "Apfel", "rRCI", "ARISCAT", "POSPOM")
+
+only_scores %>% 
+    # crosswise operation to create a table
     summarise(across(is.character, table)) %>% 
     .[2,] %>% 
     gather(risk_score, value) %>% 
@@ -385,7 +390,7 @@ survey_fragments %>%
     scale_y_continuous(labels = function(x) paste0(x, " %")) + 
     labs(x = "", 
                  y = "", 
-                 title = "Risk scores used") +
+                 title = "") +
             theme_light(base_size = 15) + 
             theme(title = element_text(size = 25, colour = 'black'),
                   axis.text.x = element_text(size = 22, vjust = 1.3),
