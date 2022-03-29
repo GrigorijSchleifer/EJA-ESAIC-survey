@@ -732,6 +732,10 @@ survey_data <- survey_data %>%
 # Digital Health Index
 # https://de.statista.com/statistik/daten/studie/1070546/umfrage/stand-der-digitalisierung-des-gesundheitssystems-nach-ausgewaehlten-laendern/
 
+# visualisation for residuals
+# http://www.sthda.com/english/wiki/chi-square-test-of-independence-in-r
+
+
 # Fischer exakt 
 # http://vassarstats.net/fisher2x3.html
 ```
@@ -1290,6 +1294,9 @@ regulations %>%
 
 # Associations
 ```{r Figure 1: Internet possible}
+# link to statistics page
+# http://www.sthda.com/english/wiki/chi-square-test-of-independence-in-r
+
 # Figure 1: GDP - Technical possible with internet
 tech_internet_GDP <- survey_dt_associations %>% 
     select(c(tech_internet, GDP_PER_CAPITA)) %>% 
