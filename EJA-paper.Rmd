@@ -377,9 +377,9 @@ survey_fragments %>%
     summarise(across(is.character, table)) %>% 
     .[2,] %>% 
     gather(risk_score, value) %>% 
-    mutate(risc_proportion = value/sum(value)) %>% 
+    mutate(risc_proportion = value/nrow(survey_fragments)) %>% 
     mutate(risk_score = fct_reorder(risk_score, risc_proportion)) %>% 
-    ggplot(aes(x = risk_score, y = risc_proportion)) +
+    ggplot(aes(x = risk_score, y = risc_proportion, fill = risk_score)) +
     geom_bar(stat='identity') +
     scale_fill_manual(values=c("#B2172B", "#08598D", "#1E9D77", "#A7771C", "#EFC000FF", "#868686FF")) + 
     labs(x = "", 
