@@ -375,7 +375,7 @@ only_scores <- survey_fragments %>%
     select(ASA.Class:POSPOM) 
 
     
-names(only_scores) <- c("ASA", "NYHA", "Apfel", "rRCI", "ARISCAT", "POSPOM")
+names(only_scores) <- c("ASA", "NYHA", "Apfel", "rCRI", "ARISCAT", "POSPOM")
 
 only_scores %>% 
     # crosswise operation to create a table
