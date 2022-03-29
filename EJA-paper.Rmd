@@ -996,7 +996,8 @@ who_obtains_df <- survey_fragments %>%
 names(who_obtains_df) <- c("Technician", "Consultant", "Other", "Resident", "Nurse")
 
 # gathering back to normal to send it to ggplot
-who_obtains_df
+who_obtains_df <- who_obtains_df %>% 
+    gather()
 
 
 who_obtains_df %>%
