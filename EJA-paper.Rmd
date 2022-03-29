@@ -1289,11 +1289,38 @@ regulations %>%
 
 
 # Associations
-```{r}
+```{r Figure 1: Internet possible}
+# Figure 1: GDP - Technical possible with internet
+tech_internet_GDP <- survey_dt_associations %>% 
+    select(c(tech_internet, GDP_PER_CAPITA)) %>% 
+    table() %>% 
+    chisq.test()
+# Figure 1: Dichte - Technical possible with internet
+tech_internet_dichte <- survey_dt_associations %>% 
+    select(c(tech_internet, dichte)) %>% 
+    table() %>% 
+    chisq.test()
+# Figure 1: Digital-Index - Technical possible with internet
+tech_internet_digital_index <- survey_dt_associations %>% 
+    select(c(tech_internet, digital_index)) %>% 
+    table() %>% 
+    chisq.test()
 
 
-survey_dt_associations %>% 
-    select(c(when_complex, GDP_PER_CAPITA)) %>% 
-    table()
+# Figure 1: GDP - Technical possible with telefone
+tech_telefone_GDP <- survey_dt_associations %>% 
+    select(c(tech_telefone, GDP_PER_CAPITA)) %>% 
+    table() %>% 
+    chisq.test()
+# Figure 1: Dichte - Technical possible with telefone
+tech_telefone_dichte <- survey_dt_associations %>% 
+    select(c(tech_telefone, dichte)) %>% 
+    table() %>% 
+    chisq.test()
+# Figure 1: Digital-Index - Technical possible with telefone
+tech_telefone_digital_index <- survey_dt_associations %>% 
+    select(c(tech_telefone, digital_index)) %>% 
+    table() %>% 
+    chisq.test()
 ```
 
