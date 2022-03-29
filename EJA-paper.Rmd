@@ -29,584 +29,6 @@ load("Rfiles.RData")
 # change "Country where you work?" to "country" for later BIP and EU membership code
 names(survey_data)[12] <- "country"
 ```
-```{r Create STRATIFICATION columns}
-survey_data <- survey_data %>% 
-    mutate(EU_members = case_when(
-        country %in% original_EU_member ~ "Original",
-        country %in% intermediate_EU_member ~ "Intermediate",
-        country %in% post_mill_eu_member ~ "Postmillenial",
-        TRUE ~ "NO MEMBER")) 
-
-# first GDP column creation, replaced by GDP per capita for better comparison of countries to minimize the effect of country size on GDP
-survey_data <- survey_data %>% 
-    mutate(GDP = case_when(
-        country %in% high_gdp_countries ~ "High GDP",
-        country %in% middle_gdp_countries ~ "Middle GDP",
-        country %in% low_gdp_countries ~ "Low GDP")) 
-
-# GDP per capita columen creation for later stratification
-survey_data <- survey_data %>% 
-    mutate(GDP_PER_CAPITA = case_when(
-        country %in% GDP_PC_high ~ "High_GDP_PC",
-        country %in% GDP_PC_middle ~ "Middle_GDP_PC",
-        country %in% GPD_PC_low ~ "Low_GDP_PC")) 
-
-# GDP per capita columen creation for later stratification
-survey_data <- survey_data %>% 
-    mutate(dichte = case_when(
-        country %in% dichte_high ~ "Hohe_Dichte",
-        country %in% dichte_middle ~ "Mittler_Dichte",
-        country %in% dichte_low ~ "Geringe_Dichte"))
-
-survey_data <- survey_data %>% 
-    mutate(digital_index = case_when(
-        country %in% high_digital ~ "High_Digital",
-        country %in% middle_digital ~ "Middle_Digital",
-        country %in% low_digital ~ "Low_Digital",
-        TRUE ~ "NO INDEX"))
-```
-# links and different
-```{r links}
-# chi-square calculator
-# https://www.socscistatistics.com/tests/chisquare2/default2.aspx
-# Digital Health Index
-# https://de.statista.com/statistik/daten/studie/1070546/umfrage/stand-der-digitalisierung-des-gesundheitssystems-nach-ausgewaehlten-laendern/
-```
-```{r creating fct_lump styple chunks}
-# https://tradingeconomics.com/country-list/gdp?continent=europe
-BIP_DF <- BIP_DF %>% 
-    mutate(levels_bip = cut(BIP_DF$BIP, 
-                            breaks = c(1, 100, 500, Inf), 
-                            labels = c("Low", "Middle", "High")))
-```
-
-
-```{r Table One FIRST PUBLICATION}
-# https://cran.r-project.org/web/packages/table1/vignettes/table1-examples.html
-# stratification by gender
-catVars = "Gender"
-
-contVars = c(
-    "Profession",
-    "Your expert level"
-)
-# cava NA's for stratification is not possible since NA is dropped
-tableOne <-
-    CreateTableOne(
-        data = survey_data,
-        vars = contVars,
-        # testExact = fisher.test,     
-        addOverall = FALSE,
-        strata = catVars
-    )
-
-
-results_tbl <- print(tableOne, nonnormal = biomarkers, exact = "stage", quote = FALSE, noSpaces = FALSE, printToggle = FALSE)
-summary(tableOne)
-# writing the table to excel
-# write.xlsx(results_tbl,
-#            file = "~/Desktop/R/Shiny/ESAIC-survey/ESAIC-KAI-survey-2021/master_data.xlsx",
-#            sheetName = "demographics_paper_gender_fix", 
-#            col.names = TRUE, 
-#            row.names = TRUE, 
-#            append = TRUE)
-```
-```{r Table One Stratified EU member}
-# https://cran.r-project.org/web/packages/table1/vignettes/table1-examples.html
-# stratification by gender
-
-catVars = "EU_members"
-
-contVars =  questions_table_one_EJA_paper
-
-# cava NA's for stratification is not possible since NA is dropped
-tableOne <-
-    CreateTableOne(
-        data = survey_data,
-        vars = contVars,
-        testExact = fisher.test,     
-        addOverall = FALSE,
-        strata = catVars
-    )
-
-
-results_tbl <- print(tableOne, nonnormal = biomarkers, exact = "stage", quote = FALSE, noSpaces = FALSE, printToggle = FALSE)
-
-# writing the table to excel
-write.xlsx(results_tbl,
-           file = "~/Desktop/R/EJA-ESAIC-survey/tbl_one.xlsx",
-           sheetName = "table_one_EU_countries",
-           col.names = TRUE,
-           row.names = TRUE)
-```
-```{r Table One GDP Stratified}
-# https://cran.r-project.org/web/packages/table1/vignettes/table1-examples.html
-# https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4966396/
-# https://www.socscistatistics.com/tests/chisquare2/default2.aspx
-# https://www.youtube.com/watch?v=f53nXHoMXx4&t=42s&ab_channel=VectorsAcademy
-
-# stratification by GDP
-catVars = "GDP"
-
-contVars = questions_table_one_EJA_paper
-
-survey_data <- survey_data %>% 
-    dplyr::filter(GDP != "NO MEMBER")
-
-# cava NA's for stratification is not possible since NA is dropped
-tableOne <-
-    CreateCatTable(
-        data = survey_data,
-        vars = contVars,
-        # testExact = fisher.test,     
-        addOverall = FALSE,
-        strata = catVars
-    )
-
-
-results_tbl <- print(tableOne, nonnormal = biomarkers, exact = "stage", quote = FALSE, noSpaces = FALSE, printToggle = FALSE)
-
-# writing the table to excel
-write.xlsx(results_tbl,
-           file = "~/Desktop/R/EJA-ESAIC-survey/tbl_one_test.xlsx",
-           sheetName = "GDP stratified two",
-           col.names = TRUE,
-           row.names = TRUE)
-```
-```{r Table One stratified GDP PER CAPITA }
-# https://data.worldbank.org/indicator/ny.gdp.pcap.cd
-# in US dollar
-# stratification by GDP
-catVars = "GDP_PER_CAPITA"
-
-contVars = questions_table_one_EJA_paper
-
-# survey_data <- survey_data %>% 
-#     select(questions_table_one_EJA_paper) %>% 
-#     dplyr::filter(GDP_PER_CAPITA != "NO MEMBER") %>% 
-#     dplyr::filter(GDP_PER_CAPITA != "Different (please comment)")
-
-# cava NA's for stratification is not possible since NA is dropped
-tableOne <-
-    CreateCatTable(
-        data = survey_data,
-        vars = contVars,
-        # testExact = fisher.test,     
-        addOverall = FALSE,
-        strata = catVars
-    )
-
-results_tbl_gdp_pc <- print(tableOne, nonnormal = biomarkers, exact = "stage", quote = FALSE, noSpaces = FALSE, printToggle = FALSE)
-
-# writing the table to excel
-write.xlsx(results_tbl_gdp_pc,
-           file = "~/Desktop/R/EJA-ESAIC-survey/tbl_one.xlsx",
-           sheetName = "GDP_PER_CAP",
-           col.names = TRUE,
-           row.names = TRUE)
-```
-```{r Table One stritified DICHTE}
-catVars = "dichte"
-
-contVars = questions_table_one_EJA_paper
-
-# survey_data <- survey_data %>% 
-#     select(questions_table_one_EJA_paper) %>% 
-#     dplyr::filter(GDP_PER_CAPITA != "NO MEMBER") %>% 
-#     dplyr::filter(GDP_PER_CAPITA != "Different (please comment)")
-
-# cava NA's for stratification is not possible since NA is dropped
-tableOne <-
-    CreateCatTable(
-        data = survey_data,
-        vars = contVars,
-        # testExact = fisher.test,     
-        addOverall = FALSE,
-        strata = catVars
-    )
-
-results_tbl_gdp_pc <- print(tableOne, nonnormal = biomarkers, exact = "stage", quote = FALSE, noSpaces = FALSE, printToggle = FALSE)
-
-# writing the table to excel
-write.xlsx(results_tbl_gdp_pc,
-           file = "~/Desktop/R/EJA-ESAIC-survey/tbl_one_dichte.xlsx",
-           sheetName = "dichte",
-           col.names = TRUE,
-           row.names = TRUE)
-```
-```{r Table One stritified DIGITAL INDEX}
-catVars = "digital_index"
-
-contVars = questions_table_one_EJA_paper
-
-# survey_data <- survey_data %>% 
-#     select(questions_table_one_EJA_paper) %>% 
-#     dplyr::filter(GDP_PER_CAPITA != "NO MEMBER") %>% 
-#     dplyr::filter(GDP_PER_CAPITA != "Different (please comment)")
-
-# cava NA's for stratification is not possible since NA is dropped
-tableOne <-
-    CreateCatTable(
-        data = survey_data,
-        vars = contVars,
-        # testExact = fisher.test,     
-        addOverall = FALSE,
-        strata = catVars
-    )
-
-results_tbl_gdp_pc <- print(tableOne, nonnormal = biomarkers, exact = "stage", quote = FALSE, noSpaces = FALSE, printToggle = FALSE)
-
-# writing the table to excel
-write.xlsx(results_tbl_gdp_pc,
-           file = "~/Desktop/R/EJA-ESAIC-survey/digital_index.xlsx",
-           sheetName = "dichte",
-           col.names = TRUE,
-           row.names = TRUE)
-```
-
-
-# Results
-
-```{r Figure 1 technical question aranged by telefone and internet}
-
-# absolute counts
-table(survey_data$"Is it possible to obtain informed consent online via internet, in your routine setting?")
-# proportions to store in "internet" df and use it for the graph
-prop.table(table(survey_data$"Is it possible to obtain informed consent online via internet, in your routine setting?"))
-
-# pie graph for internet 
-internet <- data.frame(answer = c("Depends", "Yes", "No"),
-                        when_simple = round(c(0.06647399, 0.23121387, 0.70231214), 3) * 100)
-
-# "#a1dab4", "#41b6c4", "#2c7fb8", "#253494" 2 (Claudia bestätigt)
-# scale_fill_manual(values=c("#a1dab4", "#41b6c4", "#2c7fb8", "#253494"))
-internet_pie <- internet %>% 
-    ggplot(aes(x="", y=when_simple, fill=answer)) +
-    geom_bar(stat="identity", width=1, color = "white") +
-    coord_polar("y", start=0) + 
-    theme_void() + 
-    geom_text(aes(label = paste0(when_simple, "%")),
-              size = 8, 
-              colour="white",
-              position = position_stack(vjust = 0.5)) +
-    theme(legend.position="bottom",
-          legend.title = element_blank(),
-          legend.text = element_text(size=30),
-          legend.spacing.x = unit(1.5, 'cm'),
-          strip.text.x = element_text(size=35)) +
-    # "#00441B", "#053060", "#660A1F", "#A7771C" (Dunkel)
-    # "#4B72AF", "#54A968", "#C64E51", "#DCAD94" (etwas weniger knallig)
-    # scale_fill_manual(values=c("#B2172B", "#08598D", "#1E9D77", "#A7771C"))
-    scale_fill_manual(values=c("#B2172B", "#08598D", "#1E9D77", "#A7771C"))
-
-
-
-# pie graph creation for telefone proportions
-table(survey_data$"Is it possible to obtain informed consent online via telefone, in your routine setting?")
-# proportions to store in "internet" df and use it for the graph
-prop.table(table(survey_data$"Is it possible to obtain informed consent online via telefone, in your routine setting?"))
-
-
-# 24 h prior and 24 prior because of daily routine pooled together
-telefone <- data.frame(answer = c("Depends", "Yes", "No"),
-                        when_simple = round(c(0.06086957, 0.37246377, 0.56666667), 3) * 100)
-
-# "#a1dab4", "#41b6c4", "#2c7fb8", "#253494" 2 (Claudia bestätigt)
-# scale_fill_manual(values=c("#a1dab4", "#41b6c4", "#2c7fb8", "#253494"))
-telefone_pie <- telefone %>% 
-    ggplot(aes(x="", y=when_simple, fill=answer)) +
-    geom_bar(stat="identity", width=1, color = "white") +
-    coord_polar("y", start=0) + 
-    theme_void() + 
-    geom_text(aes(label = paste0(when_simple, "%")),
-              size = 8, 
-              colour="white",
-              position = position_stack(vjust = 0.5)) +
-    theme(legend.position="bottom",
-          legend.title = element_blank(),
-          legend.text = element_text(size=30),
-          legend.spacing.x = unit(1.5, 'cm'),
-          strip.text.x = element_text(size=35)) +
-    # "#00441B", "#053060", "#660A1F", "#A7771C" (Dunkel)
-    # "#4B72AF", "#54A968", "#C64E51", "#DCAD94" (etwas weniger knallig)
-    # scale_fill_manual(values=c("#B2172B", "#08598D", "#1E9D77", "#A7771C"))
-    scale_fill_manual(values=c("#B2172B", "#08598D", "#1E9D77", "#A7771C"))
-
-ggarrange(internet_pie, 
-          telefone_pie, 
-          labels = c("A:  Internet", 
-                     "B:  Telefone"),
-          font.label = list(size = 19),
-          hjust = -0.02,
-          ncol = 2)
-```
-
-```{r responce counts for different countries}
-survey_fragments %>% 
-    dplyr::filter(country != "Other") %>% 
-    count(country) %>% 
-    arrange(desc(n)) %>% 
-    print(n = 100)
-```
-```{r Who obtaines consent?}
-survey_fragments %>% 
-    count(who.obtains) %>% 
-    dplyr::filter(!is.na(who.obtains)) %>% 
-    mutate(who.obtains = fct_reorder(who.obtains, n)) %>% 
-    ggplot(aes(x = who.obtains, y = n, fill = who.obtains)) +
-            geom_col() +
-            labs(x = "", 
-                 y = "", 
-                 title = "Who in general obtains the informed consent?") +
-            theme_light(base_size = 15) + 
-            theme(title = element_text(size = 25, colour = 'black'),
-                  axis.text.x = element_text(size = 22, vjust = 1.3),
-                  axis.text.y = element_text(size = 20)) +
-            theme(legend.position = "None") +
-            scale_fill_brewer(palette = "Set2") +
-    coord_flip()
-```
-```{r data provided by Profession}
-table(survey_data$Profession)
-prop.table(table(survey_data$Profession))
-```
-```{r risc scores}
-only_scores <- survey_fragments %>% 
-    select(ASA.Class:POSPOM) 
-
-    
-names(only_scores) <- c("ASA", "NYHA", "Apfel", "rCRI", "ARISCAT", "POSPOM")
-
-only_scores %>% 
-    # crosswise operation to create a table
-    summarise(across(is.character, table)) %>% 
-    .[2,] %>% 
-    gather(risk_score, value) %>% 
-    mutate(risc_proportion = value/nrow(survey_fragments) * 100) %>% 
-    mutate(risk_score = fct_reorder(risk_score, risc_proportion)) %>% 
-    ggplot(aes(x = risk_score, y = risc_proportion, fill = risk_score)) +
-    geom_bar(stat='identity') +
-    scale_fill_manual(values=c("#B2172B", "#08598D", "#1E9D77", "#A7771C", "#EFC000FF", "#868686FF")) + 
-    scale_y_continuous(labels = function(x) paste0(x, " %")) + 
-    labs(x = "", 
-                 y = "", 
-                 title = "") +
-            theme_light(base_size = 15) + 
-            theme(title = element_text(size = 25, colour = 'black'),
-                  axis.text.x = element_text(size = 22, vjust = 1.3),
-                  axis.text.y = element_text(size = 20)) +
-            theme(legend.position = "None") +
-    coord_flip()
-```
-```{r questionnaire table}
-catVars = "Gender"
-
-contVars = c(
-    "Profession",
-    "Your expert level"
-)
-# cava NA's for stratification is not possible since NA is dropped
-tableOne <-
-    CreateTableOne(
-        data = survey_data,
-        vars = contVars,
-        testExact = fisher.test,     
-        addOverall = FALSE,
-        strata = catVars
-    )
-
-
-results_tbl <- print(tableOne, nonnormal = biomarkers, exact = "stage", quote = FALSE, noSpaces = FALSE, printToggle = FALSE)
-summary(tableOne)
-
-```
-```{r PIE When do you need to obtain Informed consent for elective surgery based on legal requirements?}
-prop.table(table(survey_data$"When do you need to obtain Informed consent for elective surgery based on legal requirements (for simple procedures, low risk patients)."))
-prop.table(table(survey_data$"When do you need to obtain Informed consent for elective surgery based on legal requirements (for complex procedures, higher risk patients)."))
-
-# 24 h prior and 24 prior because of daily routine pooled together
-simple_df <- data.frame(simple_complex = c(rep("simple procedures", 3), rep("complex procedures", 3)),
-                        answer = rep(c("2 days or more", "24h or less", "Same day"), 2),
-                        when_simple = round(c(0.1289111, 0.5419274, 0.3291615, 0.33625, 0.51625, 0.14750), digits = 3) * 100)
-
-
-# "#0073C2FF", "#EFC000FF", "#868686FF", "#CD534CFF"
-simple_df %>% 
-    ggplot(aes(x="", y=when_simple, fill=answer)) +
-    geom_bar(stat="identity", width=1, color = "white") +
-    coord_polar("y", start=0) + 
-    theme_void() + 
-    geom_text(aes(label = paste0(when_simple, "%")),
-              size = 10, 
-              colour="white",
-              position = position_stack(vjust = 0.5)) +
-    theme(legend.position="bottom",
-          legend.title = element_blank(),
-          legend.text = element_text(size=30),
-          legend.spacing.x = unit(1.5, 'cm'),
-          strip.text.x = element_text(size=35)) +
-    # "#00441B", "#053060", "#660A1F", "#A7771C" (Dunkel)
-    # "#4B72AF", "#54A968", "#C64E51", "#DCAD94" (etwas weniger knallig)
-    scale_fill_manual(values=c("#B2172B", "#08598D", "#1E9D77", "#A7771C")) + 
-    facet_wrap(~factor(simple_complex, levels = c("simple procedures", "complex procedures")))
-
-
-
-################## base R pie ####################################
-# when_obtain_simple_complex <- c("2 days or more",
-#                         "24h or less",
-#                         "Same day")
-# 
-# when_simple <- round(c(0.1289111, 0.5419274, 0.3291615), digits = 2) * 100
-# when_complex <- round(c(0.33625, 0.51625, 0.14750), digits = 2) * 100
-# 
-# cols = brewer.pal(n = length(when_obtain_simple_complex), name = 'Set1')
-# par(mfrow = c(1, 2))
-# 
-# # prop.table(table(survey_data$"When do you need to obtain Informed consent for elective surgery based on legal requirements (for simple procedures, low risk patients)."))
-# pie(when_simple, 
-#     labels = paste0(when_simple, "%"),
-#     clockwise = TRUE,
-#     col = cols,
-#     cex.main=3, 
-#     cex = 2.5,
-#     main = "simple procedures",
-#     radius = 1.2,
-#     border = "white")
-# 
-# legend("bottom", 
-#        legend = when_obtain_simple_complex,
-#        fill = cols,
-#        cex = 1.5, 
-#        bty = "n",
-#        border = "white",
-#        inset = -.06)
-# 
-# # prop.table(table(survey_data$"When do you need to obtain Informed consent for elective surgery based on legal requirements (for complex procedures, higher risk patients)."))
-# pie(when_complex,
-#     labels = paste0(when_complex, "%"),
-#     clockwise = TRUE,
-#     cex.main=3, 
-#     cex = 2.5,
-#     col = cols,
-#     main = "complex procedures",
-#     radius = 1.2,
-#     border = "white")
-```
-```{r PIE Is an online/telephone informed consent for elective surgery in accordance with the legal requirements in your country? }
-prop.table(table(survey_data$"Is an online/telephone informed consent for elective surgery in accordance with the legal requirements in your country? (for simple procedures, low risk patients)"))
-table(survey_data$"Is an online/telephone informed consent for elective surgery in accordance with the legal requirements in your country? (for simple procedures, low risk patients)")
-
-prop.table(table(survey_data$"Is an online/telephone informed consent for elective surgery in accordance with the legal requirements in your country? (for complex procedures, higher risk patients)"))
-table(survey_data$"Is an online/telephone informed consent for elective surgery in accordance with the legal requirements in your country? (for complex procedures, higher risk patients)")
-
-
-consent_legal <- data.frame(simple_complex = c(rep("simple procedures", 3), rep("complex procedures", 3)),
-                        answer = rep(c("Unsure", "No", "Yes"), 2),
-                        when_simple = round(c(0.3553616, 0.3715711, 0.2730673, 0.3877805, 0.4251870, 0.1870324), digits = 3) * 100)
-
-
-consent_legal %>% 
-    ggplot(aes(x="", y=when_simple, fill=answer)) +
-    geom_bar(stat="identity", width=1, color = "white") +
-    coord_polar("y", start=0) + 
-    theme_void() + 
-    geom_text(aes(label = paste0(when_simple, "%")),
-              size = 10, 
-              colour="white",
-              position = position_stack(vjust = 0.5)) +
-    theme(legend.position="bottom",
-          legend.title = element_blank(),
-          legend.text = element_text(size=30),
-          legend.spacing.x = unit(1.5, 'cm'),
-          strip.text.x = element_text(size=35)) +
-    # "#00441B", "#053060", "#660A1F", "#A7771C" (Dunkel)
-    # "#4B72AF", "#54A968", "#C64E51", "#DCAD94" (etwas weniger knallig)
-    # "#B2172B", "#08598D", "#1E9D77", "#A7771C" (original)
-    # "#ffffb2", "#fecc5c", "#fd8d3c", "#e31a1c" (black and white compatible)
-    scale_fill_manual(values=c("#B2172B", "#08598D", "#1E9D77", "#A7771C")) +
-    facet_wrap(~factor(simple_complex, levels = c("simple procedures", "complex procedures")))
-```
-```{r Thinking of Re-Do / repeated anaesthesia assuming the patient is well informed. Would an online/telephone informed consent then be allowed for elective surgery due to legal requirements in your country?}
-
-prop.table(table(survey_data$`Thinking of Re-Do / repeated anaesthesia assuming the patient is well informed. Would an online/telephone informed consent then be allowed for elective surgery due to legal requirements in your country?`))
-
-redo_legal <- data.frame(answer = c("Unsure", "No", "Yes"),
-                        when_simple = round(c(0.3496241, 0.3283208, 0.3220551), digits = 3) * 100)
-
-
-redo_legal %>% 
-    ggplot(aes(x="", y=when_simple, fill=answer)) +
-    geom_bar(stat="identity", width=1, color = "white") +
-    coord_polar("y", start=0) + 
-    theme_void() + 
-    geom_text(aes(label = paste0(when_simple, "%")),
-              size = 10, 
-              colour="white",
-              position = position_stack(vjust = 0.5)) +
-    theme(legend.position="bottom",
-          legend.title = element_blank(),
-          legend.text = element_text(size=30),
-          legend.spacing.x = unit(1.5, 'cm'),
-          strip.text.x = element_text(size=35)) +
-    # "#00441B", "#053060", "#660A1F", "#A7771C" (Dunkel)
-    # "#4B72AF", "#54A968", "#C64E51", "#DCAD94" (etwas weniger knallig)
-    # "#B2172B", "#08598D", "#1E9D77", "#A7771C" (original)
-    # "#ffffb2", "#fecc5c", "#fd8d3c", "#e31a1c" (black and white compatible)
-    scale_fill_manual(values=c("#B2172B", "#08598D", "#1E9D77", "#A7771C"))
-```
-```{r Is there a special regulation in your country during this pandemic situation favouring online or telephone informed consent?}
-prop.table(table(survey_data$"Is there a special regulation in your country during this pandemic situation favouring online or telephone informed consent?"))
-table(survey_data$"Is there a special regulation in your country during this pandemic situation favouring online or telephone informed consent?")
-
-regulations <- data.frame(answer = c("Unsure", "No", "Yes"),
-                          when_simple = round(c(0.2518703, 0.5610973, 0.1870324), digits = 3) * 100)
-
-
-# "#0073C2FF", "#EFC000FF", "#868686FF", "#CD534CFF"
-regulations %>% 
-    ggplot(aes(x="", y=when_simple, fill=answer)) +
-    geom_bar(stat="identity", width=1, color = "white") +
-    coord_polar("y", start=0) + 
-    theme_void() + 
-    geom_text(aes(label = paste0(when_simple, "%")),
-              size = 10, 
-              colour="white",
-              position = position_stack(vjust = 0.5)) +
-    theme(legend.position="bottom",
-          legend.title = element_blank(),
-          legend.text = element_text(size=30),
-          legend.spacing.x = unit(1.5, 'cm'),
-          strip.text.x = element_text(size=35)) +
-    # "#00441B", "#053060", "#660A1F", "#A7771C" (Dunkel)
-    # "#4B72AF", "#54A968", "#C64E51", "#DCAD94" (etwas weniger knallig)
-    # scale_fill_manual(values=c("#B2172B", "#08598D", "#1E9D77", "#A7771C"))
-    scale_fill_manual(values=c("#a1dab4", "#41b6c4", "#2c7fb8", "#253494"))
-
-# pandemic_adjustments_values = round(c(0.2518703, 0.5610973, 0.1870324), 2) * 100
-# 
-# pie(pandemic_adjustments_values, 
-#     labels = paste0(pandemic_adjustments_values, "%"),
-#     clockwise = TRUE,
-#     col = cols,
-#     cex.main=3, 
-#     cex = 2.5,
-#     radius = 0.8,
-#     border = "white")
-# 
-# 
-# legend("bottom", 
-#        legend = pandemic_adnustments,
-#        fill = cols,
-#        cex = 1.5, 
-#        bty = "n",
-#        border = "white",
-#        horiz = TRUE,
-#        y = 2)
-
-
-```
-
 ```{r R files used for analysis}
 # this will save all objects to REata for later load
 save(
@@ -1244,3 +666,605 @@ low_digital <- c("Belgium",
 # survey_data_barchart$country[survey_data_barchart$country == "North Macedonia (formerly Macedonia)"] <- "Macedonia" 
 # survey_data_barchart$country[survey_data_barchart$country == "Bosnia and Herzegovina"] <- "B&H" 
 ```
+```{r Create STRATIFICATION columns}
+survey_data <- survey_data %>% 
+    mutate(EU_members = case_when(
+        country %in% original_EU_member ~ "Original",
+        country %in% intermediate_EU_member ~ "Intermediate",
+        country %in% post_mill_eu_member ~ "Postmillenial",
+        TRUE ~ "NO MEMBER")) 
+
+# first GDP column creation, replaced by GDP per capita for better comparison of countries to minimize the effect of country size on GDP
+survey_data <- survey_data %>% 
+    mutate(GDP = case_when(
+        country %in% high_gdp_countries ~ "High GDP",
+        country %in% middle_gdp_countries ~ "Middle GDP",
+        country %in% low_gdp_countries ~ "Low GDP")) 
+
+# GDP per capita columen creation for later stratification
+survey_data <- survey_data %>% 
+    mutate(GDP_PER_CAPITA = case_when(
+        country %in% GDP_PC_high ~ "High_GDP_PC",
+        country %in% GDP_PC_middle ~ "Middle_GDP_PC",
+        country %in% GPD_PC_low ~ "Low_GDP_PC")) 
+
+# GDP per capita columen creation for later stratification
+survey_data <- survey_data %>% 
+    mutate(dichte = case_when(
+        country %in% dichte_high ~ "Hohe_Dichte",
+        country %in% dichte_middle ~ "Mittler_Dichte",
+        country %in% dichte_low ~ "Geringe_Dichte"))
+
+survey_data <- survey_data %>% 
+    mutate(digital_index = case_when(
+        country %in% high_digital ~ "High_Digital",
+        country %in% middle_digital ~ "Middle_Digital",
+        country %in% low_digital ~ "Low_Digital",
+        TRUE ~ "NO INDEX"))
+```
+# links and different
+```{r links}
+# chi-square calculator
+# https://www.socscistatistics.com/tests/chisquare2/default2.aspx
+# Digital Health Index
+# https://de.statista.com/statistik/daten/studie/1070546/umfrage/stand-der-digitalisierung-des-gesundheitssystems-nach-ausgewaehlten-laendern/
+```
+```{r creating fct_lump styple chunks}
+# https://tradingeconomics.com/country-list/gdp?continent=europe
+BIP_DF <- BIP_DF %>% 
+    mutate(levels_bip = cut(BIP_DF$BIP, 
+                            breaks = c(1, 100, 500, Inf), 
+                            labels = c("Low", "Middle", "High")))
+```
+
+
+```{r Table One FIRST PUBLICATION}
+# https://cran.r-project.org/web/packages/table1/vignettes/table1-examples.html
+# stratification by gender
+catVars = "Gender"
+
+contVars = c(
+    "Profession",
+    "Your expert level"
+)
+# cava NA's for stratification is not possible since NA is dropped
+tableOne <-
+    CreateTableOne(
+        data = survey_data,
+        vars = contVars,
+        # testExact = fisher.test,     
+        addOverall = FALSE,
+        strata = catVars
+    )
+
+
+results_tbl <- print(tableOne, nonnormal = biomarkers, exact = "stage", quote = FALSE, noSpaces = FALSE, printToggle = FALSE)
+summary(tableOne)
+# writing the table to excel
+# write.xlsx(results_tbl,
+#            file = "~/Desktop/R/Shiny/ESAIC-survey/ESAIC-KAI-survey-2021/master_data.xlsx",
+#            sheetName = "demographics_paper_gender_fix", 
+#            col.names = TRUE, 
+#            row.names = TRUE, 
+#            append = TRUE)
+```
+```{r Table One Stratified EU member}
+# https://cran.r-project.org/web/packages/table1/vignettes/table1-examples.html
+# stratification by gender
+
+catVars = "EU_members"
+
+contVars =  questions_table_one_EJA_paper
+
+# cava NA's for stratification is not possible since NA is dropped
+tableOne <-
+    CreateTableOne(
+        data = survey_data,
+        vars = contVars,
+        testExact = fisher.test,     
+        addOverall = FALSE,
+        strata = catVars
+    )
+
+
+results_tbl <- print(tableOne, nonnormal = biomarkers, exact = "stage", quote = FALSE, noSpaces = FALSE, printToggle = FALSE)
+
+# writing the table to excel
+write.xlsx(results_tbl,
+           file = "~/Desktop/R/EJA-ESAIC-survey/tbl_one.xlsx",
+           sheetName = "table_one_EU_countries",
+           col.names = TRUE,
+           row.names = TRUE)
+```
+```{r Table One GDP Stratified}
+# https://cran.r-project.org/web/packages/table1/vignettes/table1-examples.html
+# https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4966396/
+# https://www.socscistatistics.com/tests/chisquare2/default2.aspx
+# https://www.youtube.com/watch?v=f53nXHoMXx4&t=42s&ab_channel=VectorsAcademy
+
+# stratification by GDP
+catVars = "GDP"
+
+contVars = questions_table_one_EJA_paper
+
+survey_data <- survey_data %>% 
+    dplyr::filter(GDP != "NO MEMBER")
+
+# cava NA's for stratification is not possible since NA is dropped
+tableOne <-
+    CreateCatTable(
+        data = survey_data,
+        vars = contVars,
+        # testExact = fisher.test,     
+        addOverall = FALSE,
+        strata = catVars
+    )
+
+
+results_tbl <- print(tableOne, nonnormal = biomarkers, exact = "stage", quote = FALSE, noSpaces = FALSE, printToggle = FALSE)
+
+# writing the table to excel
+write.xlsx(results_tbl,
+           file = "~/Desktop/R/EJA-ESAIC-survey/tbl_one_test.xlsx",
+           sheetName = "GDP stratified two",
+           col.names = TRUE,
+           row.names = TRUE)
+```
+```{r Table One stratified GDP PER CAPITA }
+# https://data.worldbank.org/indicator/ny.gdp.pcap.cd
+# in US dollar
+# stratification by GDP
+catVars = "GDP_PER_CAPITA"
+
+contVars = questions_table_one_EJA_paper
+
+# survey_data <- survey_data %>% 
+#     select(questions_table_one_EJA_paper) %>% 
+#     dplyr::filter(GDP_PER_CAPITA != "NO MEMBER") %>% 
+#     dplyr::filter(GDP_PER_CAPITA != "Different (please comment)")
+
+# cava NA's for stratification is not possible since NA is dropped
+tableOne <-
+    CreateCatTable(
+        data = survey_data,
+        vars = contVars,
+        # testExact = fisher.test,     
+        addOverall = FALSE,
+        strata = catVars
+    )
+
+results_tbl_gdp_pc <- print(tableOne, nonnormal = biomarkers, exact = "stage", quote = FALSE, noSpaces = FALSE, printToggle = FALSE)
+
+# writing the table to excel
+write.xlsx(results_tbl_gdp_pc,
+           file = "~/Desktop/R/EJA-ESAIC-survey/tbl_one.xlsx",
+           sheetName = "GDP_PER_CAP",
+           col.names = TRUE,
+           row.names = TRUE)
+```
+```{r Table One stritified DICHTE}
+catVars = "dichte"
+
+contVars = questions_table_one_EJA_paper
+
+# survey_data <- survey_data %>% 
+#     select(questions_table_one_EJA_paper) %>% 
+#     dplyr::filter(GDP_PER_CAPITA != "NO MEMBER") %>% 
+#     dplyr::filter(GDP_PER_CAPITA != "Different (please comment)")
+
+# cava NA's for stratification is not possible since NA is dropped
+tableOne <-
+    CreateCatTable(
+        data = survey_data,
+        vars = contVars,
+        # testExact = fisher.test,     
+        addOverall = FALSE,
+        strata = catVars
+    )
+
+results_tbl_gdp_pc <- print(tableOne, nonnormal = biomarkers, exact = "stage", quote = FALSE, noSpaces = FALSE, printToggle = FALSE)
+
+# writing the table to excel
+write.xlsx(results_tbl_gdp_pc,
+           file = "~/Desktop/R/EJA-ESAIC-survey/tbl_one_dichte.xlsx",
+           sheetName = "dichte",
+           col.names = TRUE,
+           row.names = TRUE)
+```
+```{r Table One stritified DIGITAL INDEX}
+catVars = "digital_index"
+
+contVars = questions_table_one_EJA_paper
+
+# survey_data <- survey_data %>% 
+#     select(questions_table_one_EJA_paper) %>% 
+#     dplyr::filter(GDP_PER_CAPITA != "NO MEMBER") %>% 
+#     dplyr::filter(GDP_PER_CAPITA != "Different (please comment)")
+
+# cava NA's for stratification is not possible since NA is dropped
+tableOne <-
+    CreateCatTable(
+        data = survey_data,
+        vars = contVars,
+        # testExact = fisher.test,     
+        addOverall = FALSE,
+        strata = catVars
+    )
+
+results_tbl_gdp_pc <- print(tableOne, nonnormal = biomarkers, exact = "stage", quote = FALSE, noSpaces = FALSE, printToggle = FALSE)
+
+# writing the table to excel
+write.xlsx(results_tbl_gdp_pc,
+           file = "~/Desktop/R/EJA-ESAIC-survey/digital_index.xlsx",
+           sheetName = "dichte",
+           col.names = TRUE,
+           row.names = TRUE)
+```
+
+
+# Results
+
+```{r Figure 1 technical question aranged by telefone and internet}
+
+# absolute counts
+table(survey_data$"Is it possible to obtain informed consent online via internet, in your routine setting?")
+# proportions to store in "internet" df and use it for the graph
+prop.table(table(survey_data$"Is it possible to obtain informed consent online via internet, in your routine setting?"))
+
+# pie graph for internet 
+internet <- data.frame(answer = c("Depends", "Yes", "No"),
+                        when_simple = round(c(0.06647399, 0.23121387, 0.70231214), 3) * 100)
+
+# "#a1dab4", "#41b6c4", "#2c7fb8", "#253494" 2 (Claudia bestätigt)
+# scale_fill_manual(values=c("#a1dab4", "#41b6c4", "#2c7fb8", "#253494"))
+internet_pie <- internet %>% 
+    ggplot(aes(x="", y=when_simple, fill=answer)) +
+    geom_bar(stat="identity", width=1, color = "white") +
+    coord_polar("y", start=0) + 
+    theme_void() + 
+    geom_text(aes(label = paste0(when_simple, "%")),
+              size = 8, 
+              colour="white",
+              position = position_stack(vjust = 0.5)) +
+    theme(legend.position="bottom",
+          legend.title = element_blank(),
+          legend.text = element_text(size=30),
+          legend.spacing.x = unit(1.5, 'cm'),
+          strip.text.x = element_text(size=35)) +
+    # "#00441B", "#053060", "#660A1F", "#A7771C" (Dunkel)
+    # "#4B72AF", "#54A968", "#C64E51", "#DCAD94" (etwas weniger knallig)
+    # scale_fill_manual(values=c("#B2172B", "#08598D", "#1E9D77", "#A7771C"))
+    scale_fill_manual(values=c("#B2172B", "#08598D", "#1E9D77", "#A7771C"))
+
+
+
+# pie graph creation for telefone proportions
+table(survey_data$"Is it possible to obtain informed consent online via telefone, in your routine setting?")
+# proportions to store in "internet" df and use it for the graph
+prop.table(table(survey_data$"Is it possible to obtain informed consent online via telefone, in your routine setting?"))
+
+
+# 24 h prior and 24 prior because of daily routine pooled together
+telefone <- data.frame(answer = c("Depends", "Yes", "No"),
+                        when_simple = round(c(0.06086957, 0.37246377, 0.56666667), 3) * 100)
+
+# "#a1dab4", "#41b6c4", "#2c7fb8", "#253494" 2 (Claudia bestätigt)
+# scale_fill_manual(values=c("#a1dab4", "#41b6c4", "#2c7fb8", "#253494"))
+telefone_pie <- telefone %>% 
+    ggplot(aes(x="", y=when_simple, fill=answer)) +
+    geom_bar(stat="identity", width=1, color = "white") +
+    coord_polar("y", start=0) + 
+    theme_void() + 
+    geom_text(aes(label = paste0(when_simple, "%")),
+              size = 8, 
+              colour="white",
+              position = position_stack(vjust = 0.5)) +
+    theme(legend.position="bottom",
+          legend.title = element_blank(),
+          legend.text = element_text(size=30),
+          legend.spacing.x = unit(1.5, 'cm'),
+          strip.text.x = element_text(size=35)) +
+    # "#00441B", "#053060", "#660A1F", "#A7771C" (Dunkel)
+    # "#4B72AF", "#54A968", "#C64E51", "#DCAD94" (etwas weniger knallig)
+    # scale_fill_manual(values=c("#B2172B", "#08598D", "#1E9D77", "#A7771C"))
+    scale_fill_manual(values=c("#B2172B", "#08598D", "#1E9D77", "#A7771C"))
+
+ggarrange(internet_pie, 
+          telefone_pie, 
+          labels = c("A:  Internet", 
+                     "B:  Telefone"),
+          font.label = list(size = 19),
+          hjust = -0.02,
+          ncol = 2)
+```
+
+```{r responce counts for different countries}
+survey_fragments %>% 
+    dplyr::filter(country != "Other") %>% 
+    count(country) %>% 
+    arrange(desc(n)) %>% 
+    print(n = 100)
+```
+```{r Who obtaines consent?}
+# spreading to change column names
+who_obtains_df <- survey_fragments %>%
+    count(who.obtains) %>%
+    dplyr::filter(!is.na(who.obtains)) %>% 
+    spread(key = "who.obtains", value = "n")
+
+# assigning column names to make the graph prettier
+names(who_obtains_df) <- c("Technician", "Consultant", "Other", "Resident", "Nurse")
+
+# gathering back to normal to send it to ggplot
+who_obtains_df
+
+
+who_obtains_df %>%
+    count(who.obtains) %>%
+    dplyr::filter(!is.na(who.obtains)) %>%
+    mutate(who.obtains = fct_reorder(who.obtains, n)) %>%
+    mutate(prop_who_obtains = n / nrow(survey_fragments) * 100) %>%
+    ggplot(aes(x = who.obtains, y = prop_who_obtains, fill = who.obtains)) +
+    geom_col() +
+    scale_fill_manual(values=c("#B2172B", "#08598D", "#1E9D77", "#A7771C", "#EFC000FF", "#868686FF")) + 
+    scale_y_continuous(labels = function(x) paste0(x, " %")) +
+    labs(x = "",
+         y = "",
+         title = "") +
+    theme_light(base_size = 15) +
+    theme(
+        title = element_text(size = 25, colour = 'black'),
+        axis.text.x = element_text(size = 22, vjust = 1.3),
+        axis.text.y = element_text(size = 20)
+    ) +
+    theme(legend.position = "None") +
+    coord_flip()
+```
+```{r data provided by Profession}
+table(survey_data$Profession)
+prop.table(table(survey_data$Profession))
+```
+```{r risc scores}
+only_scores <- survey_fragments %>% 
+    select(ASA.Class:POSPOM) 
+
+    
+names(only_scores) <- c("ASA", "NYHA", "Apfel", "rCRI", "ARISCAT", "POSPOM")
+
+only_scores %>% 
+    # crosswise operation to create a table
+    summarise(across(is.character, table)) %>% 
+    .[2,] %>% 
+    gather(risk_score, value) %>% 
+    mutate(risc_proportion = value/nrow(survey_fragments) * 100) %>% 
+    mutate(risk_score = fct_reorder(risk_score, risc_proportion)) %>% 
+    ggplot(aes(x = risk_score, y = risc_proportion, fill = risk_score)) +
+    geom_bar(stat='identity') +
+    scale_fill_manual(values=c("#B2172B", "#08598D", "#1E9D77", "#A7771C", "#EFC000FF", "#868686FF")) + 
+    scale_y_continuous(labels = function(x) paste0(x, " %")) + 
+    labs(x = "", 
+                 y = "", 
+                 title = "") +
+            theme_light(base_size = 15) + 
+            theme(title = element_text(size = 25, colour = 'black'),
+                  axis.text.x = element_text(size = 22, vjust = 1.3),
+                  axis.text.y = element_text(size = 20)) +
+            theme(legend.position = "None") +
+    coord_flip()
+```
+```{r questionnaire table}
+catVars = "Gender"
+
+contVars = c(
+    "Profession",
+    "Your expert level"
+)
+# cava NA's for stratification is not possible since NA is dropped
+tableOne <-
+    CreateTableOne(
+        data = survey_data,
+        vars = contVars,
+        testExact = fisher.test,     
+        addOverall = FALSE,
+        strata = catVars
+    )
+
+
+results_tbl <- print(tableOne, nonnormal = biomarkers, exact = "stage", quote = FALSE, noSpaces = FALSE, printToggle = FALSE)
+summary(tableOne)
+
+```
+```{r PIE When do you need to obtain Informed consent for elective surgery based on legal requirements?}
+prop.table(table(survey_data$"When do you need to obtain Informed consent for elective surgery based on legal requirements (for simple procedures, low risk patients)."))
+prop.table(table(survey_data$"When do you need to obtain Informed consent for elective surgery based on legal requirements (for complex procedures, higher risk patients)."))
+
+# 24 h prior and 24 prior because of daily routine pooled together
+simple_df <- data.frame(simple_complex = c(rep("simple procedures", 3), rep("complex procedures", 3)),
+                        answer = rep(c("2 days or more", "24h or less", "Same day"), 2),
+                        when_simple = round(c(0.1289111, 0.5419274, 0.3291615, 0.33625, 0.51625, 0.14750), digits = 3) * 100)
+
+
+# "#0073C2FF", "#EFC000FF", "#868686FF", "#CD534CFF"
+simple_df %>% 
+    ggplot(aes(x="", y=when_simple, fill=answer)) +
+    geom_bar(stat="identity", width=1, color = "white") +
+    coord_polar("y", start=0) + 
+    theme_void() + 
+    geom_text(aes(label = paste0(when_simple, "%")),
+              size = 10, 
+              colour="white",
+              position = position_stack(vjust = 0.5)) +
+    theme(legend.position="bottom",
+          legend.title = element_blank(),
+          legend.text = element_text(size=30),
+          legend.spacing.x = unit(1.5, 'cm'),
+          strip.text.x = element_text(size=35)) +
+    # "#00441B", "#053060", "#660A1F", "#A7771C" (Dunkel)
+    # "#4B72AF", "#54A968", "#C64E51", "#DCAD94" (etwas weniger knallig)
+    scale_fill_manual(values=c("#B2172B", "#08598D", "#1E9D77", "#A7771C")) + 
+    facet_wrap(~factor(simple_complex, levels = c("simple procedures", "complex procedures")))
+
+
+
+################## base R pie ####################################
+# when_obtain_simple_complex <- c("2 days or more",
+#                         "24h or less",
+#                         "Same day")
+# 
+# when_simple <- round(c(0.1289111, 0.5419274, 0.3291615), digits = 2) * 100
+# when_complex <- round(c(0.33625, 0.51625, 0.14750), digits = 2) * 100
+# 
+# cols = brewer.pal(n = length(when_obtain_simple_complex), name = 'Set1')
+# par(mfrow = c(1, 2))
+# 
+# # prop.table(table(survey_data$"When do you need to obtain Informed consent for elective surgery based on legal requirements (for simple procedures, low risk patients)."))
+# pie(when_simple, 
+#     labels = paste0(when_simple, "%"),
+#     clockwise = TRUE,
+#     col = cols,
+#     cex.main=3, 
+#     cex = 2.5,
+#     main = "simple procedures",
+#     radius = 1.2,
+#     border = "white")
+# 
+# legend("bottom", 
+#        legend = when_obtain_simple_complex,
+#        fill = cols,
+#        cex = 1.5, 
+#        bty = "n",
+#        border = "white",
+#        inset = -.06)
+# 
+# # prop.table(table(survey_data$"When do you need to obtain Informed consent for elective surgery based on legal requirements (for complex procedures, higher risk patients)."))
+# pie(when_complex,
+#     labels = paste0(when_complex, "%"),
+#     clockwise = TRUE,
+#     cex.main=3, 
+#     cex = 2.5,
+#     col = cols,
+#     main = "complex procedures",
+#     radius = 1.2,
+#     border = "white")
+```
+```{r PIE Is an online/telephone informed consent for elective surgery in accordance with the legal requirements in your country? }
+prop.table(table(survey_data$"Is an online/telephone informed consent for elective surgery in accordance with the legal requirements in your country? (for simple procedures, low risk patients)"))
+table(survey_data$"Is an online/telephone informed consent for elective surgery in accordance with the legal requirements in your country? (for simple procedures, low risk patients)")
+
+prop.table(table(survey_data$"Is an online/telephone informed consent for elective surgery in accordance with the legal requirements in your country? (for complex procedures, higher risk patients)"))
+table(survey_data$"Is an online/telephone informed consent for elective surgery in accordance with the legal requirements in your country? (for complex procedures, higher risk patients)")
+
+
+consent_legal <- data.frame(simple_complex = c(rep("simple procedures", 3), rep("complex procedures", 3)),
+                        answer = rep(c("Unsure", "No", "Yes"), 2),
+                        when_simple = round(c(0.3553616, 0.3715711, 0.2730673, 0.3877805, 0.4251870, 0.1870324), digits = 3) * 100)
+
+
+consent_legal %>% 
+    ggplot(aes(x="", y=when_simple, fill=answer)) +
+    geom_bar(stat="identity", width=1, color = "white") +
+    coord_polar("y", start=0) + 
+    theme_void() + 
+    geom_text(aes(label = paste0(when_simple, "%")),
+              size = 10, 
+              colour="white",
+              position = position_stack(vjust = 0.5)) +
+    theme(legend.position="bottom",
+          legend.title = element_blank(),
+          legend.text = element_text(size=30),
+          legend.spacing.x = unit(1.5, 'cm'),
+          strip.text.x = element_text(size=35)) +
+    # "#00441B", "#053060", "#660A1F", "#A7771C" (Dunkel)
+    # "#4B72AF", "#54A968", "#C64E51", "#DCAD94" (etwas weniger knallig)
+    # "#B2172B", "#08598D", "#1E9D77", "#A7771C" (original)
+    # "#ffffb2", "#fecc5c", "#fd8d3c", "#e31a1c" (black and white compatible)
+    scale_fill_manual(values=c("#B2172B", "#08598D", "#1E9D77", "#A7771C")) +
+    facet_wrap(~factor(simple_complex, levels = c("simple procedures", "complex procedures")))
+```
+```{r Thinking of Re-Do / repeated anaesthesia assuming the patient is well informed. Would an online/telephone informed consent then be allowed for elective surgery due to legal requirements in your country?}
+
+prop.table(table(survey_data$`Thinking of Re-Do / repeated anaesthesia assuming the patient is well informed. Would an online/telephone informed consent then be allowed for elective surgery due to legal requirements in your country?`))
+
+redo_legal <- data.frame(answer = c("Unsure", "No", "Yes"),
+                        when_simple = round(c(0.3496241, 0.3283208, 0.3220551), digits = 3) * 100)
+
+
+redo_legal %>% 
+    ggplot(aes(x="", y=when_simple, fill=answer)) +
+    geom_bar(stat="identity", width=1, color = "white") +
+    coord_polar("y", start=0) + 
+    theme_void() + 
+    geom_text(aes(label = paste0(when_simple, "%")),
+              size = 10, 
+              colour="white",
+              position = position_stack(vjust = 0.5)) +
+    theme(legend.position="bottom",
+          legend.title = element_blank(),
+          legend.text = element_text(size=30),
+          legend.spacing.x = unit(1.5, 'cm'),
+          strip.text.x = element_text(size=35)) +
+    # "#00441B", "#053060", "#660A1F", "#A7771C" (Dunkel)
+    # "#4B72AF", "#54A968", "#C64E51", "#DCAD94" (etwas weniger knallig)
+    # "#B2172B", "#08598D", "#1E9D77", "#A7771C" (original)
+    # "#ffffb2", "#fecc5c", "#fd8d3c", "#e31a1c" (black and white compatible)
+    scale_fill_manual(values=c("#B2172B", "#08598D", "#1E9D77", "#A7771C"))
+```
+```{r Is there a special regulation in your country during this pandemic situation favouring online or telephone informed consent?}
+prop.table(table(survey_data$"Is there a special regulation in your country during this pandemic situation favouring online or telephone informed consent?"))
+table(survey_data$"Is there a special regulation in your country during this pandemic situation favouring online or telephone informed consent?")
+
+regulations <- data.frame(answer = c("Unsure", "No", "Yes"),
+                          when_simple = round(c(0.2518703, 0.5610973, 0.1870324), digits = 3) * 100)
+
+
+# "#0073C2FF", "#EFC000FF", "#868686FF", "#CD534CFF"
+regulations %>% 
+    ggplot(aes(x="", y=when_simple, fill=answer)) +
+    geom_bar(stat="identity", width=1, color = "white") +
+    coord_polar("y", start=0) + 
+    theme_void() + 
+    geom_text(aes(label = paste0(when_simple, "%")),
+              size = 10, 
+              colour="white",
+              position = position_stack(vjust = 0.5)) +
+    theme(legend.position="bottom",
+          legend.title = element_blank(),
+          legend.text = element_text(size=30),
+          legend.spacing.x = unit(1.5, 'cm'),
+          strip.text.x = element_text(size=35)) +
+    # "#00441B", "#053060", "#660A1F", "#A7771C" (Dunkel)
+    # "#4B72AF", "#54A968", "#C64E51", "#DCAD94" (etwas weniger knallig)
+    # scale_fill_manual(values=c("#B2172B", "#08598D", "#1E9D77", "#A7771C"))
+    scale_fill_manual(values=c("#a1dab4", "#41b6c4", "#2c7fb8", "#253494"))
+
+# pandemic_adjustments_values = round(c(0.2518703, 0.5610973, 0.1870324), 2) * 100
+# 
+# pie(pandemic_adjustments_values, 
+#     labels = paste0(pandemic_adjustments_values, "%"),
+#     clockwise = TRUE,
+#     col = cols,
+#     cex.main=3, 
+#     cex = 2.5,
+#     radius = 0.8,
+#     border = "white")
+# 
+# 
+# legend("bottom", 
+#        legend = pandemic_adnustments,
+#        fill = cols,
+#        cex = 1.5, 
+#        bty = "n",
+#        border = "white",
+#        horiz = TRUE,
+#        y = 2)
+
+
+```
+
+
+
+# Associations
+```{r}
+
+```
+
