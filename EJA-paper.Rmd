@@ -662,7 +662,24 @@ low_digital <- c("Belgium",
 
     
     
-    
+# new df with short names created to be able to create better looking contingency tables
+survey_dt_associations <- survey_data %>%
+    select(questions_table_one_EJA_paper) %>%
+    `colnames<-`(
+        c(
+            "when_complex",
+            "when_simple",
+            "accordance_complex",
+            "accordance_simple",
+            "legal_simple",
+            "Re_do",
+            "tech_internet",
+            "tech_telefone",
+            "ensuring_certain",
+            "future",
+            "pandemic_regulation"
+        )
+    )
 
 # survey_data_barchart$country[survey_data_barchart$country == "United Kingdom (UK)"] <- "UK" 
 # survey_data_barchart$country[survey_data_barchart$country == "North Macedonia (formerly Macedonia)"] <- "Macedonia" 
@@ -1270,41 +1287,6 @@ regulations %>%
 
 # Associations
 ```{r}
-questions_table_one_EJA_paper <- c(
-    # legal quesions
-    "When do you need to obtain Informed consent for elective surgery based on legal requirements (for complex procedures, higher risk patients).",
-    "When do you need to obtain Informed consent for elective surgery based on legal requirements (for simple procedures, low risk patients).",
-    "Is an online/telephone informed consent for elective surgery in accordance with the legal requirements in your country? (for complex procedures, higher risk patients)",
-    "Is an online/telephone informed consent for elective surgery in accordance with the legal requirements in your country? (for simple procedures, low risk patients)",
-    "Do you know if it is legally allowed to obtain informed consent via Internet or telephone (for simple procedures, low risk patients) in your country?",
-    "Thinking of Re-Do / repeated anaesthesia assuming the patient is well informed. Would an online/telephone informed consent then be allowed for elective surgery due to legal requirements in your country?",
-    # technical questions
-    "Is it possible to obtain informed consent online via internet, in your routine setting?",
-    "Is it possible to obtain informed consent online via telefone, in your routine setting?",
-    # other questions
-    "When ensuring a certain guideline, which may include i.e. specific appointment (time and date) for the interview, secure data protected online service, asking if there is a relaxed environment without distraction, parents’ explicit agreement in online or telephone interview. Would this be an alternative to personal face-to-face meetings?",
-    "How would you prefer to do the anaesthesiological preoperative evaluation in the future?",
-    "Is there a special regulation in your country during this pandemic situation favouring online or telephone informed consent?"
-)
-
-
-survey_dt_associations <- survey_data %>%
-    select(questions_table_one_EJA_paper) %>%
-    `colnames<-`(
-        c(
-            "when_complex",
-            "when_simple",
-            "accordance_complex",
-            "accordance_simple",
-            "legal_simple",
-            "Re_do",
-            "tech_internet",
-            "tech_telefone",
-            "ensuring_certain",
-            "future",
-            "pandemic_regulation"
-        )
-    )
 
 ```
 
