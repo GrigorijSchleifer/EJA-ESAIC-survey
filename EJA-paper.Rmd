@@ -1307,22 +1307,23 @@ tech_internet_GDP <- survey_dt_associations %>%
                                    levels = c("High_GDP_PC",
                                               "Middle_GDP_PC",
                                               "Low_GDP_PC"))) %>%
-    mutate(tech_internet = factor(
-        tech_internet,
-        levels = c("Yes",
-                   "No"))) %>% 
+    mutate(tech_internet = factor(tech_internet,
+                                  levels = c("Yes","No"))) %>% 
     table() %>%
     chisq.test()
 
 corrplot(
     tech_internet_GDP$residuals,
     is.corr = FALSE,
-    tl.col = "brown",
+    tl.col = "black",
     tl.srt = 0,
+    tl.cex = 1.4,
+    tl.offset = 1,
     bg = "White",
     addCoef.col = "white",
     title = "\n\n Correlation Plot Of Gambling Data",
-    type = "full"
+    type = "full",
+    cl.pos = 'n'
 )
 
 corrplot(tech_internet_GDP$residuals, is.cor = FALSE)
