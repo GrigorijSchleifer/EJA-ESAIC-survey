@@ -12,6 +12,7 @@ library(lessR)
 library(xlsx)
 library(ggpubr)
 library(scales)
+library(corrplot)
 
 # library(ReporteRs)
 # library(magrittr)
@@ -1298,11 +1299,21 @@ regulations %>%
 # http://www.sthda.com/english/wiki/chi-square-test-of-independence-in-r
 
 # Figure 1: GDP - Technical possible with internet
-tech_internet_GDP <- survey_dt_associations %>% 
-    dplyr::filter(tech_internet != "I don´t know") %>% 
-    select(c(tech_internet, GDP_PER_CAPITA)) %>% 
-    table() %>% 
+tech_internet_GDP <- survey_dt_associations %>%
+    dplyr::filter(tech_internet != "I don´t know") %>%
+    select(c(tech_internet, GDP_PER_CAPITA)) %>%
+    # chaning levels for better presentation of the contingency table
+    mutate(GDP_PER_CAPITA = factor(GDP_PER_CAPITA,
+                                   levels = c("High_GDP_PC",
+                                              "Middle_GDP_PC",
+                                              "Low_GDP_PC"))) %>%
+    mutate(tech_internet = factor(
+        tech_internet,
+        levels = c("Yes",
+                   "No"))) %>% 
+    table() %>%
     chisq.test()
+
 # Figure 1: Dichte - Technical possible with internet
 tech_internet_dichte <- survey_dt_associations %>% 
     dplyr::filter(tech_internet != "I don´t know") %>% 
