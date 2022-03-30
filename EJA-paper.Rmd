@@ -1314,12 +1314,26 @@ tech_internet_GDP <- survey_dt_associations %>%
     table() %>%
     chisq.test()
 
+corrplot(
+    tech_internet_GDP$residuals,
+    is.corr = FALSE,
+    tl.col = "brown",
+    tl.srt = 0,
+    bg = "White",
+    addCoef.col = "white",
+    title = "\n\n Correlation Plot Of Gambling Data",
+    type = "full"
+)
+
+corrplot(tech_internet_GDP$residuals, is.cor = FALSE)
+
 # Figure 1: Dichte - Technical possible with internet
 tech_internet_dichte <- survey_dt_associations %>% 
     dplyr::filter(tech_internet != "I don´t know") %>% 
     select(c(tech_internet, dichte)) %>% 
     table() %>% 
     chisq.test()
+
 # Figure 1: Digital-Index - Technical possible with internet
 tech_internet_digital_index <- survey_dt_associations %>% 
     dplyr::filter(tech_internet != "I don´t know") %>% 
