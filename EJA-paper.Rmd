@@ -1299,6 +1299,7 @@ regulations %>%
 
 # Figure 1: GDP - Technical possible with internet
 tech_internet_GDP <- survey_dt_associations %>% 
+    dplyr::filter(tech_internet != "I don´t know") %>% 
     select(c(tech_internet, GDP_PER_CAPITA)) %>% 
     table() %>% 
     chisq.test()
@@ -1315,7 +1316,7 @@ tech_internet_digital_index <- survey_dt_associations %>%
 
 
 # Figure 1: GDP - Technical possible with telefone
-tech_telefone_GDP <- survey_dt_associations %>% 
+tech_telefone_GDP <- survey_dt_associations %>%
     select(c(tech_telefone, GDP_PER_CAPITA)) %>% 
     table() %>% 
     chisq.test()
