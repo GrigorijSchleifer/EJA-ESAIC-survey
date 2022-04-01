@@ -749,6 +749,7 @@ BIP_DF <- BIP_DF %>%
 ```
 
 
+# Results
 ```{r Table One FIRST PUBLICATION}
 # https://cran.r-project.org/web/packages/table1/vignettes/table1-examples.html
 # stratification by gender
@@ -931,9 +932,6 @@ write.xlsx(results_tbl_gdp_pc,
            col.names = TRUE,
            row.names = TRUE)
 ```
-
-
-# Results
 
 ```{r Figure 1 technical question aranged by telefone and internet}
 
@@ -1309,22 +1307,10 @@ tech_internet_GDP <- survey_dt_associations %>%
                                               "Low_GDP_PC"))) %>%
     mutate(tech_internet = factor(tech_internet,
                                   levels = c("Yes","No"))) %>% 
-    table() %>%
-    chisq.test()
+    table()
 
-corrplot(
-    tech_internet_GDP$residuals,
-    is.corr = FALSE,
-    tl.col = "black",
-    tl.srt = 0,
-    tl.cex = 1.4,
-    tl.offset = 1,
-    bg = "White",
-    addCoef.col = "white",
-    title = "\n\n Correlation Plot Of Gambling Data",
-    type = "full",
-    cl.pos = 'n'
-)
+
+
 
 corrplot(tech_internet_GDP$residuals, is.cor = FALSE)
 
@@ -1361,5 +1347,20 @@ tech_telefone_digital_index <- survey_dt_associations %>%
     select(c(tech_telefone, digital_index)) %>% 
     table() %>% 
     chisq.test()
+
+
+corrplot(
+    tech_internet_GDP$residuals,
+    is.corr = FALSE,
+    tl.col = "black",
+    tl.srt = 0,
+    tl.cex = 1.4,
+    tl.offset = 1,
+    bg = "White",
+    addCoef.col = "white",
+    title = "\n\n ...",
+    type = "full",
+    cl.pos = 'n'
+)
 ```
 
