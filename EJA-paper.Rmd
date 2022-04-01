@@ -13,8 +13,8 @@ library(xlsx)
 library(ggpubr)
 library(scales)
 library(corrplot)
-library(gridExtra)
-library(cowplot)
+library(gridGraphics)
+library(grid)
 
 
 # library(ReporteRs)
@@ -742,6 +742,10 @@ survey_data <- survey_data %>%
 
 # Fischer exakt 
 # http://vassarstats.net/fisher2x3.html
+
+# grobs for correlation matrix
+# https://stackoverflow.com/questions/53734543/converting-corrplot-output-to-grob
+
 ```
 ```{r creating fct_lump styple chunks}
 # https://tradingeconomics.com/country-list/gdp?continent=europe
@@ -1343,7 +1347,7 @@ plot_tech_internet <- survey_dt_associations %>%
     ggplot(aes(x = value, y = Answer, fill=Index)) +
     geom_bar(position = "fill", stat='identity')
     
-Corr_GDP_tech_internet <- corrplot(
+corrplot(
     GDP_tech_internet$residuals,
     is.corr = FALSE,
     tl.col = "black",
@@ -1357,8 +1361,12 @@ Corr_GDP_tech_internet <- corrplot(
     cl.pos = 'n'
 )
 
+# https://stackoverflow.com/questions/53734543/converting-corrplot-output-to-grob
+grid.echo()
+P1 <- grid.grab()
+
 ggarrange(plot_tech_internet,
-          plot_tech_internet, 
+          P1, 
           ncol = 2,
           nrow = 1)
 
