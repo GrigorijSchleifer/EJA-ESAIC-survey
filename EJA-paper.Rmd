@@ -13,6 +13,9 @@ library(xlsx)
 library(ggpubr)
 library(scales)
 library(corrplot)
+library(gridExtra)
+library(cowplot)
+
 
 # library(ReporteRs)
 # library(magrittr)
@@ -1292,12 +1295,34 @@ regulations %>%
 
 
 # Associations
-```{r Stacked bar horizontal: Internet possible}
+```{r GDP_PC: Stacked bar horizontal: Internet possible}
 # link to statistics page
 # http://www.sthda.com/english/wiki/chi-square-test-of-independence-in-r
 
-# Figure 1: GDP - Technical possible with internet
-tech_internet_GDP <- survey_dt_associations %>%
+# Table: GDP - Technical possible with internet
+GDP_tech_internet <- survey_dt_associations %>%
+    dplyr::filter(tech_internet != "Different (please comment)") %>%
+    select(c(tech_internet, GDP_PER_CAPITA)) %>%
+    # chaning levels for better presentation of the contingency table
+    mutate(GDP_PER_CAPITA = factor(
+        GDP_PER_CAPITA,
+        levels = c("High_GDP_PC",
+                   "Middle_GDP_PC",
+                   "Low_GDP_PC")
+    )) %>%
+    mutate(tech_internet = factor(
+        tech_internet,
+        levels = c("Yes",
+                   "No (please comment)"),
+        labels = c("Yes",
+                   "No")
+    )) %>%
+    table() %>% 
+    chisq.test()
+    # Chi-Square Statistics
+
+# horizontal stacked bar plot for internet possible stritified with GDP_PC
+plot_tech_internet <- survey_dt_associations %>%
     dplyr::filter(tech_internet != "Different (please comment)") %>%
     select(c(tech_internet, GDP_PER_CAPITA)) %>%
     # chaning levels for better presentation of the contingency table
@@ -1313,14 +1338,45 @@ tech_internet_GDP <- survey_dt_associations %>%
     table() %>% 
     as.data.frame.matrix() %>% 
     rownames_to_column(var = "Answer") %>% 
-    add_column(Question = rep("tech_internet", 2))
+    add_column(Question = rep("tech_internet", 2)) %>% 
+    gather(key = "Index", value = "value", -Answer, -Question) %>% 
+    ggplot(aes(x = value, y = Answer, fill=Index)) +
+    geom_bar(position = "fill", stat='identity')
+    
+Corr_GDP_tech_internet <- corrplot(
+    GDP_tech_internet$residuals,
+    is.corr = FALSE,
+    tl.col = "black",
+    tl.srt = 0,
+    tl.cex = 1.4,
+    tl.offset = 1,
+    bg = "White",
+    addCoef.col = "white",
+    title = "\n\n ...",
+    type = "full",
+    cl.pos = 'n'
+)
+
+ggarrange(plot_tech_internet,
+          plot_tech_internet, 
+          ncol = 2,
+          nrow = 1)
+
+
+
+
+
+
+
+# horizontal stacked bar plot
 
 
 #   Answer High_GDP_PC Middle_GDP_PC Low_GDP_PC      Question
 # 1    Yes          89            49         19 tech_internet
 # 2     No         222           181         83 tech_internet
+
 ```
-```{r Stacked bar horizontal: Telefone possible}
+```{r GDP_PC: Stacked bar horizontal: Telefone possible}
 tech_internet_GDP <- survey_dt_associations %>%
     dplyr::filter(tech_telefone != "Different (please comment)") %>%
     select(c(tech_telefone, GDP_PER_CAPITA)) %>%
@@ -1343,6 +1399,26 @@ tech_internet_GDP <- survey_dt_associations %>%
 # 1    Yes         175            56         24 tech_telefone
 # 2     No         139           173         78 tech_telefone
 ```
+```{r}
+# Digital Index - Technical possible with internet
+survey_dt_associations %>%
+    dplyr::filter(tech_internet != "Different (please comment)") %>%
+    select(c(tech_internet, digital_index)) %>%
+    # chaning levels for better presentation of the contingency table
+    mutate(digital_index = factor(digital_index,
+                                   levels = c("High_GDP_PC",
+                                              "Middle_GDP_PC",
+                                              "Low_GDP_PC"))) %>%
+    mutate(tech_internet = factor(tech_internet,
+                                  levels = c("Yes",
+                                             "No (please comment)"), 
+                                  labels = c("Yes",
+                                             "No"))) %>%
+    table() %>% 
+    as.data.frame.matrix() %>% 
+    rownames_to_column(var = "Answer") %>% 
+    add_column(Question = rep("tech_internet", 2))
+```
 
 
 ```{r }
@@ -1363,12 +1439,7 @@ tech_internet_digital_index <- survey_dt_associations %>%
     chisq.test()
 
 
-# Figure 1: GDP - Technical possible with telefone
-tech_telefone_GDP <- survey_dt_associations %>%
-    dplyr::filter(tech_telefone != "Different (please comment)") %>% 
-    select(c(tech_telefone, GDP_PER_CAPITA)) %>% 
-    table() %>% 
-    chisq.test()
+
 # Figure 1: Dichte - Technical possible with telefone
 tech_telefone_dichte <- survey_dt_associations %>% 
     dplyr::filter(tech_telefone != "Different (please comment)") %>% 
