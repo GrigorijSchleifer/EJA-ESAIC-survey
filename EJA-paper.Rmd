@@ -1312,8 +1312,8 @@ tech_internet_GDP <- survey_dt_associations %>%
                                              "No"))) %>%
     table() %>% 
     as.data.frame.matrix() %>% 
-    add_column(Answer = c("Yes", "No"),
-               Question = rep("tech_internet", 2))
+    rownames_to_column(var = "Answer") %>% 
+    add_column(Question = rep("tech_internet", 2))
 
 
 #              GDP_PER_CAPITA
