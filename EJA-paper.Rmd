@@ -668,17 +668,17 @@ survey_dt_associations <- survey_data %>%
     select(questions_table_one_EJA_paper, GDP_PER_CAPITA, digital_index, dichte) %>%
     `colnames<-`(
         c(
+            "prefer_future",
             "when_complex",
             "when_simple",
             "accordance_complex",
             "accordance_simple",
-            "legal_simple",
             "Re_do",
+            "special_regulations",
             "tech_internet",
             "tech_telefone",
-            "ensuring_certain",
-            "future",
-            "pandemic_regulation",
+            "legal_tel_int_simple",
+            "certain_guidlines",
             "GDP_PER_CAPITA", 
             "digital_index", 
             "dichte"
@@ -1298,7 +1298,7 @@ regulations %>%
 
 # Figure 1: GDP - Technical possible with internet
 tech_internet_GDP <- survey_dt_associations %>%
-    dplyr::filter(tech_internet != "I don´t know") %>%
+    dplyr::filter(tech_internet != "Different (please comment)") %>%
     select(c(tech_internet, GDP_PER_CAPITA)) %>%
     # chaning levels for better presentation of the contingency table
     mutate(GDP_PER_CAPITA = factor(GDP_PER_CAPITA,
@@ -1306,10 +1306,22 @@ tech_internet_GDP <- survey_dt_associations %>%
                                               "Middle_GDP_PC",
                                               "Low_GDP_PC"))) %>%
     mutate(tech_internet = factor(tech_internet,
-                                  levels = c("Yes","No"))) %>% 
-    table()
+                                  levels = c("Yes",
+                                             "No (please comment)"), 
+                                  labels = c("Yes",
+                                             "No"))) %>%
+    table() %>% 
+    as.data.frame.matrix() %>% 
+    add_column(Answer = c("Yes", "No"),
+               Question = rep("tech_internet", 2))
 
 
+#              GDP_PER_CAPITA
+# tech_internet High_GDP_PC Middle_GDP_PC Low_GDP_PC
+#           Yes          80            64          5
+#           No          203           156         89
+          
+          
 
 
 corrplot(tech_internet_GDP$residuals, is.cor = FALSE)
