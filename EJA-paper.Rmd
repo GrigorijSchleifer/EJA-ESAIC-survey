@@ -1292,7 +1292,7 @@ regulations %>%
 
 
 # Associations
-```{r Figure 1: Internet possible}
+```{r Stacked bar horizontal: Internet possible}
 # link to statistics page
 # http://www.sthda.com/english/wiki/chi-square-test-of-independence-in-r
 
@@ -1316,15 +1316,37 @@ tech_internet_GDP <- survey_dt_associations %>%
     add_column(Question = rep("tech_internet", 2))
 
 
-#              GDP_PER_CAPITA
-# tech_internet High_GDP_PC Middle_GDP_PC Low_GDP_PC
-#           Yes          80            64          5
-#           No          203           156         89
-          
-          
+#   Answer High_GDP_PC Middle_GDP_PC Low_GDP_PC      Question
+# 1    Yes          89            49         19 tech_internet
+# 2     No         222           181         83 tech_internet
+```
+```{r Stacked bar horizontal: Telefone possible}
+tech_internet_GDP <- survey_dt_associations %>%
+    dplyr::filter(tech_telefone != "Different (please comment)") %>%
+    select(c(tech_telefone, GDP_PER_CAPITA)) %>%
+    # chaning levels for better presentation of the contingency table
+    mutate(GDP_PER_CAPITA = factor(GDP_PER_CAPITA,
+                                   levels = c("High_GDP_PC",
+                                              "Middle_GDP_PC",
+                                              "Low_GDP_PC"))) %>%
+    mutate(tech_telefone = factor(tech_telefone,
+                                  levels = c("Yes",
+                                             "No (please comment)"), 
+                                  labels = c("Yes",
+                                             "No"))) %>%
+    table() %>% 
+    as.data.frame.matrix() %>% 
+    rownames_to_column(var = "Answer") %>% 
+    add_column(Question = rep("tech_telefone", 2))
+
+#   Answer High_GDP_PC Middle_GDP_PC Low_GDP_PC      Question
+# 1    Yes         175            56         24 tech_telefone
+# 2     No         139           173         78 tech_telefone
+```
 
 
-corrplot(tech_internet_GDP$residuals, is.cor = FALSE)
+```{r }
+
 
 # Figure 1: Dichte - Technical possible with internet
 tech_internet_dichte <- survey_dt_associations %>% 
@@ -1361,6 +1383,9 @@ tech_telefone_digital_index <- survey_dt_associations %>%
     chisq.test()
 
 
+```
+
+```{r Correlation plot: Pearsons residuals}
 corrplot(
     tech_internet_GDP$residuals,
     is.corr = FALSE,
@@ -1374,5 +1399,6 @@ corrplot(
     type = "full",
     cl.pos = 'n'
 )
+
 ```
 
