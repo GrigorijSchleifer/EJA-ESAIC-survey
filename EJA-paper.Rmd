@@ -1367,13 +1367,20 @@ corrplot(
 grid.echo()
 P1 <- grid.grab()
 P1 <- as_ggplot(P1)
+
+# trying out ggcorrplot package
+pearsons_residuals_GDP_internet <- GDP_tech_internet$residual
+
+# http://www.sthda.com/english/wiki/ggcorrplot-visualization-of-a-correlation-matrix-using-ggplot2
+plot_pearsons_residuals_GDP_internet <- ggcorrplot(pearsons_residuals_GDP_internet, method = "circle")
+
+ggballoonplot(data.frame(pearsons_residuals_GDP_internet),
+              size = "value")
+
 ggarrange(plot_tech_internet,
-          P1, 
+          plot_pearsons_residuals_GDP_internet, 
           ncol = 2,
           nrow = 1)
-
-
-
 
 
 
