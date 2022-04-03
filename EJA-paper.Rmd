@@ -1368,39 +1368,13 @@ grid.echo()
 P1 <- grid.grab()
 P1 <- as_ggplot(P1)
 
-# trying out ggcorrplot package
-prs_res_GDP_int <- as_data_frame(GDP_tech_internet$residual)
-
-
 df <- tibble(tech_internet = c("Yes", "No", "Yes", "No", "Yes", "No"),
              GDP_PER_CAPITA = c("High_GDP_PC", "High_GDP_PC", "Middle_GDP_PC", "Middle_GDP_PC", "Low_GDP_PC", "Low_GDP_PC"), 
              n = c(14.991455,-0.8520704,-0.9552603, 0.5429420, -11.1832737, 0.6725381))
 
-# trying geom_point approach
-cols <- c("#d73027",
-          "darkgrey",
-          "#4575b4")
-
-df %>% 
-    ggplot(aes(x = GDP_PER_CAPITA, y = tech_internet, colour = n, size = n)) +
-    geom_point() +
-    scale_colour_gradientn(colours = cols) +
-    theme(legend.position="bottom") +
-    scale_size(range = c(1,20)) +
-    guides(color=guide_legend(override.aes = list(size = c(20, 1, 20))))
-
-
-# http://www.sthda.com/english/wiki/ggcorrplot-visualization-of-a-correlation-matrix-using-ggplot2
-plot_pearsons_residuals_GDP_internet <- ggcorrplot(pearsons_residuals_GDP_internet, method = "circle")
-
-ggballoonplot(prs_res_GDP_int_spread)
-
-prs_res_GDP_int_spread %>% 
-    ggplot() +
-    geom_point()
 
 ggarrange(plot_tech_internet,
-          plot_pearsons_residuals_GDP_internet, 
+          P1, 
           ncol = 2,
           nrow = 1)
 
