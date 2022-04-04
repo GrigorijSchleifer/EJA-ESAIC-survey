@@ -1401,7 +1401,7 @@ GDP_tech_internet <- survey_dt_associations %>%
             levels = c("High_GDP_PC",
                        "Middle_GDP_PC",
                        "Low_GDP_PC"),
-            labels = c("High GDP per capita", "Middle GDP per capita","Low GDP per capita"))) %>%
+            labels = c("High", "Middle","Low"))) %>%
     mutate(tech_internet = factor(
         tech_internet,
         levels = c("Yes",
@@ -1431,7 +1431,7 @@ GDP_tech_telefone <- survey_dt_associations %>%
             levels = c("High_GDP_PC",
                        "Middle_GDP_PC",
                        "Low_GDP_PC"),
-            labels = c("High GDP per capita", "Middle GDP per capita","Low GDP per capita"))) %>%
+            labels = c("High", "Middle","Low"))) %>%
     mutate(tech_telefone = factor(
         tech_telefone,
         levels = c("Yes",
@@ -1445,7 +1445,7 @@ GDP_tech_telefone <- survey_dt_associations %>%
 
 # technical internet GDP
 corrplot(
-    t(GDP_tech_internet$residuals),
+    GDP_tech_internet$residuals,
     is.corr = FALSE,
     tl.col = "black",
     tl.srt = 0,
