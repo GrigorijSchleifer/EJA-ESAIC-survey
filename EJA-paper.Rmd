@@ -1301,94 +1301,6 @@ regulations %>%
 
 
 # Associations
-```{r GDP_PC: Stacked bar horizontal: Internet possible}
-# link to statistics page
-# http://www.sthda.com/english/wiki/chi-square-test-of-independence-in-r
-
-# Table: GDP - Technical possible with internet
-GDP_tech_internet <- survey_dt_associations %>%
-    dplyr::filter(tech_internet != "Different (please comment)") %>%
-    select(c(tech_internet, GDP_PER_CAPITA)) %>%
-    # chaning levels for better presentation of the contingency table
-    mutate(GDP_PER_CAPITA = factor(
-        GDP_PER_CAPITA,
-        levels = c("High_GDP_PC",
-                   "Middle_GDP_PC",
-                   "Low_GDP_PC")
-    )) %>%
-    mutate(tech_internet = factor(
-        tech_internet,
-        levels = c("Yes",
-                   "No (please comment)"),
-        labels = c("Yes",
-                   "No")
-    )) %>%
-    table() %>% 
-    chisq.test()
-    # Chi-Square Statistics
-
-# horizontal stacked bar plot for internet possible stritified with GDP_PC
-plot_tech_internet <- survey_dt_associations %>%
-    dplyr::filter(tech_internet != "Different (please comment)") %>%
-    select(c(tech_internet, GDP_PER_CAPITA)) %>%
-    # chaning levels for better presentation of the contingency table
-    mutate(GDP_PER_CAPITA = factor(GDP_PER_CAPITA,
-                                   levels = c("High_GDP_PC",
-                                              "Middle_GDP_PC",
-                                              "Low_GDP_PC"))) %>%
-    mutate(tech_internet = factor(tech_internet,
-                                  levels = c("Yes",
-                                             "No (please comment)"), 
-                                  labels = c("Yes",
-                                             "No"))) %>%
-    table() %>% 
-    as.data.frame.matrix() %>% 
-    rownames_to_column(var = "Answer") %>% 
-    add_column(Question = rep("tech_internet", 2)) %>% 
-    gather(key = "Index", value = "value", -Answer, -Question) %>% 
-    ggplot(aes(x = value, y = Answer, fill=Index)) +
-    geom_bar(position = "fill", stat='identity')
-    
-corrplot(
-    GDP_tech_internet$residuals,
-    is.corr = FALSE,
-    tl.col = "black",
-    tl.srt = 0,
-    tl.cex = 1.4,
-    tl.offset = 1,
-    bg = "White",
-    addCoef.col = "white",
-    title = "\n\n ...",
-    type = "full",
-    cl.pos = 'n'
-)
-
-# https://stackoverflow.com/questions/53734543/converting-corrplot-output-to-grob
-grid.echo()
-P1 <- grid.grab()
-P1 <- as_ggplot(P1)
-
-df <- tibble(tech_internet = c("Yes", "No", "Yes", "No", "Yes", "No"),
-             GDP_PER_CAPITA = c("High_GDP_PC", "High_GDP_PC", "Middle_GDP_PC", "Middle_GDP_PC", "Low_GDP_PC", "Low_GDP_PC"), 
-             n = c(14.991455,-0.8520704,-0.9552603, 0.5429420, -11.1832737, 0.6725381))
-
-
-ggarrange(plot_tech_internet,
-          P1, 
-          ncol = 2,
-          nrow = 1)
-
-
-
-
-# horizontal stacked bar plot
-
-
-#   Answer High_GDP_PC Middle_GDP_PC Low_GDP_PC      Question
-# 1    Yes          89            49         19 tech_internet
-# 2     No         222           181         83 tech_internet
-
-```
 ```{r GDP_PC: Stacked bar horizontal: Telefone possible}
 tech_internet_GDP <- survey_dt_associations %>%
     dplyr::filter(tech_telefone != "Different (please comment)") %>%
@@ -1468,21 +1380,99 @@ tech_telefone_digital_index <- survey_dt_associations %>%
 
 
 ```
+```{r GDP_PC: Stacked bar horizontal: Internet possible}
+# link to statistics page
+# http://www.sthda.com/english/wiki/chi-square-test-of-independence-in-r
 
-```{r Correlation plot: Pearsons residuals}
+# Chi-Square stats: GDP - Technical possible with internet
+GDP_tech_internet <- survey_dt_associations %>%
+    dplyr::filter(tech_internet != "Different (please comment)") %>%
+    select(c(tech_internet, GDP_PER_CAPITA)) %>%
+    # chaning levels for better presentation of the contingency table
+    mutate(GDP_PER_CAPITA = factor(
+        GDP_PER_CAPITA,
+        levels = c("High_GDP_PC",
+                   "Middle_GDP_PC",
+                   "Low_GDP_PC")
+    )) %>%
+    mutate(
+        GDP_PER_CAPITA = factor(
+            GDP_PER_CAPITA,
+            levels = c("High_GDP_PC",
+                       "Middle_GDP_PC",
+                       "Low_GDP_PC"),
+            labels = c("High", "Middle","Low"))) %>%
+    mutate(tech_internet = factor(
+        tech_internet,
+        levels = c("Yes",
+                   "No (please comment)"),
+        labels = c("Yes",
+                   "No")
+    )) %>%
+    table() %>%
+    chisq.test()
+    # Chi-Square Statistics
+
+# horizontal stacked bar plot for internet possible stritified with GDP_PC
+plot_tech_internet <- survey_dt_associations %>%
+    select(c(tech_internet, GDP_PER_CAPITA)) %>%
+    dplyr::filter(tech_internet != "Different (please comment)") %>%
+    # chaning levels for better presentation of the contingency table
+    mutate(GDP_PER_CAPITA = factor(GDP_PER_CAPITA,
+                                   levels = c("High_GDP_PC",
+                                              "Middle_GDP_PC",
+                                              "Low_GDP_PC"))) %>%
+    mutate(tech_internet = factor(tech_internet,
+                                  levels = c("Yes",
+                                             "No (please comment)"), 
+                                  labels = c("Yes",
+                                             "No"))) %>%
+    table() %>% 
+    as.data.frame.matrix() %>% 
+    rownames_to_column(var = "Answer") %>% 
+    add_column(Question = rep("tech_internet", 2)) %>% 
+    gather(key = "Index", value = "value", -Answer, -Question) %>% 
+    ggplot(aes(x = value, y = Answer, fill=Index)) +
+    geom_bar(position = "fill", stat='identity')
+    
 corrplot(
-    tech_internet_GDP$residuals,
+    GDP_tech_internet$residuals,
     is.corr = FALSE,
     tl.col = "black",
     tl.srt = 0,
-    tl.cex = 1.4,
+    tl.cex = 2,
     tl.offset = 1,
     bg = "White",
     addCoef.col = "white",
-    title = "\n\n ...",
+    title = "Is it possible to obtain informed consent online via internet  in your routine setting?",
     type = "full",
     cl.pos = 'n'
 )
+
+# https://stackoverflow.com/questions/53734543/converting-corrplot-output-to-grob
+grid.echo()
+P1 <- grid.grab()
+P1 <- as_ggplot(P1)
+
+df <- tibble(tech_internet = c("Yes", "No", "Yes", "No", "Yes", "No"),
+             GDP_PER_CAPITA = c("High_GDP_PC", "High_GDP_PC", "Middle_GDP_PC", "Middle_GDP_PC", "Low_GDP_PC", "Low_GDP_PC"), 
+             n = c(14.991455,-0.8520704,-0.9552603, 0.5429420, -11.1832737, 0.6725381))
+
+
+ggarrange(plot_tech_internet,
+          P1, 
+          ncol = 2,
+          nrow = 1)
+
+
+
+
+# horizontal stacked bar plot
+
+
+#   Answer High_GDP_PC Middle_GDP_PC Low_GDP_PC      Question
+# 1    Yes          89            49         19 tech_internet
+# 2     No         222           181         83 tech_internet
 
 ```
 
