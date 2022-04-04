@@ -1384,7 +1384,7 @@ tech_telefone_digital_index <- survey_dt_associations %>%
 # link to statistics page
 # http://www.sthda.com/english/wiki/chi-square-test-of-independence-in-r
 
-# Chi-Square stats: GDP - Technical possible with internet
+# Chi-Square stats: GDP - Technical possible with INTERNET
 GDP_tech_internet <- survey_dt_associations %>%
     dplyr::filter(tech_internet != "Different (please comment)") %>%
     select(c(tech_internet, GDP_PER_CAPITA)) %>%
@@ -1401,9 +1401,39 @@ GDP_tech_internet <- survey_dt_associations %>%
             levels = c("High_GDP_PC",
                        "Middle_GDP_PC",
                        "Low_GDP_PC"),
-            labels = c("High", "Middle","Low"))) %>%
+            labels = c("High GDP per capita", "Middle GDP per capita","Low GDP per capita"))) %>%
     mutate(tech_internet = factor(
         tech_internet,
+        levels = c("Yes",
+                   "No (please comment)"),
+        labels = c("Yes",
+                   "No")
+    )) %>%
+    table() %>%
+    # prop.table(., 2)
+    chisq.test()
+    # Chi-Square Statistics
+
+# Chi-Square stats: GDP - Technical possible with TELEFONE
+GDP_tech_telefone <- survey_dt_associations %>%
+    dplyr::filter(tech_telefone != "Different (please comment)") %>%
+    select(c(tech_telefone, GDP_PER_CAPITA)) %>%
+    # chaning levels for better presentation of the contingency table
+    mutate(GDP_PER_CAPITA = factor(
+        GDP_PER_CAPITA,
+        levels = c("High_GDP_PC",
+                   "Middle_GDP_PC",
+                   "Low_GDP_PC")
+    )) %>%
+    mutate(
+        GDP_PER_CAPITA = factor(
+            GDP_PER_CAPITA,
+            levels = c("High_GDP_PC",
+                       "Middle_GDP_PC",
+                       "Low_GDP_PC"),
+            labels = c("High GDP per capita", "Middle GDP per capita","Low GDP per capita"))) %>%
+    mutate(tech_telefone = factor(
+        tech_telefone,
         levels = c("Yes",
                    "No (please comment)"),
         labels = c("Yes",
@@ -1413,30 +1443,9 @@ GDP_tech_internet <- survey_dt_associations %>%
     chisq.test()
     # Chi-Square Statistics
 
-# horizontal stacked bar plot for internet possible stritified with GDP_PC
-plot_tech_internet <- survey_dt_associations %>%
-    select(c(tech_internet, GDP_PER_CAPITA)) %>%
-    dplyr::filter(tech_internet != "Different (please comment)") %>%
-    # chaning levels for better presentation of the contingency table
-    mutate(GDP_PER_CAPITA = factor(GDP_PER_CAPITA,
-                                   levels = c("High_GDP_PC",
-                                              "Middle_GDP_PC",
-                                              "Low_GDP_PC"))) %>%
-    mutate(tech_internet = factor(tech_internet,
-                                  levels = c("Yes",
-                                             "No (please comment)"), 
-                                  labels = c("Yes",
-                                             "No"))) %>%
-    table() %>% 
-    as.data.frame.matrix() %>% 
-    rownames_to_column(var = "Answer") %>% 
-    add_column(Question = rep("tech_internet", 2)) %>% 
-    gather(key = "Index", value = "value", -Answer, -Question) %>% 
-    ggplot(aes(x = value, y = Answer, fill=Index)) +
-    geom_bar(position = "fill", stat='identity')
-    
+# technical internet GDP
 corrplot(
-    GDP_tech_internet$residuals,
+    t(GDP_tech_internet$residuals),
     is.corr = FALSE,
     tl.col = "black",
     tl.srt = 0,
@@ -1444,10 +1453,16 @@ corrplot(
     tl.offset = 1,
     bg = "White",
     addCoef.col = "white",
-    title = "Is it possible to obtain informed consent online via internet  in your routine setting?",
     type = "full",
     cl.pos = 'n'
 )
+
+
+# perscent contribution 
+# contrib <- 100*GDP_tech_internet$residuals^2/GDP_tech_internet$statistic
+
+
+
 
 # https://stackoverflow.com/questions/53734543/converting-corrplot-output-to-grob
 grid.echo()
