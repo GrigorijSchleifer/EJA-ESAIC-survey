@@ -1015,6 +1015,56 @@ ggarrange(internet_pie,
           hjust = -0.02,
           ncol = 2)
 ```
+```{r Figure 2 PIE Is an online/telephone informed consent for elective surgery in accordance with the legal requirements in your country? }
+prop.table(table(survey_data$"Is an online/telephone informed consent for elective surgery in accordance with the legal requirements in your country? (for simple procedures, low risk patients)"))
+table(survey_data$"Is an online/telephone informed consent for elective surgery in accordance with the legal requirements in your country? (for simple procedures, low risk patients)")
+
+prop.table(table(survey_data$"Is an online/telephone informed consent for elective surgery in accordance with the legal requirements in your country? (for complex procedures, higher risk patients)"))
+table(survey_data$"Is an online/telephone informed consent for elective surgery in accordance with the legal requirements in your country? (for complex procedures, higher risk patients)")
+
+
+consent_legal <-
+    data.frame(
+        simple_complex = c(rep("simple procedures", 3), rep("complex procedures", 3), rep("Re-Do", 3)),
+        answer = rep(c("Unsure", "No", "Yes"), 3),
+        when_simple = round(
+            c(
+                0.3553616,
+                0.3715711,
+                0.2730673,
+                0.3877805,
+                0.4251870,
+                0.1870324,
+                0.3496241,
+                0.3283208,
+                0.3220551
+            ),
+            digits = 3
+        ) * 100
+    )
+
+
+consent_legal %>% 
+    ggplot(aes(x="", y=when_simple, fill=answer)) +
+    geom_bar(stat="identity", width=1, color = "white") +
+    coord_polar("y", start=0) + 
+    theme_void() + 
+    geom_text(aes(label = paste0(when_simple, "%")),
+              size = 10, 
+              colour="white",
+              position = position_stack(vjust = 0.5)) +
+    theme(legend.position="bottom",
+          legend.title = element_blank(),
+          legend.text = element_text(size=30),
+          legend.spacing.x = unit(1.5, 'cm'),
+          strip.text.x = element_text(size=35)) +
+    # "#00441B", "#053060", "#660A1F", "#A7771C" (Dunkel)
+    # "#4B72AF", "#54A968", "#C64E51", "#DCAD94" (etwas weniger knallig)
+    # "#B2172B", "#08598D", "#1E9D77", "#A7771C" (original)
+    # "#ffffb2", "#fecc5c", "#fd8d3c", "#e31a1c" (black and white compatible)
+    scale_fill_manual(values=c("#B2172B", "#08598D", "#1E9D77", "#A7771C")) +
+    facet_wrap(~factor(simple_complex, levels = c("simple procedures", "complex procedures")))
+```
 
 ```{r responce counts for different countries}
 survey_fragments %>% 
@@ -1184,40 +1234,6 @@ simple_df %>%
 #     radius = 1.2,
 #     border = "white")
 ```
-```{r PIE Is an online/telephone informed consent for elective surgery in accordance with the legal requirements in your country? }
-prop.table(table(survey_data$"Is an online/telephone informed consent for elective surgery in accordance with the legal requirements in your country? (for simple procedures, low risk patients)"))
-table(survey_data$"Is an online/telephone informed consent for elective surgery in accordance with the legal requirements in your country? (for simple procedures, low risk patients)")
-
-prop.table(table(survey_data$"Is an online/telephone informed consent for elective surgery in accordance with the legal requirements in your country? (for complex procedures, higher risk patients)"))
-table(survey_data$"Is an online/telephone informed consent for elective surgery in accordance with the legal requirements in your country? (for complex procedures, higher risk patients)")
-
-
-consent_legal <- data.frame(simple_complex = c(rep("simple procedures", 3), rep("complex procedures", 3)),
-                        answer = rep(c("Unsure", "No", "Yes"), 2),
-                        when_simple = round(c(0.3553616, 0.3715711, 0.2730673, 0.3877805, 0.4251870, 0.1870324), digits = 3) * 100)
-
-
-consent_legal %>% 
-    ggplot(aes(x="", y=when_simple, fill=answer)) +
-    geom_bar(stat="identity", width=1, color = "white") +
-    coord_polar("y", start=0) + 
-    theme_void() + 
-    geom_text(aes(label = paste0(when_simple, "%")),
-              size = 10, 
-              colour="white",
-              position = position_stack(vjust = 0.5)) +
-    theme(legend.position="bottom",
-          legend.title = element_blank(),
-          legend.text = element_text(size=30),
-          legend.spacing.x = unit(1.5, 'cm'),
-          strip.text.x = element_text(size=35)) +
-    # "#00441B", "#053060", "#660A1F", "#A7771C" (Dunkel)
-    # "#4B72AF", "#54A968", "#C64E51", "#DCAD94" (etwas weniger knallig)
-    # "#B2172B", "#08598D", "#1E9D77", "#A7771C" (original)
-    # "#ffffb2", "#fecc5c", "#fd8d3c", "#e31a1c" (black and white compatible)
-    scale_fill_manual(values=c("#B2172B", "#08598D", "#1E9D77", "#A7771C")) +
-    facet_wrap(~factor(simple_complex, levels = c("simple procedures", "complex procedures")))
-```
 ```{r Thinking of Re-Do / repeated anaesthesia assuming the patient is well informed. Would an online/telephone informed consent then be allowed for elective surgery due to legal requirements in your country?}
 
 prop.table(table(survey_data$`Thinking of Re-Do / repeated anaesthesia assuming the patient is well informed. Would an online/telephone informed consent then be allowed for elective surgery due to legal requirements in your country?`))
@@ -1318,7 +1334,9 @@ tech_internet_GDP <- survey_dt_associations %>%
     table() %>% 
     as.data.frame.matrix() %>% 
     rownames_to_column(var = "Answer") %>% 
-    add_column(Question = rep("tech_telefone", 2))
+    # add_column(Question = rep("tech_telefone", 2)) %>% 
+    gather(key = "GDP_PC", value = "values", -Answer) %>% 
+    ggplot(aes(x = GDP_PC, y = Answer))
 
 #   Answer High_GDP_PC Middle_GDP_PC Low_GDP_PC      Question
 # 1    Yes         175            56         24 tech_telefone
@@ -1380,7 +1398,7 @@ tech_telefone_digital_index <- survey_dt_associations %>%
 
 
 ```
-```{r GDP_PC: Stacked bar horizontal: Internet possible}
+```{r GDP_PC Residuals: Internet/telefone possible}
 # link to statistics page
 # http://www.sthda.com/english/wiki/chi-square-test-of-independence-in-r
 
@@ -1445,11 +1463,11 @@ GDP_tech_telefone <- survey_dt_associations %>%
 
 # technical internet GDP
 corrplot(
-    GDP_tech_internet$residuals,
+    GDP_tech_telefone$residuals,
     is.corr = FALSE,
     tl.col = "black",
     tl.srt = 0,
-    tl.cex = 2,
+    tl.cex = 3,
     tl.offset = 1,
     bg = "White",
     addCoef.col = "white",
