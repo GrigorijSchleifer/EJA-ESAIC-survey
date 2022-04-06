@@ -943,7 +943,6 @@ write.xlsx(results_tbl_gdp_pc,
 ```
 
 ```{r Figure 1 technical question aranged by telefone and internet}
-
 # absolute counts
 table(survey_data$"Is it possible to obtain informed consent online via internet, in your routine setting?")
 # proportions to store in "internet" df and use it for the graph
