@@ -1511,9 +1511,132 @@ GDP_tech_telefone <- survey_dt_associations %>%
     chisq.test()
     # Chi-Square Statistics
 
+# Chi-Square stats: DIGITAL INDEX - Technical possible with INTERNET
+Digital_index_tech_internet <- survey_dt_associations %>%
+    dplyr::filter(tech_internet != "Different (please comment)") %>%
+    dplyr::filter(digital_index != "NO INDEX") %>%
+    select(c(tech_internet, digital_index)) %>%
+    # chaning levels for better presentation of the contingency table
+    mutate(digital_index = factor(
+        digital_index,
+        levels = c("High_Digital",
+                   "Middle_Digital",
+                   "Low_Digital")
+    )) %>%
+    mutate(
+        digital_index = factor(
+            digital_index,
+            levels = c("High_Digital",
+                       "Middle_Digital",
+                       "Low_Digital"),
+            labels = c("High", "Middle","Low"))) %>%
+    mutate(tech_internet = factor(
+        tech_internet,
+        levels = c("Yes",
+                   "No (please comment)"),
+        labels = c("Yes",
+                   "No")
+    )) %>%
+    table() %>%
+    # prop.table(., 2)
+    chisq.test()
+    # Chi-Square Statistics
+
+
+# Chi-Square stats: DIGITAL INDEX - Technical possible with TELEFONE
+Digital_index_tech_telefone <- survey_dt_associations %>%
+    dplyr::filter(tech_telefone != "Different (please comment)") %>%
+    dplyr::filter(digital_index != "NO INDEX") %>%
+    select(c(tech_telefone, digital_index)) %>%
+    # chaning levels for better presentation of the contingency table
+    mutate(digital_index = factor(
+        digital_index,
+        levels = c("High_Digital",
+                   "Middle_Digital",
+                   "Low_Digital")
+    )) %>%
+    mutate(
+        digital_index = factor(
+            digital_index,
+            levels = c("High_Digital",
+                       "Middle_Digital",
+                       "Low_Digital"),
+            labels = c("High", "Middle","Low"))) %>%
+    mutate(tech_telefone = factor(
+        tech_telefone,
+        levels = c("Yes",
+                   "No (please comment)"),
+        labels = c("Yes",
+                   "No")
+    )) %>%
+    table() %>%
+    # prop.table(., 2)
+    chisq.test()
+    # Chi-Square Statistics
+
+# Chi-Square stats: DICHTE - Technical possible with INTERNET
+dichte_tech_internet <- survey_dt_associations %>%
+    dplyr::filter(tech_internet != "Different (please comment)") %>%
+    select(c(tech_internet, dichte)) %>%
+    # chaning levels for better presentation of the contingency table
+    mutate(dichte = factor(
+        dichte,
+        levels = c("Hohe_Dichte",
+                   "Mittler_Dichte",
+                   "Geringe_Dichte")
+    )) %>%
+    mutate(
+        dichte = factor(
+            dichte,
+            levels = c("Hohe_Dichte",
+                       "Mittler_Dichte",
+                       "Geringe_Dichte"),
+            labels = c("High", "Middle","Low"))) %>%
+    mutate(tech_internet = factor(
+        tech_internet,
+        levels = c("Yes",
+                   "No (please comment)"),
+        labels = c("Yes",
+                   "No")
+    )) %>%
+    table() %>%
+    # prop.table(., 2)
+    chisq.test()
+
+
+# Chi-Square stats: DICHTE - Technical possible with TELEFONE
+dichte_tech_telefone <- survey_dt_associations %>%
+    dplyr::filter(tech_telefone != "Different (please comment)") %>%
+    select(c(tech_telefone, dichte)) %>%
+    # chaning levels for better presentation of the contingency table
+    mutate(dichte = factor(
+        dichte,
+        levels = c("Hohe_Dichte",
+                   "Mittler_Dichte",
+                   "Geringe_Dichte")
+    )) %>%
+    mutate(
+        dichte = factor(
+            dichte,
+            levels = c("Hohe_Dichte",
+                       "Mittler_Dichte",
+                       "Geringe_Dichte"),
+            labels = c("High", "Middle","Low"))) %>%
+    mutate(tech_telefone = factor(
+        tech_telefone,
+        levels = c("Yes",
+                   "No (please comment)"),
+        labels = c("Yes",
+                   "No")
+    )) %>%
+    table() %>%
+    # prop.table(., 2)
+    chisq.test()
+    # Chi-Square Statistics
+
 # technical internet GDP
 corrplot(
-    GDP_tech_telefone$residuals,
+    t(dichte_tech_internet$residuals),
     is.corr = FALSE,
     tl.col = "black",
     tl.srt = 0,
@@ -1522,7 +1645,8 @@ corrplot(
     bg = "White",
     addCoef.col = "white",
     type = "full",
-    cl.pos = 'n'
+    cl.pos = 'n', 
+    mar = c(0,0,0,5)
 )
 
 
