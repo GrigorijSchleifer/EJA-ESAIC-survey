@@ -1591,7 +1591,7 @@ dichte_tech_internet <- survey_dt_associations %>%
             levels = c("Hohe_Dichte",
                        "Mittler_Dichte",
                        "Geringe_Dichte"),
-            labels = c("High", "Middle","Low"))) %>%
+            labels = c("High Dicht ", "Middle Dichte","Low"))) %>%
     mutate(tech_internet = factor(
         tech_internet,
         levels = c("Yes",
@@ -1636,7 +1636,7 @@ dichte_tech_telefone <- survey_dt_associations %>%
 
 # technical internet GDP
 corrplot(
-    t(dichte_tech_internet$residuals),
+    t(dichte_tech_telefone$residuals),
     is.corr = FALSE,
     tl.col = "black",
     tl.srt = 0,
