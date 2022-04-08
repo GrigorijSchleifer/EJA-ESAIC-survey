@@ -1112,7 +1112,7 @@ consent_legal_stacked %>%
           legend.text = element_text(size=30),
           legend.spacing.x = unit(1.5, 'cm'),
           strip.text.x = element_text(size=35)) +
-    scale_fill_manual(values=c("#B2172B", "#08598D", "#1E9D77", "#A7771C")) +
+    scale_fill_manual(values=c("#BF0127", "#002F62", "#1E9D77", "#A7771C")) +
     theme(axis.title.x = element_blank(),
           axis.title.y = element_blank(),
           axis.text.x = element_blank(),
