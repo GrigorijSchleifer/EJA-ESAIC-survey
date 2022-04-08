@@ -1104,7 +1104,7 @@ consent_legal_stacked %>%
     geom_bar(stat = "identity", width = 0.9, color = "white") +
     theme_light() + 
     geom_text(aes(label = paste0(when_simple, "%")),
-              size = 10, 
+              size = 15, 
               colour="white",
               position = position_stack(vjust = 0.5)) +
     theme(legend.position="bottom",
@@ -1116,7 +1116,7 @@ consent_legal_stacked %>%
     theme(axis.title.x = element_blank(),
           axis.title.y = element_blank(),
           axis.text.x = element_blank(),
-          axis.text.y = element_text(size=20)) +
+          axis.text.y = element_text(size=29)) +
     # facet_wrap(~factor(simple_complex, levels = c("simple procedures", "complex procedures", "Re-Do"))) +
     coord_flip()
 ```
