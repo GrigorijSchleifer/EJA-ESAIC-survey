@@ -957,7 +957,7 @@ internet_simplelegend <- data.frame(internet_telefone = c(rep("Internet", 3), re
 
 # "#a1dab4", "#41b6c4", "#2c7fb8", "#253494" 2 (Claudia bestätigt)
 # scale_fill_manual(values=c("#a1dab4", "#41b6c4", "#2c7fb8", "#253494"))
-internet_simplelegend <- internet %>% 
+internet_simplelegend <- internet_simplelegend %>% 
     ggplot(aes(x="", y=when_simple, fill=answer)) +
     geom_bar(stat="identity", width=1, color = "white") +
     coord_polar("y", start=0) + 
@@ -1125,7 +1125,7 @@ prop.table(table(survey_data$"When do you need to obtain Informed consent for el
 prop.table(table(survey_data$"When do you need to obtain Informed consent for elective surgery based on legal requirements (for complex procedures, higher risk patients)."))
 
 # 24 h prior and 24 prior because of daily routine pooled together
-simple_df <- data.frame(simple_complex = c(rep("simple procedures", 3), rep("complex procedures", 3)),
+simple_df <- data.frame(simple_complex = c(rep("Simple", 3), rep("Complex", 3)),
                         answer = rep(c("2 days or more", "24h or less", "Same day"), 2),
                         when_simple = round(c(0.1289111, 0.5419274, 0.3291615, 0.33625, 0.51625, 0.14750), digits = 3) * 100)
 
@@ -1133,11 +1133,11 @@ simple_df <- data.frame(simple_complex = c(rep("simple procedures", 3), rep("com
 # "#0073C2FF", "#EFC000FF", "#868686FF", "#CD534CFF"
 simple_df %>% 
     ggplot(aes(x="", y=when_simple, fill=answer)) +
-    geom_bar(stat="identity", width=1, color = "white") +
+    geom_bar(stat="identity", width=2, color = "white") +
     coord_polar("y", start=0) + 
     theme_void() + 
     geom_text(aes(label = paste0(when_simple, "%")),
-              size = 10, 
+              size = 8, 
               colour="white",
               position = position_stack(vjust = 0.5)) +
     theme(legend.position="bottom",
@@ -1148,7 +1148,7 @@ simple_df %>%
     # "#00441B", "#053060", "#660A1F", "#A7771C" (Dunkel)
     # "#4B72AF", "#54A968", "#C64E51", "#DCAD94" (etwas weniger knallig)
     scale_fill_manual(values=c("#B2172B", "#08598D", "#1E9D77", "#A7771C")) + 
-    facet_wrap(~factor(simple_complex, levels = c("simple procedures", "complex procedures")))
+    facet_wrap(~factor(simple_complex, levels = c("Simple", "Complex")))
 
 
 
