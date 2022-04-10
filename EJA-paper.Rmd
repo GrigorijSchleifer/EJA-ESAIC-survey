@@ -1598,7 +1598,7 @@ corrplot(
 )
 ```
 
-```{r Figure : GDP_PC Residuals: When simple }
+```{r Figure : GDP_PC Residuals: When simple}
 # Chi-Square stats: 
 GDP_accordance_simple <- survey_dt_associations %>%
     select(c(when_simple, GDP_PER_CAPITA)) %>%
@@ -1623,11 +1623,16 @@ GDP_accordance_simple <- survey_dt_associations %>%
                    "24h prior to surgery",
                    "2 days or more before surgery"),
         labels = c("Same",
-                   "24_prior_or_less",
-                   "24_prior",
+                   "day_prior_or_less",
+                   "day_prior",
                    "Two_days")
-    )) %>%
-    table() %>%
+    ))
+
+# combine both 24h entries
+GDP_accordance_simple$when_simple[GDP_accordance_simple$when_simple == "day_prior_or_less"] <- "day_prior"
+
+GDP_accordance_simple %>% 
+    table() %>% 
     # Chi-Square Statistics
     chisq.test()
 
