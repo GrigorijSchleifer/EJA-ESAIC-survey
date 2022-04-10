@@ -1488,6 +1488,21 @@ GDP_tech_internet <- survey_dt_associations %>%
     chisq.test()
     # Chi-Square Statistics
 
+# technical internet GDP
+corrplot(
+    t(GDP_tech_internet$residuals),
+    is.corr = FALSE,
+    tl.col = "black",
+    tl.srt = 0,
+    tl.cex = 3,
+    tl.offset = 1,
+    bg = "White",
+    addCoef.col = "white",
+    type = "full",
+    cl.pos = 'n', 
+    mar = c(0,0,0,5)
+)
+
 # Chi-Square stats: GDP - Technical possible with TELEFONE
 GDP_tech_telefone <- survey_dt_associations %>%
     dplyr::filter(tech_telefone != "Different (please comment)") %>%
@@ -1520,7 +1535,7 @@ GDP_tech_telefone <- survey_dt_associations %>%
 
 # technical internet GDP
 corrplot(
-    t(dichte_tech_telefone$residuals),
+    t(GDP_tech_telefone$residuals),
     is.corr = FALSE,
     tl.col = "black",
     tl.srt = 0,
