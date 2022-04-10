@@ -1631,10 +1631,13 @@ GDP_accordance_simple <- survey_dt_associations %>%
 # combine both 24h entries
 GDP_accordance_simple$when_simple[GDP_accordance_simple$when_simple == "day_prior_or_less"] <- "day_prior"
 
-GDP_accordance_simple %>% 
-    table() %>% 
-    # Chi-Square Statistics
-    chisq.test()
+GDP_accordance_simple <- GDP_accordance_simple %>% 
+    dplyr::filter(when_simple != "day_prior_or_less") %>% 
+    table()
+
+GDP_accordance_simple[c(1,3,4),] %>% 
+# Chi-Square Statistics
+chisq.test()
 
 # Legal requirenments for simple
 corrplot(
