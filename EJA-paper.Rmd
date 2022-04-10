@@ -1372,87 +1372,6 @@ regulations %>%
 
 
 # Associations
-```{r GDP_PC: Stacked bar horizontal: Telefone possible}
-tech_internet_GDP <- survey_dt_associations %>%
-    dplyr::filter(tech_telefone != "Different (please comment)") %>%
-    select(c(tech_telefone, GDP_PER_CAPITA)) %>%
-    # chaning levels for better presentation of the contingency table
-    mutate(GDP_PER_CAPITA = factor(GDP_PER_CAPITA,
-                                   levels = c("High_GDP_PC",
-                                              "Middle_GDP_PC",
-                                              "Low_GDP_PC"))) %>%
-    mutate(tech_telefone = factor(tech_telefone,
-                                  levels = c("Yes",
-                                             "No (please comment)"), 
-                                  labels = c("Yes",
-                                             "No"))) %>%
-    table() %>% 
-    as.data.frame.matrix() %>% 
-    rownames_to_column(var = "Answer") %>% 
-    # add_column(Question = rep("tech_telefone", 2)) %>% 
-    gather(key = "GDP_PC", value = "values", -Answer) %>% 
-    ggplot(aes(x = GDP_PC, y = Answer))
-
-#   Answer High_GDP_PC Middle_GDP_PC Low_GDP_PC      Question
-# 1    Yes         175            56         24 tech_telefone
-# 2     No         139           173         78 tech_telefone
-```
-```{r}
-# Digital Index - Technical possible with internet
-survey_dt_associations %>%
-    dplyr::filter(tech_internet != "Different (please comment)") %>%
-    select(c(tech_internet, digital_index)) %>%
-    # chaning levels for better presentation of the contingency table
-    mutate(digital_index = factor(digital_index,
-                                   levels = c("High_GDP_PC",
-                                              "Middle_GDP_PC",
-                                              "Low_GDP_PC"))) %>%
-    mutate(tech_internet = factor(tech_internet,
-                                  levels = c("Yes",
-                                             "No (please comment)"), 
-                                  labels = c("Yes",
-                                             "No"))) %>%
-    table() %>% 
-    as.data.frame.matrix() %>% 
-    rownames_to_column(var = "Answer") %>% 
-    add_column(Question = rep("tech_internet", 2))
-```
-
-
-```{r }
-
-
-# Figure 1: Dichte - Technical possible with internet
-tech_internet_dichte <- survey_dt_associations %>% 
-    dplyr::filter(tech_internet != "I don´t know") %>% 
-    select(c(tech_internet, dichte)) %>% 
-    table() %>% 
-    chisq.test()
-
-# Figure 1: Digital-Index - Technical possible with internet
-tech_internet_digital_index <- survey_dt_associations %>% 
-    dplyr::filter(tech_internet != "I don´t know") %>% 
-    select(c(tech_internet, digital_index)) %>% 
-    table() %>% 
-    chisq.test()
-
-
-
-# Figure 1: Dichte - Technical possible with telefone
-tech_telefone_dichte <- survey_dt_associations %>% 
-    dplyr::filter(tech_telefone != "Different (please comment)") %>% 
-    select(c(tech_telefone, dichte)) %>% 
-    table() %>% 
-    chisq.test()
-# Figure 1: Digital-Index - Technical possible with telefone
-tech_telefone_digital_index <- survey_dt_associations %>% 
-    dplyr::filter(tech_telefone != "Different (please comment)") %>% 
-    select(c(tech_telefone, digital_index)) %>% 
-    table() %>% 
-    chisq.test()
-
-
-```
 # DP_PC Pearsons residuals plots
 ```{r GDP_PC Residuals: Internet/telefone possible}
 # link to statistics page
@@ -1549,42 +1468,139 @@ corrplot(
 )
 ```
 
-```{r }
-
-
-
-# Chi-Square stats: DIGITAL INDEX - Technical possible with INTERNET
-Digital_index_tech_internet <- survey_dt_associations %>%
-    dplyr::filter(tech_internet != "Different (please comment)") %>%
-    dplyr::filter(digital_index != "NO INDEX") %>%
-    select(c(tech_internet, digital_index)) %>%
+```{r GDP_PC Residuals: Legal requirenments simple/complex/Redo}
+# Chi-Square stats: GDP_PC legal requirenments simple
+GDP_accordance_simple <- survey_dt_associations %>%
+    dplyr::filter(accordance_simple != "I do not know the legal requirements") %>%
+    select(c(accordance_simple, GDP_PER_CAPITA)) %>%
     # chaning levels for better presentation of the contingency table
-    mutate(digital_index = factor(
-        digital_index,
-        levels = c("High_Digital",
-                   "Middle_Digital",
-                   "Low_Digital")
+    mutate(GDP_PER_CAPITA = factor(
+        GDP_PER_CAPITA,
+        levels = c("High_GDP_PC",
+                   "Middle_GDP_PC",
+                   "Low_GDP_PC")
     )) %>%
     mutate(
-        digital_index = factor(
-            digital_index,
-            levels = c("High_Digital",
-                       "Middle_Digital",
-                       "Low_Digital"),
+        GDP_PER_CAPITA = factor(
+            GDP_PER_CAPITA,
+            levels = c("High_GDP_PC",
+                       "Middle_GDP_PC",
+                       "Low_GDP_PC"),
             labels = c("High", "Middle","Low"))) %>%
-    mutate(tech_internet = factor(
-        tech_internet,
+    mutate(accordance_simple = factor(
+        accordance_simple,
         levels = c("Yes",
-                   "No (please comment)"),
+                   "No (please comment the reasons)"),
         labels = c("Yes",
                    "No")
     )) %>%
     table() %>%
-    # prop.table(., 2)
-    chisq.test()
     # Chi-Square Statistics
+    chisq.test()
 
+# Legal requirenments for simple
+corrplot(
+    t(GDP_accordance_simple$residuals),
+    is.corr = FALSE,
+    tl.col = "black",
+    tl.srt = 0,
+    tl.cex = 3,
+    tl.offset = 1,
+    bg = "White",
+    addCoef.col = "white",
+    type = "full",
+    cl.pos = 'n', 
+    mar = c(0,0,0,5)
+)
 
+# Chi-Square stats: GDP_PC legal requirenments complex
+GDP_accordance_complex <- survey_dt_associations %>%
+    dplyr::filter(accordance_complex != "I do not know the legal requirements") %>%
+    select(c(accordance_complex, GDP_PER_CAPITA)) %>%
+    # chaning levels for better presentation of the contingency table
+    mutate(GDP_PER_CAPITA = factor(
+        GDP_PER_CAPITA,
+        levels = c("High_GDP_PC",
+                   "Middle_GDP_PC",
+                   "Low_GDP_PC")
+    )) %>%
+    mutate(
+        GDP_PER_CAPITA = factor(
+            GDP_PER_CAPITA,
+            levels = c("High_GDP_PC",
+                       "Middle_GDP_PC",
+                       "Low_GDP_PC"),
+            labels = c("High", "Middle","Low"))) %>%
+    mutate(accordance_complex = factor(
+        accordance_complex,
+        levels = c("Yes",
+                   "No (please comment the reasons)"),
+        labels = c("Yes",
+                   "No")
+    )) %>%
+    table() %>%
+    # Chi-Square Statistics
+    chisq.test()
+
+# Legal requirenments for complex
+corrplot(
+    t(GDP_accordance_complex$residuals),
+    is.corr = FALSE,
+    tl.col = "black",
+    tl.srt = 0,
+    tl.cex = 3,
+    tl.offset = 1,
+    bg = "White",
+    addCoef.col = "white",
+    type = "full",
+    cl.pos = 'n', 
+    mar = c(0,0,0,5)
+)
+
+# Chi-Square stats: GDP_PC Re-Do
+GDP_Re_Do <- survey_dt_associations %>%
+    dplyr::filter(Re_do != "I do not know the legal requirements") %>%
+    select(c(Re_do, GDP_PER_CAPITA)) %>%
+    # chaning levels for better presentation of the contingency table
+    mutate(GDP_PER_CAPITA = factor(
+        GDP_PER_CAPITA,
+        levels = c("High_GDP_PC",
+                   "Middle_GDP_PC",
+                   "Low_GDP_PC")
+    )) %>%
+    mutate(
+        GDP_PER_CAPITA = factor(
+            GDP_PER_CAPITA,
+            levels = c("High_GDP_PC",
+                       "Middle_GDP_PC",
+                       "Low_GDP_PC"),
+            labels = c("High", "Middle","Low"))) %>%
+    mutate(Re_do = factor(
+        Re_do,
+        levels = c("Yes",
+                   "No")
+    )) %>%
+    table() %>%
+    # Chi-Square Statistics
+    chisq.test()
+
+# Corrplot Re-Do
+corrplot(
+    t(GDP_Re_Do$residuals),
+    is.corr = FALSE,
+    tl.col = "black",
+    tl.srt = 0,
+    tl.cex = 3,
+    tl.offset = 1,
+    bg = "White",
+    addCoef.col = "white",
+    type = "full",
+    cl.pos = 'n', 
+    mar = c(0,0,0,5)
+)
+```
+
+```{r}
 # Chi-Square stats: DIGITAL INDEX - Technical possible with TELEFONE
 Digital_index_tech_telefone <- survey_dt_associations %>%
     dplyr::filter(tech_telefone != "Different (please comment)") %>%
@@ -1711,3 +1727,28 @@ ggarrange(plot_tech_internet,
 
 ```
 
+```{r GDP_PC: Stacked bar horizontal: Telefone possible}
+tech_internet_GDP <- survey_dt_associations %>%
+    dplyr::filter(tech_telefone != "Different (please comment)") %>%
+    select(c(tech_telefone, GDP_PER_CAPITA)) %>%
+    # chaning levels for better presentation of the contingency table
+    mutate(GDP_PER_CAPITA = factor(GDP_PER_CAPITA,
+                                   levels = c("High_GDP_PC",
+                                              "Middle_GDP_PC",
+                                              "Low_GDP_PC"))) %>%
+    mutate(tech_telefone = factor(tech_telefone,
+                                  levels = c("Yes",
+                                             "No (please comment)"), 
+                                  labels = c("Yes",
+                                             "No"))) %>%
+    table() %>% 
+    as.data.frame.matrix() %>% 
+    rownames_to_column(var = "Answer") %>% 
+    # add_column(Question = rep("tech_telefone", 2)) %>% 
+    gather(key = "GDP_PC", value = "values", -Answer) %>% 
+    ggplot(aes(x = GDP_PC, y = Answer))
+
+#   Answer High_GDP_PC Middle_GDP_PC Low_GDP_PC      Question
+# 1    Yes         175            56         24 tech_telefone
+# 2     No         139           173         78 tech_telefone
+```
