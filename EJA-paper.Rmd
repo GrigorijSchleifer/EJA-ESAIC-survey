@@ -1600,7 +1600,7 @@ corrplot(
 
 ```{r Figure : GDP_PC Residuals: When simple}
 # Chi-Square stats: 
-GDP_accordance_simple <- survey_dt_associations %>%
+GDP_when_simple <- survey_dt_associations %>%
     select(c(when_simple, GDP_PER_CAPITA)) %>%
     # chaning levels for better presentation of the contingency table
     mutate(GDP_PER_CAPITA = factor(
@@ -1629,18 +1629,18 @@ GDP_accordance_simple <- survey_dt_associations %>%
     ))
 
 # combine both 24h entries
-GDP_accordance_simple$when_simple[GDP_accordance_simple$when_simple == "day_prior_or_less"] <- "=24"
+GDP_when_simple$when_simple[GDP_when_simple$when_simple == "day_prior_or_less"] <- "=24"
 
-GDP_accordance_simple <- GDP_accordance_simple %>% 
+GDP_when_simple <- GDP_when_simple %>% 
     table()
 
-GDP_accordance_simple_test <- GDP_accordance_simple[c(1,3,4),] %>% 
+GDP_when_simple_test <- GDP_when_simple[c(1,3,4),] %>% 
 # Chi-Square Statistics
 chisq.test()
 
 # Legal requirenments for simple
 corrplot(
-    t(GDP_accordance_simple_test$residuals),
+    t(GDP_when_simple_test$residuals),
     is.corr = FALSE,
     tl.col = "black",
     tl.srt = 0,
@@ -1654,7 +1654,7 @@ corrplot(
 )
 
 # Chi-Square stats: 
-GDP_accordance_complex <- survey_dt_associations %>%
+GDP_when_complex <- survey_dt_associations %>%
     select(c(when_complex, GDP_PER_CAPITA)) %>%
     # chaning levels for better presentation of the contingency table
     mutate(GDP_PER_CAPITA = factor(
@@ -1683,18 +1683,18 @@ GDP_accordance_complex <- survey_dt_associations %>%
     ))
 
 # combine both 24h entries
-GDP_accordance_complex$when_simple[GDP_accordance_complex$when_simple == "day_prior_or_less"] <- "=24"
+GDP_when_complex$when_complex[GDP_when_complex$when_complex == "day_prior_or_less"] <- "=24"
 
-GDP_accordance_complex <- GDP_accordance_complex %>% 
+GDP_when_complex <- GDP_when_complex %>% 
     table()
 
-GDP_accordance_complex_test <- GDP_accordance_complex[c(1,3,4),] %>% 
+GDP_when_complex_test <- GDP_when_complex[c(1,3,4),] %>% 
 # Chi-Square Statistics
 chisq.test()
 
 # Legal requirenments for simple
 corrplot(
-    t(GDP_accordance_complex_test$residuals),
+    t(GDP_when_complex_test$residuals),
     is.corr = FALSE,
     tl.col = "black",
     tl.srt = 0,
@@ -1706,6 +1706,5 @@ corrplot(
     cl.pos = 'n', 
     mar = c(0,0,0,5)
 )
-
 ```
 
