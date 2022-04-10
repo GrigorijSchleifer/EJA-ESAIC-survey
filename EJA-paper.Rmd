@@ -1487,14 +1487,10 @@ GDP_accordance_simple <- survey_dt_associations %>%
             labels = c("High", "Middle","Low"))) %>%
     mutate(accordance_simple = factor(
         accordance_simple,
-        levels = c("Same day of the operation/procedure is sufficient enough",
-                   "24h prior to surgery",
-                   "24h prior to surgery but often its far less because of daily routine practice",
-                   "Same day of the operation/procedure is sufficient enough"),
-        labels = c("Same day",
-                   "24 h or less",
-                   "Same day",
-                   "Same day")
+        levels = c("Yes",
+                   "No (please comment the reasons)"),
+        labels = c("Yes",
+                   "No")
     )) %>%
     table() %>%
     # Chi-Square Statistics
@@ -1602,8 +1598,8 @@ corrplot(
 )
 ```
 
-```{r Figure : GDP_PC Residuals: Legal requirenments simple/complex/Redo}
-# Chi-Square stats: GDP_PC legal requirenments simple
+```{r Figure : GDP_PC Residuals: When simple }
+# Chi-Square stats: 
 GDP_accordance_simple <- survey_dt_associations %>%
     select(c(when_simple, GDP_PER_CAPITA)) %>%
     # chaning levels for better presentation of the contingency table
@@ -1622,10 +1618,14 @@ GDP_accordance_simple <- survey_dt_associations %>%
             labels = c("High", "Middle","Low"))) %>%
     mutate(when_simple = factor(
         when_simple,
-        levels = c("Yes",
-                   "No (please comment the reasons)"),
-        labels = c("Yes",
-                   "No")
+        levels = c("Same day of the operation/procedure is sufficient enough",
+                   "24h prior to surgery but often its far less because of daily routine practice",
+                   "24h prior to surgery",
+                   "2 days or more before surgery"),
+        labels = c("Same",
+                   "24_prior_or_less",
+                   "24_prior",
+                   "Two_days")
     )) %>%
     table() %>%
     # Chi-Square Statistics
