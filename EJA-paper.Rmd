@@ -1622,26 +1622,79 @@ GDP_accordance_simple <- survey_dt_associations %>%
                    "24h prior to surgery but often its far less because of daily routine practice",
                    "24h prior to surgery",
                    "2 days or more before surgery"),
-        labels = c("Same",
+        labels = c("<24",
                    "day_prior_or_less",
-                   "day_prior",
-                   "Two_days")
+                   "=24",
+                   ">48")
     ))
 
 # combine both 24h entries
-GDP_accordance_simple$when_simple[GDP_accordance_simple$when_simple == "day_prior_or_less"] <- "day_prior"
+GDP_accordance_simple$when_simple[GDP_accordance_simple$when_simple == "day_prior_or_less"] <- "=24"
 
 GDP_accordance_simple <- GDP_accordance_simple %>% 
-    dplyr::filter(when_simple != "day_prior_or_less") %>% 
     table()
 
-GDP_accordance_simple[c(1,3,4),] %>% 
+GDP_accordance_simple_test <- GDP_accordance_simple[c(1,3,4),] %>% 
 # Chi-Square Statistics
 chisq.test()
 
 # Legal requirenments for simple
 corrplot(
-    t(GDP_accordance_simple$residuals),
+    t(GDP_accordance_simple_test$residuals),
+    is.corr = FALSE,
+    tl.col = "black",
+    tl.srt = 0,
+    tl.cex = 3,
+    tl.offset = 1,
+    bg = "White",
+    addCoef.col = "white",
+    type = "full",
+    cl.pos = 'n', 
+    mar = c(0,0,0,5)
+)
+
+# Chi-Square stats: 
+GDP_accordance_complex <- survey_dt_associations %>%
+    select(c(when_complex, GDP_PER_CAPITA)) %>%
+    # chaning levels for better presentation of the contingency table
+    mutate(GDP_PER_CAPITA = factor(
+        GDP_PER_CAPITA,
+        levels = c("High_GDP_PC",
+                   "Middle_GDP_PC",
+                   "Low_GDP_PC")
+    )) %>%
+    mutate(
+        GDP_PER_CAPITA = factor(
+            GDP_PER_CAPITA,
+            levels = c("High_GDP_PC",
+                       "Middle_GDP_PC",
+                       "Low_GDP_PC"),
+            labels = c("High", "Middle","Low"))) %>%
+    mutate(when_complex = factor(
+        when_complex,
+        levels = c("Same day of the operation/procedure is sufficient enough",
+                   "24h prior to surgery but often its far less because of daily routine practice",
+                   "24h prior to surgery",
+                   "2 days or more before surgery"),
+        labels = c("<24",
+                   "day_prior_or_less",
+                   "=24",
+                   ">48")
+    ))
+
+# combine both 24h entries
+GDP_accordance_complex$when_simple[GDP_accordance_complex$when_simple == "day_prior_or_less"] <- "=24"
+
+GDP_accordance_complex <- GDP_accordance_complex %>% 
+    table()
+
+GDP_accordance_complex_test <- GDP_accordance_complex[c(1,3,4),] %>% 
+# Chi-Square Statistics
+chisq.test()
+
+# Legal requirenments for simple
+corrplot(
+    t(GDP_accordance_complex_test$residuals),
     is.corr = FALSE,
     tl.col = "black",
     tl.srt = 0,
