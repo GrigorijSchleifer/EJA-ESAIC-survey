@@ -1405,7 +1405,7 @@ GDP_tech_internet <- survey_dt_associations %>%
     chisq.test()
     # Chi-Square Statistics
 
-# technical internet GDP
+# technical internet GDP proof ok
 corrplot(
     t(GDP_tech_internet$residuals),
     is.corr = FALSE,
