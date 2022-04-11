@@ -1450,7 +1450,7 @@ GDP_tech_telefone <- survey_dt_associations %>%
     # Chi-Square Statistics
 
 
-# technical internet GDP
+# technical internet GDP proof ok
 corrplot(
     t(GDP_tech_telefone$residuals),
     is.corr = FALSE,
@@ -1496,8 +1496,8 @@ GDP_accordance_simple <- survey_dt_associations %>%
     # Chi-Square Statistics
     chisq.test()
 
-# Legal requirenments for simple
-corrplot(
+# Legal requirenments for simple proof ok
+corrplot( 
     t(GDP_accordance_simple$residuals),
     is.corr = FALSE,
     tl.col = "black",
@@ -1540,7 +1540,7 @@ GDP_accordance_complex <- survey_dt_associations %>%
     # Chi-Square Statistics
     chisq.test()
 
-# Legal requirenments for complex
+# Legal requirenments for complex proof ok
 corrplot(
     t(GDP_accordance_complex$residuals),
     is.corr = FALSE,
@@ -1582,7 +1582,7 @@ GDP_Re_Do <- survey_dt_associations %>%
     # Chi-Square Statistics
     chisq.test()
 
-# Corrplot Re-Do
+# Corrplot Re-Do proof ok
 corrplot(
     t(GDP_Re_Do$residuals),
     is.corr = FALSE,
@@ -1638,7 +1638,7 @@ GDP_when_simple_test <- GDP_when_simple[c(1,3,4),] %>%
 # Chi-Square Statistics
 chisq.test()
 
-# Legal requirenments for simple
+# Legal requirenments for simple proof ok
 corrplot(
     t(GDP_when_simple_test$residuals),
     is.corr = FALSE,
@@ -1692,7 +1692,7 @@ GDP_when_complex_test <- GDP_when_complex[c(1,3,4),] %>%
 # Chi-Square Statistics
 chisq.test()
 
-# Legal requirenments for simple
+# Legal requirenments for simple proof ok
 corrplot(
     t(GDP_when_complex_test$residuals),
     is.corr = FALSE,
