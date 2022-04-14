@@ -1465,6 +1465,137 @@ corrplot(
     mar = c(0,0,0,5)
 )
 ```
+```{r Figure : GDP_PC Residuals: Legal requirenments simple/complex/Redo}
+# Chi-Square stats: GDP_PC legal requirenments simple
+GDP_accordance_simple <- survey_dt_associations %>%
+    dplyr::filter(accordance_simple != "I do not know the legal requirements") %>%
+    select(c(accordance_simple, GDP_PER_CAPITA)) %>%
+    # chaning levels for better presentation of the contingency table
+    mutate(GDP_PER_CAPITA = factor(
+        GDP_PER_CAPITA,
+        levels = c("High_GDP_PC",
+                   "Middle_GDP_PC",
+                   "Low_GDP_PC")
+    )) %>%
+    mutate(
+        GDP_PER_CAPITA = factor(
+            GDP_PER_CAPITA,
+            levels = c("High_GDP_PC",
+                       "Middle_GDP_PC",
+                       "Low_GDP_PC"),
+            labels = c("High", "Middle","Low"))) %>%
+    mutate(accordance_simple = factor(
+        accordance_simple,
+        levels = c("Yes",
+                   "No (please comment the reasons)"),
+        labels = c("Yes",
+                   "No")
+    )) %>%
+    table() %>%
+    # Chi-Square Statistics
+    chisq.test()
+
+# Legal requirenments for simple proof ok
+corrplot( 
+    t(GDP_accordance_simple$residuals),
+    is.corr = FALSE,
+    tl.col = "black",
+    tl.srt = 0,
+    tl.cex = 3,
+    tl.offset = 1,
+    bg = "White",
+    addCoef.col = "white",
+    type = "full",
+    cl.pos = 'n', 
+    mar = c(0,0,0,5)
+)
+
+# Chi-Square stats: GDP_PC legal requirenments complex
+GDP_accordance_complex <- survey_dt_associations %>%
+    dplyr::filter(accordance_complex != "I do not know the legal requirements") %>%
+    select(c(accordance_complex, GDP_PER_CAPITA)) %>%
+    # chaning levels for better presentation of the contingency table
+    mutate(GDP_PER_CAPITA = factor(
+        GDP_PER_CAPITA,
+        levels = c("High_GDP_PC",
+                   "Middle_GDP_PC",
+                   "Low_GDP_PC")
+    )) %>%
+    mutate(
+        GDP_PER_CAPITA = factor(
+            GDP_PER_CAPITA,
+            levels = c("High_GDP_PC",
+                       "Middle_GDP_PC",
+                       "Low_GDP_PC"),
+            labels = c("High", "Middle","Low"))) %>%
+    mutate(accordance_complex = factor(
+        accordance_complex,
+        levels = c("Yes",
+                   "No (please comment the reasons)"),
+        labels = c("Yes",
+                   "No")
+    )) %>%
+    table() %>%
+    # Chi-Square Statistics
+    chisq.test()
+
+# Legal requirenments for complex proof ok
+corrplot(
+    t(GDP_accordance_complex$residuals),
+    is.corr = FALSE,
+    tl.col = "black",
+    tl.srt = 0,
+    tl.cex = 3,
+    tl.offset = 1,
+    bg = "White",
+    addCoef.col = "white",
+    type = "full",
+    cl.pos = 'n', 
+    mar = c(0,0,0,5)
+)
+
+# Chi-Square stats: GDP_PC Re-Do
+GDP_Re_Do <- survey_dt_associations %>%
+    dplyr::filter(Re_do != "I do not know the legal requirements") %>%
+    select(c(Re_do, GDP_PER_CAPITA)) %>%
+    # chaning levels for better presentation of the contingency table
+    mutate(GDP_PER_CAPITA = factor(
+        GDP_PER_CAPITA,
+        levels = c("High_GDP_PC",
+                   "Middle_GDP_PC",
+                   "Low_GDP_PC")
+    )) %>%
+    mutate(
+        GDP_PER_CAPITA = factor(
+            GDP_PER_CAPITA,
+            levels = c("High_GDP_PC",
+                       "Middle_GDP_PC",
+                       "Low_GDP_PC"),
+            labels = c("High", "Middle","Low"))) %>%
+    mutate(Re_do = factor(
+        Re_do,
+        levels = c("Yes",
+                   "No")
+    )) %>%
+    table() %>%
+    # Chi-Square Statistics
+    chisq.test()
+
+# Corrplot Re-Do proof ok
+corrplot(
+    t(GDP_Re_Do$residuals),
+    is.corr = FALSE,
+    tl.col = "black",
+    tl.srt = 0,
+    tl.cex = 3,
+    tl.offset = 1,
+    bg = "White",
+    addCoef.col = "white",
+    type = "full",
+    cl.pos = 'n', 
+    mar = c(0,0,0,5)
+)
+```
 ```{r Figure : GDP_PC Residuals: When simple}
 # Chi-Square stats: 
 GDP_when_simple <- survey_dt_associations %>%
@@ -1572,137 +1703,6 @@ corrplot(
     type = "full",
     cl.pos = 'n', 
     mar = c(0,0,2,5)
-)
-
-# Chi-Square stats: GDP_PC Re-Do
-GDP_Re_Do <- survey_dt_associations %>%
-    dplyr::filter(Re_do != "I do not know the legal requirements") %>%
-    select(c(Re_do, GDP_PER_CAPITA)) %>%
-    # chaning levels for better presentation of the contingency table
-    mutate(GDP_PER_CAPITA = factor(
-        GDP_PER_CAPITA,
-        levels = c("High_GDP_PC",
-                   "Middle_GDP_PC",
-                   "Low_GDP_PC")
-    )) %>%
-    mutate(
-        GDP_PER_CAPITA = factor(
-            GDP_PER_CAPITA,
-            levels = c("High_GDP_PC",
-                       "Middle_GDP_PC",
-                       "Low_GDP_PC"),
-            labels = c("High", "Middle","Low"))) %>%
-    mutate(Re_do = factor(
-        Re_do,
-        levels = c("Yes",
-                   "No")
-    )) %>%
-    table() %>%
-    # Chi-Square Statistics
-    chisq.test()
-
-# Corrplot Re-Do proof ok
-corrplot(
-    t(GDP_Re_Do$residuals),
-    is.corr = FALSE,
-    tl.col = "black",
-    tl.srt = 0,
-    tl.cex = 3,
-    tl.offset = 1.5,
-    bg = "White",
-    addCoef.col = "white",
-    type = "full",
-    cl.pos = 'n', 
-    mar = c(0,0,0,5)
-)
-```
-```{r Figure : GDP_PC Residuals: Legal requirenments simple/complex/Redo}
-# Chi-Square stats: GDP_PC legal requirenments simple
-GDP_accordance_simple <- survey_dt_associations %>%
-    dplyr::filter(accordance_simple != "I do not know the legal requirements") %>%
-    select(c(accordance_simple, GDP_PER_CAPITA)) %>%
-    # chaning levels for better presentation of the contingency table
-    mutate(GDP_PER_CAPITA = factor(
-        GDP_PER_CAPITA,
-        levels = c("High_GDP_PC",
-                   "Middle_GDP_PC",
-                   "Low_GDP_PC")
-    )) %>%
-    mutate(
-        GDP_PER_CAPITA = factor(
-            GDP_PER_CAPITA,
-            levels = c("High_GDP_PC",
-                       "Middle_GDP_PC",
-                       "Low_GDP_PC"),
-            labels = c("High", "Middle","Low"))) %>%
-    mutate(accordance_simple = factor(
-        accordance_simple,
-        levels = c("Yes",
-                   "No (please comment the reasons)"),
-        labels = c("Yes",
-                   "No")
-    )) %>%
-    table() %>%
-    # Chi-Square Statistics
-    chisq.test()
-
-# Legal requirenments for simple proof ok
-corrplot( 
-    t(GDP_accordance_simple$residuals),
-    is.corr = FALSE,
-    tl.col = "black",
-    tl.srt = 0,
-    tl.cex = 3,
-    tl.offset = 1,
-    bg = "White",
-    addCoef.col = "white",
-    type = "full",
-    cl.pos = 'n', 
-    mar = c(0,0,0,5)
-)
-
-# Chi-Square stats: GDP_PC legal requirenments complex
-GDP_accordance_complex <- survey_dt_associations %>%
-    dplyr::filter(accordance_complex != "I do not know the legal requirements") %>%
-    select(c(accordance_complex, GDP_PER_CAPITA)) %>%
-    # chaning levels for better presentation of the contingency table
-    mutate(GDP_PER_CAPITA = factor(
-        GDP_PER_CAPITA,
-        levels = c("High_GDP_PC",
-                   "Middle_GDP_PC",
-                   "Low_GDP_PC")
-    )) %>%
-    mutate(
-        GDP_PER_CAPITA = factor(
-            GDP_PER_CAPITA,
-            levels = c("High_GDP_PC",
-                       "Middle_GDP_PC",
-                       "Low_GDP_PC"),
-            labels = c("High", "Middle","Low"))) %>%
-    mutate(accordance_complex = factor(
-        accordance_complex,
-        levels = c("Yes",
-                   "No (please comment the reasons)"),
-        labels = c("Yes",
-                   "No")
-    )) %>%
-    table() %>%
-    # Chi-Square Statistics
-    chisq.test()
-
-# Legal requirenments for complex proof ok
-corrplot(
-    t(GDP_accordance_complex$residuals),
-    is.corr = FALSE,
-    tl.col = "black",
-    tl.srt = 0,
-    tl.cex = 3,
-    tl.offset = 1,
-    bg = "White",
-    addCoef.col = "white",
-    type = "full",
-    cl.pos = 'n', 
-    mar = c(0,0,0,5)
 )
 ```
 
