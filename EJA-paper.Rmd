@@ -1401,7 +1401,6 @@ GDP_tech_internet <- survey_dt_associations %>%
                    "No")
     )) %>%
     table() %>%
-    # prop.table(., 2)
     chisq.test()
     # Chi-Square Statistics
 
