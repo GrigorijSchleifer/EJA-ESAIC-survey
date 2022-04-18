@@ -1628,14 +1628,14 @@ GDP_when_simple <- survey_dt_associations %>%
 
 # combine observation to <24 and >24
 GDP_when_simple$when_simple[GDP_when_simple$when_simple == "day_prior_or_less"] <- "<24"
-GDP_when_simple$when_simple[GDP_when_simple$when_simple == "~24"] <- "<24"
+
 
 
 GDP_when_simple <- GDP_when_simple %>% 
     table()
 
 # select only rows with observations and send them to the chi-square test
-GDP_when_simple_test <- GDP_when_simple[c(1,4),] %>% 
+GDP_when_simple_test <- GDP_when_simple[c(1,3,4),] %>% 
 # Chi-Square Statistics
 chisq.test()
 
