@@ -949,7 +949,7 @@ prop.table(table(survey_data$"Is it possible to obtain informed consent online v
 # proportions to store in "telefone" df and use it for the graph
 prop.table(table(survey_data$"Is it possible to obtain informed consent online via telefone, in your routine setting?"))
 
-# 
+##
 # pie graph for internet 
 internet_simplelegend <- data.frame(internet_telefone = c(rep("Internet", 3), rep("Telefone", 3)),
                        answer = factor(c("Depends", "Yes", "No", "Depends", "Yes", "No"),levels = c("No", "Depends", "Yes")), 
