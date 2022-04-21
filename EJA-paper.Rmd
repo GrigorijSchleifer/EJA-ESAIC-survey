@@ -952,8 +952,8 @@ prop.table(table(survey_data$"Is it possible to obtain informed consent online v
 
 # pie graph for internet 
 internet_simplelegend <- data.frame(internet_telefone = c(rep("Internet", 3), rep("Telefone", 3)),
-                       answer = c("Depends", "Yes", "No", "Depends", "Yes", "No"),
-                        when_simple = round(c(0.06647399, 0.23121387, 0.70231214, 0.06086957, 0.56666667, 0.37246377), 3) * 100)
+                       answer = factor(c("Depends", "Yes", "No", "Depends", "Yes", "No"),levels = c("No","Yes","Depends")), 
+                       when_simple = round(c(0.06647399, 0.23121387, 0.70231214, 0.06086957, 0.56666667, 0.37246377), 3) * 100)
 
 # "#a1dab4", "#41b6c4", "#2c7fb8", "#253494" 2 (Claudia bestätigt)
 # scale_fill_manual(values=c("#a1dab4", "#41b6c4", "#2c7fb8", "#253494"))
@@ -973,42 +973,12 @@ internet_simplelegend <- internet_simplelegend %>%
           strip.text.x = element_text(size=35)) +
     # "#00441B", "#053060", "#660A1F", "#A7771C" (Dunkel)
     # "#4B72AF", "#54A968", "#C64E51", "#DCAD94" (etwas weniger knallig)
-    # scale_fill_manual(values=c("#B2172B", "#08598D", "#1E9D77", "#A7771C"))
+    # scale_fill_manual(values=c("#B2172B", "#08598D", "#1E9D77", "#A7771C")
+    # scale_fill_manual(values=c("#BF0127", "#002F62", "#1E9D77", "#A7771C")) +
     scale_fill_manual(values=c("#BF0127", "#002F62", "#1E9D77", "#A7771C")) +
     facet_wrap(~factor(internet_telefone, levels = c("Internet", "Telefone")))
 
 
-
-# # pie graph creation for telefone proportions
-# table(survey_data$"Is it possible to obtain informed consent online via telefone, in your routine setting?")
-# # proportions to store in "internet" df and use it for the graph
-# prop.table(table(survey_data$"Is it possible to obtain informed consent online via telefone, in your routine setting?"))
-# 
-# 
-# # 24 h prior and 24 prior because of daily routine pooled together
-# telefone <- data.frame(answer = c("Depends", "Yes", "No"),
-#                         when_simple = round(c(0.06086957, 0.37246377, 0.56666667), 3) * 100)
-# 
-# # "#a1dab4", "#41b6c4", "#2c7fb8", "#253494" 2 (Claudia bestätigt)
-# # scale_fill_manual(values=c("#a1dab4", "#41b6c4", "#2c7fb8", "#253494"))
-# telefone_pie <- telefone %>% 
-#     ggplot(aes(x="", y=when_simple, fill=answer)) +
-#     geom_bar(stat="identity", width=1, color = "white") +
-#     coord_polar("y", start=0) + 
-#     theme_void() + 
-#     geom_text(aes(label = paste0(when_simple, "%")),
-#               size = 8, 
-#               colour="white",
-#               position = position_stack(vjust = 0.5)) +
-#     theme(legend.position="bottom",
-#           legend.title = element_blank(),
-#           legend.text = element_text(size=30),
-#           legend.spacing.x = unit(1.5, 'cm'),
-#           strip.text.x = element_text(size=35)) +
-#     # "#00441B", "#053060", "#660A1F", "#A7771C" (Dunkel)
-#     # "#4B72AF", "#54A968", "#C64E51", "#DCAD94" (etwas weniger knallig)
-#     # scale_fill_manual(values=c("#B2172B", "#08598D", "#1E9D77", "#A7771C"))
-#     scale_fill_manual(values=c("#B2172B", "#08598D", "#1E9D77", "#A7771C"))
 
 # not realy usefull if faced_wrapped by ...
 # ggarrange(internet_pie, 
@@ -1021,7 +991,6 @@ internet_simplelegend <- internet_simplelegend %>%
 ```
 ```{r Figure 2 Stacked barchart: Is an online/telephone informed consent for elective surgery in accordance with the legal requirements in your country? }
 prop.table(table(survey_data$"Is an online/telephone informed consent for elective surgery in accordance with the legal requirements in your country? (for simple procedures, low risk patients)"))
-table(survey_data$"Is an online/telephone informed consent for elective surgery in accordance with the legal requirements in your country? (for simple procedures, low risk patients)")
 
 prop.table(table(survey_data$"Is an online/telephone informed consent for elective surgery in accordance with the legal requirements in your country? (for complex procedures, higher risk patients)"))
 table(survey_data$"Is an online/telephone informed consent for elective surgery in accordance with the legal requirements in your country? (for complex procedures, higher risk patients)")
@@ -1067,7 +1036,7 @@ consent_legal_stacked <-
     )
 
 # pie chart for legal requirentments and repeated anesthesia
-consent_legal %>% 
+consent_legal_pie %>% 
     ggplot(aes(x="", y=when_simple, fill=answer)) +
     geom_bar(stat="identity", width=1, color = "white") +
     coord_polar("y", start=0) + 
@@ -1096,7 +1065,7 @@ consent_legal_stacked %>%
                                    levels = c("Re-Do",
                                               "complex procedures",
                                               "simple procedures"),
-                                   labels = c("Repeated anesthesia",
+                                   labels = c("Repeated anaesthesia",
                                               "Complex procedures",
                                               "Simple procedures"))) %>%
     # mutate(answer = fct_relevel(answer,  c("Yes", "No", "Unsure"))) %>%
@@ -1401,7 +1370,6 @@ GDP_tech_internet <- survey_dt_associations %>%
                    "No")
     )) %>%
     table() %>%
-    prop.table(.,2)
     chisq.test()
     # Chi-Square Statistics
 
