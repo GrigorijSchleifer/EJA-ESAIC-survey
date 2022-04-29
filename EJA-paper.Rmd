@@ -993,6 +993,7 @@ internet_simplelegend <- internet_simplelegend %>%
 prop.table(table(survey_data$"Is an online/telephone informed consent for elective surgery in accordance with the legal requirements in your country? (for simple procedures, low risk patients)"))
 
 prop.table(table(survey_data$"Is an online/telephone informed consent for elective surgery in accordance with the legal requirements in your country? (for complex procedures, higher risk patients)"))
+
 table(survey_data$"Is an online/telephone informed consent for elective surgery in accordance with the legal requirements in your country? (for complex procedures, higher risk patients)")
 
 
@@ -1095,7 +1096,7 @@ prop.table(table(survey_data$"When do you need to obtain Informed consent for el
 
 # 24 h prior and 24 prior because of daily routine pooled together
 simple_df <- data.frame(simple_complex = c(rep("Simple", 3), rep("Complex", 3)),
-                        answer = rep(c("2 days or more", "24h or less", "Same day"), 2),
+                        answer = rep(c("2 days or more", "Day before", "Same day"), 2),
                         when_simple = round(c(0.1289111, 0.5419274, 0.3291615, 0.33625, 0.51625, 0.14750), digits = 3) * 100)
 
 
