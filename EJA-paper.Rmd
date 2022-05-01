@@ -1107,7 +1107,7 @@ simple_df %>%
     coord_polar("y", start=0) + 
     theme_void() + 
     geom_text(aes(label = paste0(when_simple, "%")),
-              size = 8, 
+              size = 11, 
               colour="white",
               position = position_stack(vjust = 0.5)) +
     theme(legend.position="bottom",
