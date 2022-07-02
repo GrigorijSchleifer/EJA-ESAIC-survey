@@ -953,7 +953,7 @@ prop.table(table(survey_data$"Is it possible to obtain informed consent online v
 # pie graph for internet 
 internet_simplelegend <- data.frame(internet_telefone = c(rep("Internet", 3), rep("Telephone", 3)),
                        answer = factor(c("Depends", "Yes", "No", "Depends", "Yes", "No"),levels = c("No", "Depends", "Yes")), 
-                       when_simple = round(c(0.06647399, 0.23121387, 0.70231214, 0.06086957, 0.56666667, 0.37246377), 3) * 100)
+                       when_simple = round(c(0.06647399, 0.23121387, 0.70231214, 0.06086957,  0.37246377, 0.56666667), 3) * 100)
 
 # "#a1dab4", "#41b6c4", "#2c7fb8", "#253494" 2 (Claudia bestätigt)
 # scale_fill_manual(values=c("#a1dab4", "#41b6c4", "#2c7fb8", "#253494"))
@@ -994,7 +994,8 @@ prop.table(table(survey_data$"Is an online/telephone informed consent for electi
 
 prop.table(table(survey_data$"Is an online/telephone informed consent for elective surgery in accordance with the legal requirements in your country? (for complex procedures, higher risk patients)"))
 
-table(survey_data$"Is an online/telephone informed consent for elective surgery in accordance with the legal requirements in your country? (for complex procedures, higher risk patients)")
+prop.table(table(survey_data$"Thinking of Re-Do / repeated anaesthesia assuming the patient is well informed. Would an online/telephone informed consent then be allowed for elective surgery due to legal requirements in your country?"))
+
 
 
 # dataframe for pie chart for legal requirentments and repeated anesthesia
@@ -1092,6 +1093,7 @@ consent_legal_stacked %>%
 ```
 ```{r Figure 3: PIE: When do you need to obtain Informed consent for elective surgery based on legal requirements?}
 prop.table(table(survey_data$"When do you need to obtain Informed consent for elective surgery based on legal requirements (for simple procedures, low risk patients)."))
+
 prop.table(table(survey_data$"When do you need to obtain Informed consent for elective surgery based on legal requirements (for complex procedures, higher risk patients)."))
 
 # 24 h prior and 24 prior because of daily routine pooled together
