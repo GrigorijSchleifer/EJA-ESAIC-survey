@@ -1684,3 +1684,13 @@ corrplot(
 ```
 
 
+
+
+```{r fixing Table on and finding where extra participant is comming from}
+survey_data %>% 
+    select(Gender, `Your expert level`) %>% 
+    rename(Level = `Your expert level`) %>% 
+    group_by(Gender) %>% 
+    count(Level)
+```
+
