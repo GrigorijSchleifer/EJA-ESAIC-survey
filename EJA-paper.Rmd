@@ -748,9 +748,6 @@ survey_data <- survey_data %>%
 ```
 
 
-
-
-
 # RESULTS
 ```{r Table One FIRST PUBLICATION}
 # https://cran.r-project.org/web/packages/table1/vignettes/table1-examples.html
@@ -1408,130 +1405,6 @@ regulations %>%
 
 
 ```
-
-
-
-# DP_PC Pearsons residuals plots
-```{r Figure : GDP_PC Residuals: When simple}
-# Chi-Square stats: 
-GDP_when_simple <- survey_dt_associations %>%
-    select(c(when_simple, GDP_PER_CAPITA)) %>%
-    # chaning levels for better presentation of the contingency table
-    mutate(GDP_PER_CAPITA = factor(
-        GDP_PER_CAPITA,
-        levels = c("High_GDP_PC",
-                   "Middle_GDP_PC",
-                   "Low_GDP_PC")
-    )) %>%
-    mutate(
-        GDP_PER_CAPITA = factor(
-            GDP_PER_CAPITA,
-            levels = c("High_GDP_PC",
-                       "Middle_GDP_PC",
-                       "Low_GDP_PC"),
-            labels = c("High", "Middle","Low"))) %>%
-    mutate(when_simple = factor(
-        when_simple,
-        levels = c("Same day of the operation/procedure is sufficient enough",
-                   "24h prior to surgery but often its far less because of daily routine practice",
-                   "24h prior to surgery",
-                   "2 days or more before surgery"),
-        labels = c("<24",
-                   "day_prior_or_less",
-                   "~24",
-                   ">24")
-    ))
-
-# combine observation to <24 and >24
-GDP_when_simple$when_simple[GDP_when_simple$when_simple == "day_prior_or_less"] <- "<24"
-
-
-
-GDP_when_simple <- GDP_when_simple %>% 
-    table()
-
-# select only rows with observations and send them to the chi-square test
-GDP_when_simple_test <- GDP_when_simple[c(1,3,4),] %>% 
-# Chi-Square Statistics
-chisq.test()
-
-# Legal requirenments for simple proof ok
-corrplot(
-    t(GDP_when_simple_test$residuals),
-    is.corr = FALSE,
-    tl.col = "black",
-    tl.srt = 0,
-    tl.cex = 3,
-    tl.offset = 1,
-    bg = "White",
-    addCoef.col = "white",
-    type = "full",
-    cl.pos = 'n', 
-    mar = c(0,0,0,5)
-)
-
-# Chi-Square stats: WHEN COMPEX
-GDP_when_complex <- survey_dt_associations %>%
-    select(c(when_complex, GDP_PER_CAPITA)) %>%
-    # chaning levels for better presentation of the contingency table
-    mutate(GDP_PER_CAPITA = factor(
-        GDP_PER_CAPITA,
-        levels = c("High_GDP_PC",
-                   "Middle_GDP_PC",
-                   "Low_GDP_PC")
-    )) %>%
-    mutate(
-        GDP_PER_CAPITA = factor(
-            GDP_PER_CAPITA,
-            levels = c("High_GDP_PC",
-                       "Middle_GDP_PC",
-                       "Low_GDP_PC"),
-            labels = c("High", "Middle","Low"))) %>%
-    mutate(when_complex = factor(
-        when_complex,
-        levels = c("Same day of the operation/procedure is sufficient enough",
-                   "24h prior to surgery but often its far less because of daily routine practice",
-                   "24h prior to surgery",
-                   "2 days or more before surgery"),
-        labels = c("<24",
-                   "day_prior_or_less",
-                   "~24",
-                   ">24")
-    ))
-
-# combine observation to <24 and >24
-GDP_when_complex$when_complex[GDP_when_complex$when_complex == "day_prior_or_less"] <- "<24"
-GDP_when_complex$when_complex[GDP_when_complex$when_complex == "~24"] <- "<24"
-
-
-GDP_when_complex <- GDP_when_complex %>% 
-    table()
-
-# select only rows with observations and send them to the chi-square test
-GDP_when_complex_test <- GDP_when_complex[c(1,4),] %>% 
-# Chi-Square Statistics
-chisq.test()
-
-# Legal requirenments for simple proof ok
-corrplot(
-    t(GDP_when_complex_test$residuals),
-    is.corr = FALSE,
-    tl.col = "black",
-    tl.srt = 0,
-    tl.cex = 3,
-    tl.offset = 1.4,
-    bg = "White",
-    addCoef.col = "white",
-    type = "full",
-    cl.pos = 'n', 
-    mar = c(0,0,2,5)
-)
-```
-
-
-
-
-
 ```{r fixing Table on and finding where extra participant is comming from}
 survey_data %>% 
     select(Gender, `Your expert level`, Profession) %>% 
@@ -1545,7 +1418,6 @@ survey_data %>%
     group_by(Gender) %>% 
     count(Level)
 ```
-
 
 
 # NOT INCLUDED data !!!
@@ -1707,4 +1579,120 @@ BIP_DF <- BIP_DF %>%
     mutate(levels_bip = cut(BIP_DF$BIP, 
                             breaks = c(1, 100, 500, Inf), 
                             labels = c("Low", "Middle", "High")))
+```
+# DP_PC Pearsons residuals plots
+```{r Figure : GDP_PC Residuals: When simple}
+# Chi-Square stats: 
+GDP_when_simple <- survey_dt_associations %>%
+    select(c(when_simple, GDP_PER_CAPITA)) %>%
+    # chaning levels for better presentation of the contingency table
+    mutate(GDP_PER_CAPITA = factor(
+        GDP_PER_CAPITA,
+        levels = c("High_GDP_PC",
+                   "Middle_GDP_PC",
+                   "Low_GDP_PC")
+    )) %>%
+    mutate(
+        GDP_PER_CAPITA = factor(
+            GDP_PER_CAPITA,
+            levels = c("High_GDP_PC",
+                       "Middle_GDP_PC",
+                       "Low_GDP_PC"),
+            labels = c("High", "Middle","Low"))) %>%
+    mutate(when_simple = factor(
+        when_simple,
+        levels = c("Same day of the operation/procedure is sufficient enough",
+                   "24h prior to surgery but often its far less because of daily routine practice",
+                   "24h prior to surgery",
+                   "2 days or more before surgery"),
+        labels = c("<24",
+                   "day_prior_or_less",
+                   "~24",
+                   ">24")
+    ))
+
+# combine observation to <24 and >24
+GDP_when_simple$when_simple[GDP_when_simple$when_simple == "day_prior_or_less"] <- "<24"
+
+
+
+GDP_when_simple <- GDP_when_simple %>% 
+    table()
+
+# select only rows with observations and send them to the chi-square test
+GDP_when_simple_test <- GDP_when_simple[c(1,3,4),] %>% 
+# Chi-Square Statistics
+chisq.test()
+
+# Legal requirenments for simple proof ok
+corrplot(
+    t(GDP_when_simple_test$residuals),
+    is.corr = FALSE,
+    tl.col = "black",
+    tl.srt = 0,
+    tl.cex = 3,
+    tl.offset = 1,
+    bg = "White",
+    addCoef.col = "white",
+    type = "full",
+    cl.pos = 'n', 
+    mar = c(0,0,0,5)
+)
+
+# Chi-Square stats: WHEN COMPEX
+GDP_when_complex <- survey_dt_associations %>%
+    select(c(when_complex, GDP_PER_CAPITA)) %>%
+    # chaning levels for better presentation of the contingency table
+    mutate(GDP_PER_CAPITA = factor(
+        GDP_PER_CAPITA,
+        levels = c("High_GDP_PC",
+                   "Middle_GDP_PC",
+                   "Low_GDP_PC")
+    )) %>%
+    mutate(
+        GDP_PER_CAPITA = factor(
+            GDP_PER_CAPITA,
+            levels = c("High_GDP_PC",
+                       "Middle_GDP_PC",
+                       "Low_GDP_PC"),
+            labels = c("High", "Middle","Low"))) %>%
+    mutate(when_complex = factor(
+        when_complex,
+        levels = c("Same day of the operation/procedure is sufficient enough",
+                   "24h prior to surgery but often its far less because of daily routine practice",
+                   "24h prior to surgery",
+                   "2 days or more before surgery"),
+        labels = c("<24",
+                   "day_prior_or_less",
+                   "~24",
+                   ">24")
+    ))
+
+# combine observation to <24 and >24
+GDP_when_complex$when_complex[GDP_when_complex$when_complex == "day_prior_or_less"] <- "<24"
+GDP_when_complex$when_complex[GDP_when_complex$when_complex == "~24"] <- "<24"
+
+
+GDP_when_complex <- GDP_when_complex %>% 
+    table()
+
+# select only rows with observations and send them to the chi-square test
+GDP_when_complex_test <- GDP_when_complex[c(1,4),] %>% 
+# Chi-Square Statistics
+chisq.test()
+
+# Legal requirenments for simple proof ok
+corrplot(
+    t(GDP_when_complex_test$residuals),
+    is.corr = FALSE,
+    tl.col = "black",
+    tl.srt = 0,
+    tl.cex = 3,
+    tl.offset = 1.4,
+    bg = "White",
+    addCoef.col = "white",
+    type = "full",
+    cl.pos = 'n', 
+    mar = c(0,0,2,5)
+)
 ```
