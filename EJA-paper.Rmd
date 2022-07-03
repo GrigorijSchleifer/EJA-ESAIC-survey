@@ -5,21 +5,23 @@ output: html_document
 
 # LINKS
 ```{r links}
+# GDP per capita world bank
+# https://data.worldbank.org/indicator/NY.GDP.PCAP.CD?end=2021&start=1997
+
 # chi-square calculator
 # https://www.socscistatistics.com/tests/chisquare2/default2.aspx
+
 # Digital Health Index
 # https://de.statista.com/statistik/daten/studie/1070546/umfrage/stand-der-digitalisierung-des-gesundheitssystems-nach-ausgewaehlten-laendern/
 
 # visualisation for residuals
 # http://www.sthda.com/english/wiki/chi-square-test-of-independence-in-r
 
-
 # Fischer exakt 
 # http://vassarstats.net/fisher2x3.html
 
 # grobs for correlation matrix
 # https://stackoverflow.com/questions/53734543/converting-corrplot-output-to-grob
-
 ```
 # SETUP
 ```{r Setup and libraries}
