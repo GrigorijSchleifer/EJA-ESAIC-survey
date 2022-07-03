@@ -3,8 +3,28 @@ title: "EJA-paper"
 output: html_document
 ---
 
-# import libraries
-```{r libraries}
+# LINKS
+```{r links}
+# chi-square calculator
+# https://www.socscistatistics.com/tests/chisquare2/default2.aspx
+# Digital Health Index
+# https://de.statista.com/statistik/daten/studie/1070546/umfrage/stand-der-digitalisierung-des-gesundheitssystems-nach-ausgewaehlten-laendern/
+
+# visualisation for residuals
+# http://www.sthda.com/english/wiki/chi-square-test-of-independence-in-r
+
+
+# Fischer exakt 
+# http://vassarstats.net/fisher2x3.html
+
+# grobs for correlation matrix
+# https://stackoverflow.com/questions/53734543/converting-corrplot-output-to-grob
+
+```
+# SETUP
+```{r Setup and libraries}
+knitr::opts_chunk$set(echo = TRUE)
+
 library(tableone)
 library(RColorBrewer)
 library(scales)
@@ -16,25 +36,8 @@ library(corrplot)
 library(gridGraphics)
 library(grid)
 library(ggcorrplot)
-
-
-
-# library(ReporteRs)
-# library(magrittr)
 ```
-# load all files
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
-```
-```{r import and load files}
-# survey_data <- read_csv("data/survey_data_no_other.csv")
-# survey_data_all_countries <- read_csv("data/survey_data_all_countries.csv")
-# survey_fragments <- read_csv("data/survey_fragments.csv")
-load("Rfiles.RData")
-
-# change "Country where you work?" to "country" for later BIP and EU membership code
-names(survey_data)[12] <- "country"
-```
+# FILES and DATA
 ```{r R files used for analysis}
 # this will save all objects to REata for later load
 save(
@@ -694,6 +697,17 @@ survey_dt_associations <- survey_data %>%
 # survey_data_barchart$country[survey_data_barchart$country == "North Macedonia (formerly Macedonia)"] <- "Macedonia" 
 # survey_data_barchart$country[survey_data_barchart$country == "Bosnia and Herzegovina"] <- "B&H" 
 ```
+# LOAD FILES
+```{r import and load files}
+# survey_data <- read_csv("data/survey_data_no_other.csv")
+# survey_data_all_countries <- read_csv("data/survey_data_all_countries.csv")
+# survey_fragments <- read_csv("data/survey_fragments.csv")
+load("Rfiles.RData")
+
+# change "Country where you work?" to "country" for later BIP and EU membership code
+names(survey_data)[12] <- "country"
+```
+# Data wrangling
 ```{r Create STRATIFICATION columns}
 survey_data <- survey_data %>% 
     mutate(EU_members = case_when(
@@ -731,34 +745,11 @@ survey_data <- survey_data %>%
         TRUE ~ "NO INDEX"))
 ```
 
-# links and different
-```{r links}
-# chi-square calculator
-# https://www.socscistatistics.com/tests/chisquare2/default2.aspx
-# Digital Health Index
-# https://de.statista.com/statistik/daten/studie/1070546/umfrage/stand-der-digitalisierung-des-gesundheitssystems-nach-ausgewaehlten-laendern/
-
-# visualisation for residuals
-# http://www.sthda.com/english/wiki/chi-square-test-of-independence-in-r
 
 
-# Fischer exakt 
-# http://vassarstats.net/fisher2x3.html
-
-# grobs for correlation matrix
-# https://stackoverflow.com/questions/53734543/converting-corrplot-output-to-grob
-
-```
-```{r creating fct_lump styple chunks}
-# https://tradingeconomics.com/country-list/gdp?continent=europe
-BIP_DF <- BIP_DF %>% 
-    mutate(levels_bip = cut(BIP_DF$BIP, 
-                            breaks = c(1, 100, 500, Inf), 
-                            labels = c("Low", "Middle", "High")))
-```
 
 
-# Results
+# RESULTS
 ```{r Table One FIRST PUBLICATION}
 # https://cran.r-project.org/web/packages/table1/vignettes/table1-examples.html
 # stratification by gender
@@ -768,6 +759,8 @@ contVars = c(
     "Profession",
     "Your expert level"
 )
+
+
 # cava NA's for stratification is not possible since NA is dropped
 tableOne <-
     CreateTableOne(
@@ -789,160 +782,7 @@ summary(tableOne)
 #            row.names = TRUE, 
 #            append = TRUE)
 ```
-```{r Table One Stratified EU member}
-# https://cran.r-project.org/web/packages/table1/vignettes/table1-examples.html
-# stratification by gender
-
-catVars = "EU_members"
-
-contVars =  questions_table_one_EJA_paper
-
-# cava NA's for stratification is not possible since NA is dropped
-tableOne <-
-    CreateTableOne(
-        data = survey_data,
-        vars = contVars,
-        testExact = fisher.test,     
-        addOverall = FALSE,
-        strata = catVars
-    )
-
-
-results_tbl <- print(tableOne, nonnormal = biomarkers, exact = "stage", quote = FALSE, noSpaces = FALSE, printToggle = FALSE)
-
-# writing the table to excel
-write.xlsx(results_tbl,
-           file = "~/Desktop/R/EJA-ESAIC-survey/tbl_one.xlsx",
-           sheetName = "table_one_EU_countries",
-           col.names = TRUE,
-           row.names = TRUE)
-```
-```{r Table One GDP Stratified}
-# https://cran.r-project.org/web/packages/table1/vignettes/table1-examples.html
-# https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4966396/
-# https://www.socscistatistics.com/tests/chisquare2/default2.aspx
-# https://www.youtube.com/watch?v=f53nXHoMXx4&t=42s&ab_channel=VectorsAcademy
-
-# stratification by GDP
-catVars = "GDP"
-
-contVars = questions_table_one_EJA_paper
-
-survey_data <- survey_data %>% 
-    dplyr::filter(GDP != "NO MEMBER")
-
-# cava NA's for stratification is not possible since NA is dropped
-tableOne <-
-    CreateCatTable(
-        data = survey_data,
-        vars = contVars,
-        # testExact = fisher.test,     
-        addOverall = FALSE,
-        strata = catVars
-    )
-
-
-results_tbl <- print(tableOne, nonnormal = biomarkers, exact = "stage", quote = FALSE, noSpaces = FALSE, printToggle = FALSE)
-
-# writing the table to excel
-write.xlsx(results_tbl,
-           file = "~/Desktop/R/EJA-ESAIC-survey/tbl_one_test.xlsx",
-           sheetName = "GDP stratified two",
-           col.names = TRUE,
-           row.names = TRUE)
-```
-```{r Table One stratified GDP PER CAPITA }
-# https://data.worldbank.org/indicator/ny.gdp.pcap.cd
-# in US dollar
-# stratification by GDP
-catVars = "GDP_PER_CAPITA"
-
-contVars = questions_table_one_EJA_paper
-
-# survey_data <- survey_data %>% 
-#     select(questions_table_one_EJA_paper) %>% 
-#     dplyr::filter(GDP_PER_CAPITA != "NO MEMBER") %>% 
-#     dplyr::filter(GDP_PER_CAPITA != "Different (please comment)")
-
-# cava NA's for stratification is not possible since NA is dropped
-tableOne <-
-    CreateCatTable(
-        data = survey_data,
-        vars = contVars,
-        # testExact = fisher.test,     
-        addOverall = FALSE,
-        strata = catVars
-    )
-
-results_tbl_gdp_pc <- print(tableOne, nonnormal = biomarkers, exact = "stage", quote = FALSE, noSpaces = FALSE, printToggle = FALSE)
-
-# writing the table to excel
-write.xlsx(results_tbl_gdp_pc,
-           file = "~/Desktop/R/EJA-ESAIC-survey/tbl_one.xlsx",
-           sheetName = "GDP_PER_CAP",
-           col.names = TRUE,
-           row.names = TRUE)
-```
-```{r Table One stritified DICHTE}
-catVars = "dichte"
-
-contVars = questions_table_one_EJA_paper
-
-# survey_data <- survey_data %>% 
-#     select(questions_table_one_EJA_paper) %>% 
-#     dplyr::filter(GDP_PER_CAPITA != "NO MEMBER") %>% 
-#     dplyr::filter(GDP_PER_CAPITA != "Different (please comment)")
-
-# cava NA's for stratification is not possible since NA is dropped
-tableOne <-
-    CreateCatTable(
-        data = survey_data,
-        vars = contVars,
-        # testExact = fisher.test,     
-        addOverall = FALSE,
-        strata = catVars
-    )
-
-results_tbl_gdp_pc <- print(tableOne, nonnormal = biomarkers, exact = "stage", quote = FALSE, noSpaces = FALSE, printToggle = FALSE)
-
-# writing the table to excel
-write.xlsx(results_tbl_gdp_pc,
-           file = "~/Desktop/R/EJA-ESAIC-survey/tbl_one_dichte.xlsx",
-           sheetName = "dichte",
-           col.names = TRUE,
-           row.names = TRUE)
-```
-```{r Table One stritified DIGITAL INDEX}
-catVars = "digital_index"
-
-contVars = questions_table_one_EJA_paper
-
-# survey_data <- survey_data %>% 
-#     select(questions_table_one_EJA_paper) %>% 
-#     dplyr::filter(GDP_PER_CAPITA != "NO MEMBER") %>% 
-#     dplyr::filter(GDP_PER_CAPITA != "Different (please comment)")
-
-# cava NA's for stratification is not possible since NA is dropped
-tableOne <-
-    CreateCatTable(
-        data = survey_data,
-        vars = contVars,
-        # testExact = fisher.test,     
-        addOverall = FALSE,
-        strata = catVars
-    )
-
-results_tbl_gdp_pc <- print(tableOne, nonnormal = biomarkers, exact = "stage", quote = FALSE, noSpaces = FALSE, printToggle = FALSE)
-
-# writing the table to excel
-write.xlsx(results_tbl_gdp_pc,
-           file = "~/Desktop/R/EJA-ESAIC-survey/digital_index.xlsx",
-           sheetName = "dichte",
-           col.names = TRUE,
-           row.names = TRUE)
-```
-
-```{r Figure 1 PIE: Technical question aranged by telefone and internet}
+```{r Figure 1 PIE: Internet/telefone possible}
 
 # proportions to store in "internet" df and use it for the graph
 prop.table(table(survey_data$"Is it possible to obtain informed consent online via internet, in your routine setting?"))
@@ -989,7 +829,100 @@ internet_simplelegend <- internet_simplelegend %>%
 #           hjust = -0.02,
 #           ncol = 2)
 ```
-```{r Figure 2 Stacked barchart: Is an online/telephone informed consent for elective surgery in accordance with the legal requirements in your country? }
+```{r Figure 2: GDP_PC Residuals: Internet/telefone possible}
+# link to statistics page
+# http://www.sthda.com/english/wiki/chi-square-test-of-independence-in-r
+
+# Chi-Square stats: GDP - Technical possible with INTERNET
+GDP_tech_internet <- survey_dt_associations %>%
+    dplyr::filter(tech_internet != "Different (please comment)") %>%
+    select(c(tech_internet, GDP_PER_CAPITA)) %>%
+    # chaning levels for better presentation of the contingency table
+    mutate(GDP_PER_CAPITA = factor(
+        GDP_PER_CAPITA,
+        levels = c("High_GDP_PC",
+                   "Middle_GDP_PC",
+                   "Low_GDP_PC")
+    )) %>%
+    mutate(
+        GDP_PER_CAPITA = factor(
+            GDP_PER_CAPITA,
+            levels = c("High_GDP_PC",
+                       "Middle_GDP_PC",
+                       "Low_GDP_PC"),
+            labels = c("High", "Middle","Low"))) %>%
+    mutate(tech_internet = factor(
+        tech_internet,
+        levels = c("Yes",
+                   "No (please comment)"),
+        labels = c("Yes",
+                   "No")
+    )) %>%
+    table() %>%
+    chisq.test()
+    # Chi-Square Statistics
+
+# technical internet GDP proof ok
+corrplot(
+    t(GDP_tech_internet$residuals),
+    is.corr = FALSE,
+    tl.col = "black",
+    tl.srt = 0,
+    tl.cex = 3,
+    tl.offset = 1,
+    bg = "White",
+    addCoef.col = "white",
+    type = "full",
+    cl.pos = 'n', 
+    mar = c(0,0,0,5)
+)
+
+# Chi-Square stats: GDP - Technical possible with TELEFONE
+GDP_tech_telefone <- survey_dt_associations %>%
+    dplyr::filter(tech_telefone != "Different (please comment)") %>%
+    select(c(tech_telefone, GDP_PER_CAPITA)) %>%
+    # chaning levels for better presentation of the contingency table
+    mutate(GDP_PER_CAPITA = factor(
+        GDP_PER_CAPITA,
+        levels = c("High_GDP_PC",
+                   "Middle_GDP_PC",
+                   "Low_GDP_PC")
+    )) %>%
+    mutate(
+        GDP_PER_CAPITA = factor(
+            GDP_PER_CAPITA,
+            levels = c("High_GDP_PC",
+                       "Middle_GDP_PC",
+                       "Low_GDP_PC"),
+            labels = c("High", "Middle","Low"))) %>%
+    mutate(tech_telefone = factor(
+        tech_telefone,
+        levels = c("Yes",
+                   "No (please comment)"),
+        labels = c("Yes",
+                   "No")
+    )) %>%
+    table() %>%
+    chisq.test()
+    # Chi-Square Statistics
+
+
+# technical internet GDP proof ok
+corrplot(
+    t(GDP_tech_telefone$residuals),
+    is.corr = FALSE,
+    tl.col = "black",
+    tl.srt = 0,
+    tl.cex = 3,
+    tl.offset = 1,
+    bg = "White",
+    addCoef.col = "white",
+    type = "full",
+    cl.pos = 'n', 
+    mar = c(0,0,0,5)
+)
+```
+```{r Figure 3 Stacked barchart: Online/telephone legal}
 prop.table(table(survey_data$"Is an online/telephone informed consent for elective surgery in accordance with the legal requirements in your country? (for simple procedures, low risk patients)"))
 
 prop.table(table(survey_data$"Is an online/telephone informed consent for elective surgery in accordance with the legal requirements in your country? (for complex procedures, higher risk patients)"))
@@ -1091,7 +1024,138 @@ consent_legal_stacked %>%
     # facet_wrap(~factor(simple_complex, levels = c("simple procedures", "complex procedures", "Re-Do"))) +
     coord_flip()
 ```
-```{r Figure 3: PIE: When do you need to obtain Informed consent for elective surgery based on legal requirements?}
+```{r Figure 4: GDP_PC Residuals: Online/telephone legal Simple/Complex/Repeated}
+# Chi-Square stats: GDP_PC legal requirenments simple
+GDP_accordance_simple <- survey_dt_associations %>%
+    dplyr::filter(accordance_simple != "I do not know the legal requirements") %>%
+    select(c(accordance_simple, GDP_PER_CAPITA)) %>%
+    # chaning levels for better presentation of the contingency table
+    mutate(GDP_PER_CAPITA = factor(
+        GDP_PER_CAPITA,
+        levels = c("High_GDP_PC",
+                   "Middle_GDP_PC",
+                   "Low_GDP_PC")
+    )) %>%
+    mutate(
+        GDP_PER_CAPITA = factor(
+            GDP_PER_CAPITA,
+            levels = c("High_GDP_PC",
+                       "Middle_GDP_PC",
+                       "Low_GDP_PC"),
+            labels = c("High", "Middle","Low"))) %>%
+    mutate(accordance_simple = factor(
+        accordance_simple,
+        levels = c("Yes",
+                   "No (please comment the reasons)"),
+        labels = c("Yes",
+                   "No")
+    )) %>%
+    table() %>%
+    # Chi-Square Statistics
+    chisq.test()
+
+# Legal requirenments for simple proof ok
+corrplot( 
+    t(GDP_accordance_simple$residuals),
+    is.corr = FALSE,
+    tl.col = "black",
+    tl.srt = 0,
+    tl.cex = 3,
+    tl.offset = 1,
+    bg = "White",
+    addCoef.col = "white",
+    type = "full",
+    cl.pos = 'n', 
+    mar = c(0,0,0,5)
+)
+
+# Chi-Square stats: GDP_PC legal requirenments complex
+GDP_accordance_complex <- survey_dt_associations %>%
+    dplyr::filter(accordance_complex != "I do not know the legal requirements") %>%
+    select(c(accordance_complex, GDP_PER_CAPITA)) %>%
+    # chaning levels for better presentation of the contingency table
+    mutate(GDP_PER_CAPITA = factor(
+        GDP_PER_CAPITA,
+        levels = c("High_GDP_PC",
+                   "Middle_GDP_PC",
+                   "Low_GDP_PC")
+    )) %>%
+    mutate(
+        GDP_PER_CAPITA = factor(
+            GDP_PER_CAPITA,
+            levels = c("High_GDP_PC",
+                       "Middle_GDP_PC",
+                       "Low_GDP_PC"),
+            labels = c("High", "Middle","Low"))) %>%
+    mutate(accordance_complex = factor(
+        accordance_complex,
+        levels = c("Yes",
+                   "No (please comment the reasons)"),
+        labels = c("Yes",
+                   "No")
+    )) %>%
+    table() %>%
+    # Chi-Square Statistics
+    chisq.test()
+
+# Legal requirenments for complex proof ok
+corrplot(
+    t(GDP_accordance_complex$residuals),
+    is.corr = FALSE,
+    tl.col = "black",
+    tl.srt = 0,
+    tl.cex = 3,
+    tl.offset = 1,
+    bg = "White",
+    addCoef.col = "white",
+    type = "full",
+    cl.pos = 'n', 
+    mar = c(0,0,0,5)
+)
+
+# Chi-Square stats: GDP_PC Re-Do
+GDP_Re_Do <- survey_dt_associations %>%
+    dplyr::filter(Re_do != "I do not know the legal requirements") %>%
+    select(c(Re_do, GDP_PER_CAPITA)) %>%
+    # chaning levels for better presentation of the contingency table
+    mutate(GDP_PER_CAPITA = factor(
+        GDP_PER_CAPITA,
+        levels = c("High_GDP_PC",
+                   "Middle_GDP_PC",
+                   "Low_GDP_PC")
+    )) %>%
+    mutate(
+        GDP_PER_CAPITA = factor(
+            GDP_PER_CAPITA,
+            levels = c("High_GDP_PC",
+                       "Middle_GDP_PC",
+                       "Low_GDP_PC"),
+            labels = c("High", "Middle","Low"))) %>%
+    mutate(Re_do = factor(
+        Re_do,
+        levels = c("Yes",
+                   "No")
+    )) %>%
+    table() %>%
+    # Chi-Square Statistics
+    chisq.test()
+
+# Corrplot Re-Do proof ok
+corrplot(
+    t(GDP_Re_Do$residuals),
+    is.corr = FALSE,
+    tl.col = "black",
+    tl.srt = 0,
+    tl.cex = 3,
+    tl.offset = 1,
+    bg = "White",
+    addCoef.col = "white",
+    type = "full",
+    cl.pos = 'n', 
+    mar = c(0,0,0,5)
+)
+```
+```{r Figure 5: PIE: Timing consent Simple/Complex}
 prop.table(table(survey_data$"When do you need to obtain Informed consent for elective surgery based on legal requirements (for simple procedures, low risk patients)."))
 
 prop.table(table(survey_data$"When do you need to obtain Informed consent for elective surgery based on legal requirements (for complex procedures, higher risk patients)."))
@@ -1166,6 +1230,8 @@ simple_df %>%
 #     border = "white")
 ```
 
+
+# EDA (Explonatory Data Analysis)
 ```{r responce counts for different countries}
 survey_fragments %>% 
     dplyr::filter(country != "Other") %>% 
@@ -1342,231 +1408,8 @@ regulations %>%
 ```
 
 
+
 # DP_PC Pearsons residuals plots
-```{r Figure : GDP_PC Residuals: Internet/telefone possible}
-# link to statistics page
-# http://www.sthda.com/english/wiki/chi-square-test-of-independence-in-r
-
-# Chi-Square stats: GDP - Technical possible with INTERNET
-GDP_tech_internet <- survey_dt_associations %>%
-    dplyr::filter(tech_internet != "Different (please comment)") %>%
-    select(c(tech_internet, GDP_PER_CAPITA)) %>%
-    # chaning levels for better presentation of the contingency table
-    mutate(GDP_PER_CAPITA = factor(
-        GDP_PER_CAPITA,
-        levels = c("High_GDP_PC",
-                   "Middle_GDP_PC",
-                   "Low_GDP_PC")
-    )) %>%
-    mutate(
-        GDP_PER_CAPITA = factor(
-            GDP_PER_CAPITA,
-            levels = c("High_GDP_PC",
-                       "Middle_GDP_PC",
-                       "Low_GDP_PC"),
-            labels = c("High", "Middle","Low"))) %>%
-    mutate(tech_internet = factor(
-        tech_internet,
-        levels = c("Yes",
-                   "No (please comment)"),
-        labels = c("Yes",
-                   "No")
-    )) %>%
-    table() %>%
-    chisq.test()
-    # Chi-Square Statistics
-
-# technical internet GDP proof ok
-corrplot(
-    t(GDP_tech_internet$residuals),
-    is.corr = FALSE,
-    tl.col = "black",
-    tl.srt = 0,
-    tl.cex = 3,
-    tl.offset = 1,
-    bg = "White",
-    addCoef.col = "white",
-    type = "full",
-    cl.pos = 'n', 
-    mar = c(0,0,0,5)
-)
-
-# Chi-Square stats: GDP - Technical possible with TELEFONE
-GDP_tech_telefone <- survey_dt_associations %>%
-    dplyr::filter(tech_telefone != "Different (please comment)") %>%
-    select(c(tech_telefone, GDP_PER_CAPITA)) %>%
-    # chaning levels for better presentation of the contingency table
-    mutate(GDP_PER_CAPITA = factor(
-        GDP_PER_CAPITA,
-        levels = c("High_GDP_PC",
-                   "Middle_GDP_PC",
-                   "Low_GDP_PC")
-    )) %>%
-    mutate(
-        GDP_PER_CAPITA = factor(
-            GDP_PER_CAPITA,
-            levels = c("High_GDP_PC",
-                       "Middle_GDP_PC",
-                       "Low_GDP_PC"),
-            labels = c("High", "Middle","Low"))) %>%
-    mutate(tech_telefone = factor(
-        tech_telefone,
-        levels = c("Yes",
-                   "No (please comment)"),
-        labels = c("Yes",
-                   "No")
-    )) %>%
-    table() %>%
-    chisq.test()
-    # Chi-Square Statistics
-
-
-# technical internet GDP proof ok
-corrplot(
-    t(GDP_tech_telefone$residuals),
-    is.corr = FALSE,
-    tl.col = "black",
-    tl.srt = 0,
-    tl.cex = 3,
-    tl.offset = 1,
-    bg = "White",
-    addCoef.col = "white",
-    type = "full",
-    cl.pos = 'n', 
-    mar = c(0,0,0,5)
-)
-```
-```{r Figure : GDP_PC Residuals: Legal requirenments simple/complex/Redo}
-# Chi-Square stats: GDP_PC legal requirenments simple
-GDP_accordance_simple <- survey_dt_associations %>%
-    dplyr::filter(accordance_simple != "I do not know the legal requirements") %>%
-    select(c(accordance_simple, GDP_PER_CAPITA)) %>%
-    # chaning levels for better presentation of the contingency table
-    mutate(GDP_PER_CAPITA = factor(
-        GDP_PER_CAPITA,
-        levels = c("High_GDP_PC",
-                   "Middle_GDP_PC",
-                   "Low_GDP_PC")
-    )) %>%
-    mutate(
-        GDP_PER_CAPITA = factor(
-            GDP_PER_CAPITA,
-            levels = c("High_GDP_PC",
-                       "Middle_GDP_PC",
-                       "Low_GDP_PC"),
-            labels = c("High", "Middle","Low"))) %>%
-    mutate(accordance_simple = factor(
-        accordance_simple,
-        levels = c("Yes",
-                   "No (please comment the reasons)"),
-        labels = c("Yes",
-                   "No")
-    )) %>%
-    table() %>%
-    # Chi-Square Statistics
-    chisq.test()
-
-# Legal requirenments for simple proof ok
-corrplot( 
-    t(GDP_accordance_simple$residuals),
-    is.corr = FALSE,
-    tl.col = "black",
-    tl.srt = 0,
-    tl.cex = 3,
-    tl.offset = 1,
-    bg = "White",
-    addCoef.col = "white",
-    type = "full",
-    cl.pos = 'n', 
-    mar = c(0,0,0,5)
-)
-
-# Chi-Square stats: GDP_PC legal requirenments complex
-GDP_accordance_complex <- survey_dt_associations %>%
-    dplyr::filter(accordance_complex != "I do not know the legal requirements") %>%
-    select(c(accordance_complex, GDP_PER_CAPITA)) %>%
-    # chaning levels for better presentation of the contingency table
-    mutate(GDP_PER_CAPITA = factor(
-        GDP_PER_CAPITA,
-        levels = c("High_GDP_PC",
-                   "Middle_GDP_PC",
-                   "Low_GDP_PC")
-    )) %>%
-    mutate(
-        GDP_PER_CAPITA = factor(
-            GDP_PER_CAPITA,
-            levels = c("High_GDP_PC",
-                       "Middle_GDP_PC",
-                       "Low_GDP_PC"),
-            labels = c("High", "Middle","Low"))) %>%
-    mutate(accordance_complex = factor(
-        accordance_complex,
-        levels = c("Yes",
-                   "No (please comment the reasons)"),
-        labels = c("Yes",
-                   "No")
-    )) %>%
-    table() %>%
-    # Chi-Square Statistics
-    chisq.test()
-
-# Legal requirenments for complex proof ok
-corrplot(
-    t(GDP_accordance_complex$residuals),
-    is.corr = FALSE,
-    tl.col = "black",
-    tl.srt = 0,
-    tl.cex = 3,
-    tl.offset = 1,
-    bg = "White",
-    addCoef.col = "white",
-    type = "full",
-    cl.pos = 'n', 
-    mar = c(0,0,0,5)
-)
-
-# Chi-Square stats: GDP_PC Re-Do
-GDP_Re_Do <- survey_dt_associations %>%
-    dplyr::filter(Re_do != "I do not know the legal requirements") %>%
-    select(c(Re_do, GDP_PER_CAPITA)) %>%
-    # chaning levels for better presentation of the contingency table
-    mutate(GDP_PER_CAPITA = factor(
-        GDP_PER_CAPITA,
-        levels = c("High_GDP_PC",
-                   "Middle_GDP_PC",
-                   "Low_GDP_PC")
-    )) %>%
-    mutate(
-        GDP_PER_CAPITA = factor(
-            GDP_PER_CAPITA,
-            levels = c("High_GDP_PC",
-                       "Middle_GDP_PC",
-                       "Low_GDP_PC"),
-            labels = c("High", "Middle","Low"))) %>%
-    mutate(Re_do = factor(
-        Re_do,
-        levels = c("Yes",
-                   "No")
-    )) %>%
-    table() %>%
-    # Chi-Square Statistics
-    chisq.test()
-
-# Corrplot Re-Do proof ok
-corrplot(
-    t(GDP_Re_Do$residuals),
-    is.corr = FALSE,
-    tl.col = "black",
-    tl.srt = 0,
-    tl.cex = 3,
-    tl.offset = 1,
-    bg = "White",
-    addCoef.col = "white",
-    type = "full",
-    cl.pos = 'n', 
-    mar = c(0,0,0,5)
-)
-```
 ```{r Figure : GDP_PC Residuals: When simple}
 # Chi-Square stats: 
 GDP_when_simple <- survey_dt_associations %>%
@@ -1686,11 +1529,180 @@ corrplot(
 
 
 
+
 ```{r fixing Table on and finding where extra participant is comming from}
 survey_data %>% 
-    select(Gender, `Your expert level`) %>% 
+    select(Gender, `Your expert level`, Profession) %>% 
+    rename(Level = `Your expert level`) %>% 
+    group_by(Gender) %>% 
+    count(Profession)
+
+survey_data %>% 
+    select(Gender, `Your expert level`, Profession) %>% 
     rename(Level = `Your expert level`) %>% 
     group_by(Gender) %>% 
     count(Level)
 ```
 
+
+
+# NOT INCLUDED data !!!
+```{r Table One Stratified EU member}
+# https://cran.r-project.org/web/packages/table1/vignettes/table1-examples.html
+# stratification by gender
+
+catVars = "EU_members"
+
+contVars =  questions_table_one_EJA_paper
+
+# cava NA's for stratification is not possible since NA is dropped
+tableOne <-
+    CreateTableOne(
+        data = survey_data,
+        vars = contVars,
+        testExact = fisher.test,     
+        addOverall = FALSE,
+        strata = catVars
+    )
+
+
+results_tbl <- print(tableOne, nonnormal = biomarkers, exact = "stage", quote = FALSE, noSpaces = FALSE, printToggle = FALSE)
+
+# writing the table to excel
+write.xlsx(results_tbl,
+           file = "~/Desktop/R/EJA-ESAIC-survey/tbl_one.xlsx",
+           sheetName = "table_one_EU_countries",
+           col.names = TRUE,
+           row.names = TRUE)
+```
+```{r Table One GDP Stratified}
+# https://cran.r-project.org/web/packages/table1/vignettes/table1-examples.html
+# https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4966396/
+# https://www.socscistatistics.com/tests/chisquare2/default2.aspx
+# https://www.youtube.com/watch?v=f53nXHoMXx4&t=42s&ab_channel=VectorsAcademy
+
+# stratification by GDP
+catVars = "GDP"
+
+contVars = questions_table_one_EJA_paper
+
+survey_data <- survey_data %>% 
+    dplyr::filter(GDP != "NO MEMBER")
+
+# cava NA's for stratification is not possible since NA is dropped
+tableOne <-
+    CreateCatTable(
+        data = survey_data,
+        vars = contVars,
+        # testExact = fisher.test,     
+        addOverall = FALSE,
+        strata = catVars
+    )
+
+
+results_tbl <- print(tableOne, nonnormal = biomarkers, exact = "stage", quote = FALSE, noSpaces = FALSE, printToggle = FALSE)
+
+# writing the table to excel
+write.xlsx(results_tbl,
+           file = "~/Desktop/R/EJA-ESAIC-survey/tbl_one_test.xlsx",
+           sheetName = "GDP stratified two",
+           col.names = TRUE,
+           row.names = TRUE)
+```
+```{r Table One stritified DICHTE}
+catVars = "dichte"
+
+contVars = questions_table_one_EJA_paper
+
+# survey_data <- survey_data %>% 
+#     select(questions_table_one_EJA_paper) %>% 
+#     dplyr::filter(GDP_PER_CAPITA != "NO MEMBER") %>% 
+#     dplyr::filter(GDP_PER_CAPITA != "Different (please comment)")
+
+# cava NA's for stratification is not possible since NA is dropped
+tableOne <-
+    CreateCatTable(
+        data = survey_data,
+        vars = contVars,
+        # testExact = fisher.test,     
+        addOverall = FALSE,
+        strata = catVars
+    )
+
+results_tbl_gdp_pc <- print(tableOne, nonnormal = biomarkers, exact = "stage", quote = FALSE, noSpaces = FALSE, printToggle = FALSE)
+
+# writing the table to excel
+write.xlsx(results_tbl_gdp_pc,
+           file = "~/Desktop/R/EJA-ESAIC-survey/tbl_one_dichte.xlsx",
+           sheetName = "dichte",
+           col.names = TRUE,
+           row.names = TRUE)
+```
+```{r Table One stritified DIGITAL INDEX}
+catVars = "digital_index"
+
+contVars = questions_table_one_EJA_paper
+
+# survey_data <- survey_data %>% 
+#     select(questions_table_one_EJA_paper) %>% 
+#     dplyr::filter(GDP_PER_CAPITA != "NO MEMBER") %>% 
+#     dplyr::filter(GDP_PER_CAPITA != "Different (please comment)")
+
+# cava NA's for stratification is not possible since NA is dropped
+tableOne <-
+    CreateCatTable(
+        data = survey_data,
+        vars = contVars,
+        # testExact = fisher.test,     
+        addOverall = FALSE,
+        strata = catVars
+    )
+
+results_tbl_gdp_pc <- print(tableOne, nonnormal = biomarkers, exact = "stage", quote = FALSE, noSpaces = FALSE, printToggle = FALSE)
+
+# writing the table to excel
+write.xlsx(results_tbl_gdp_pc,
+           file = "~/Desktop/R/EJA-ESAIC-survey/digital_index.xlsx",
+           sheetName = "dichte",
+           col.names = TRUE,
+           row.names = TRUE)
+```
+```{r Table One stratified GDP PER CAPITA }
+# https://data.worldbank.org/indicator/ny.gdp.pcap.cd
+# in US dollar
+# stratification by GDP
+catVars = "GDP_PER_CAPITA"
+
+contVars = questions_table_one_EJA_paper
+
+# survey_data <- survey_data %>% 
+#     select(questions_table_one_EJA_paper) %>% 
+#     dplyr::filter(GDP_PER_CAPITA != "NO MEMBER") %>% 
+#     dplyr::filter(GDP_PER_CAPITA != "Different (please comment)")
+
+# cava NA's for stratification is not possible since NA is dropped
+tableOne <-
+    CreateCatTable(
+        data = survey_data,
+        vars = contVars,
+        # testExact = fisher.test,     
+        addOverall = FALSE,
+        strata = catVars
+    )
+
+results_tbl_gdp_pc <- print(tableOne, nonnormal = biomarkers, exact = "stage", quote = FALSE, noSpaces = FALSE, printToggle = FALSE)
+
+# writing the table to excel
+write.xlsx(results_tbl_gdp_pc,
+           file = "~/Desktop/R/EJA-ESAIC-survey/tbl_one.xlsx",
+           sheetName = "GDP_PER_CAP",
+           col.names = TRUE,
+           row.names = TRUE)
+```
+```{r creating fct_lump styple chunks}
+# https://tradingeconomics.com/country-list/gdp?continent=europe
+BIP_DF <- BIP_DF %>% 
+    mutate(levels_bip = cut(BIP_DF$BIP, 
+                            breaks = c(1, 100, 500, Inf), 
+                            labels = c("Low", "Middle", "High")))
+```
