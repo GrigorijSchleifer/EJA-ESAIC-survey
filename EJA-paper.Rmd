@@ -22,6 +22,12 @@ output: html_document
 
 # grobs for correlation matrix
 # https://stackoverflow.com/questions/53734543/converting-corrplot-output-to-grob
+
+# Residuals
+# https://scholarworks.umass.edu/cgi/viewcontent.cgi?article=1269&context=pare
+# https://www.statisticshowto.com/what-is-a-standardized-residuals/
+# https://reneues.files.wordpress.com/2010/01/categorical-data-analysis-alan-agresti.pdf
+
 ```
 # SETUP
 ```{r Setup and libraries}
