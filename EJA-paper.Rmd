@@ -1243,32 +1243,31 @@ future_prefer <- survey_data %>%
         GDP_PER_CAPITA
     ))
 
-catVars = "GDP_PER_CAPITA"
-# contVars = c(
-#     "Profession",
-#     "Your expert level"
-# )
+names(future_prefer) <- c("prefer", "GDP_PER_CAPITA")
+
+GDP_PC = "GDP_PER_CAPITA"
+prefer = "prefer"
 
 
 # cava NA's for stratification is not possible since NA is dropped
 tableOne <-
     CreateTableOne(
         data = future_prefer,
-        vars = catVars,
+        vars = prefer,
         # testExact = fisher.test,     
         addOverall = FALSE,
-        strata = catVars
+        strata = GDP_PC
     )
 
 
 tbl_future_prefer <- print(tableOne, nonnormal = biomarkers, exact = "stage", quote = FALSE, noSpaces = FALSE, printToggle = FALSE)
 # writing the table to excel
-write.xlsx(results_tbl,
-           file = "~/Desktop/future_prefer_table.xlsx",
-           sheetName = "Prefer_table",
-           col.names = TRUE,
-           row.names = TRUE,
-           append = TRUE)
+# write.xlsx(tbl_future_prefer,
+#            file = "~/Desktop/future_prefer_table.xlsx",
+#            sheetName = "Prefer_table",
+#            col.names = TRUE,
+#            row.names = TRUE,
+#            append = TRUE)
 ```
 
 
